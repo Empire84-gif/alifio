@@ -1,0 +1,2575 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+  @font-face {
+    font-family: "RobotoLocal";
+    src: url("{{ url_for('static', filename='fonts/Roboto-Regular.ttf') }}") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --cl-bg: #101722;
+    --cl-surface: #1a2230;
+    --cl-surface-2: #212b3a;
+    --cl-surface-3: #2a3547;
+
+    --cl-border: rgba(255, 255, 255, 0.20);
+    --cl-border-2: rgba(255, 255, 255, 0.28);
+    --cl-border-3: rgba(255, 255, 255, 0.38);
+
+    --cl-text: #f4f7fb;
+    --cl-text-2: #dce2eb;
+    --cl-text-3: #cfd8e5;
+    --cl-text-4: #aeb8c8;
+    --cl-icon: #cbd4e0;
+
+    --cl-ok: #5eead4;
+    --cl-vip: #ff87b7;
+    --cl-warn: #ffd36b;
+
+    --cl-t: 0.16s ease;
+    --cl-r: 2px;
+  }
+
+  body {
+    background: var(--cl-bg) !important;
+  }
+
+  .clients-page,
+  .clients-page *,
+  .client-edit-modal,
+  .client-edit-modal * {
+    box-sizing: border-box;
+    font-family: "RobotoLocal", Arial, sans-serif;
+  }
+
+  .clients-page {
+    width: 100%;
+    max-width: 1500px;
+    min-width: 0;
+    margin: 0 auto;
+    color: var(--cl-text);
+  }
+
+  .clients-page-card.card {
+    display: grid;
+    gap: 0;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+    border: 1px solid var(--cl-border-2);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface);
+    box-shadow:
+      0 0 56px rgba(255, 255, 255, 0.03),
+      0 34px 80px rgba(0, 0, 0, 0.42);
+  }
+
+  .clients-page-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    min-width: 0;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--cl-border-2);
+    background: var(--cl-surface-2);
+  }
+
+  .clients-page-topbar-text {
+    min-width: 0;
+    flex: 1 1 420px;
+  }
+
+  .clients-page-title {
+    margin: 0;
+    color: var(--cl-text);
+    font-size: 16.8px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+
+  .clients-page-topbar-note {
+    margin: 4px 0 0;
+    color: var(--cl-text-3);
+    font-size: 11.55px;
+    line-height: 1.45;
+  }
+
+  .clients-section {
+    min-width: 0;
+    padding: 18px 22px 22px;
+  }
+
+  .clients-section-header {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 12px;
+  }
+
+  .clients-section-title {
+    margin: 0;
+    color: var(--cl-text);
+    font-size: 15.75px;
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .clients-section-note {
+    margin: 2px 0 0;
+    color: var(--cl-text-3);
+    font-size: 11.55px;
+    line-height: 1.45;
+  }
+
+  .clients-empty-note {
+    margin: 0;
+    padding: 14px;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: transparent;
+    color: var(--cl-text-4);
+    font-size: 11.55px;
+    line-height: 1.5;
+  }
+
+  .clients-search-wrap {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    margin-top: 10px;
+  }
+
+  .clients-search-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .clients-search-box {
+    display: grid;
+    gap: 3px;
+    width: 100%;
+    max-width: 360px;
+    min-width: 0;
+  }
+
+  .clients-search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .clients-search-icon {
+    position: absolute;
+    left: 11px;
+    z-index: 4;
+    color: var(--cl-icon);
+    font-size: 11.55px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .clients-search-input,
+  .client-edit-input,
+  .client-edit-textarea,
+  .client-edit-static-box {
+    border: 1px solid var(--cl-border-2);
+    background: var(--cl-surface-3);
+    color: var(--cl-text);
+    transition:
+      border-color var(--cl-t),
+      background var(--cl-t),
+      box-shadow var(--cl-t),
+      color var(--cl-t);
+  }
+
+  .clients-search-input,
+  .client-edit-input {
+    width: 100%;
+    min-width: 0;
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: var(--cl-r);
+    font-size: 11.55px;
+    line-height: 1;
+  }
+
+  .clients-search-input {
+    padding-left: 31px;
+  }
+
+  .clients-search-input::placeholder,
+  .client-edit-input::placeholder,
+  .client-edit-textarea::placeholder {
+    color: var(--cl-text-4);
+    opacity: 1;
+  }
+
+  .clients-search-input:hover,
+  .client-edit-input:hover,
+  .client-edit-textarea:hover,
+  .client-edit-static-box:hover {
+    border-color: var(--cl-border-3);
+  }
+
+  .clients-search-input:focus,
+  .client-edit-input:focus,
+  .client-edit-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+  }
+
+  .clients-table-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    margin-top: 16px;
+    border: 1px solid var(--cl-border-2);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-2);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .clients-table {
+    width: 100%;
+    min-width: 1100px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .clients-table thead {
+    background: var(--cl-surface-3);
+  }
+
+  .clients-table th,
+  .clients-table td {
+    border-right: 1px solid var(--cl-border);
+    border-bottom: 1px solid var(--cl-border);
+  }
+
+  .clients-table th:last-child,
+  .clients-table td:last-child {
+    border-right: none;
+  }
+
+  .clients-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .clients-table th {
+    padding: 0;
+    color: var(--cl-text-4);
+    font-size: 8.4px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .clients-th-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    min-height: 36px;
+    padding: 8px 10px;
+  }
+
+  .clients-table td {
+    overflow: hidden;
+    padding: 9px 10px;
+    background: var(--cl-surface);
+    color: var(--cl-text-2);
+    font-size: 11.55px;
+    line-height: 1.35;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .clients-table tbody tr:hover td {
+    background: color-mix(in srgb, var(--primary-color) 8%, var(--cl-surface));
+  }
+
+  .clients-data-row {
+    cursor: default;
+  }
+
+  .clients-sort-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: background var(--cl-t), color var(--cl-t);
+  }
+
+  .clients-sort-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--cl-text-2);
+  }
+
+  .clients-sort-btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--primary-color);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .clients-sort-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .clients-sort-icons {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    flex: 0 0 auto;
+    width: 10px;
+  }
+
+  .clients-sort-icons i {
+    color: rgba(255, 255, 255, 0.34);
+    font-size: 7.35px;
+    line-height: 0.8;
+    transition: color var(--cl-t), transform var(--cl-t);
+  }
+
+  .clients-sort-btn.is-active {
+    color: var(--cl-text);
+  }
+
+  .clients-sort-btn.is-active .clients-sort-icons .bi-caret-up-fill,
+  .clients-sort-btn[data-direction="asc"] .clients-sort-icons .bi-caret-up-fill,
+  .clients-sort-btn.is-active .clients-sort-icons .bi-caret-down-fill,
+  .clients-sort-btn[data-direction="desc"] .clients-sort-icons .bi-caret-down-fill {
+    color: var(--primary-color);
+  }
+
+  .clients-col-id {
+    width: 52px;
+    min-width: 52px;
+    text-align: center;
+  }
+
+  .clients-col-id .clients-th-content,
+  .clients-table td.clients-col-id {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .clients-col-name { width: 220px; min-width: 200px; }
+  .clients-col-phone { width: 140px; min-width: 140px; }
+  .clients-col-email { width: 190px; min-width: 190px; }
+  .clients-col-last-booking { width: 180px; min-width: 180px; }
+  .clients-col-total { width: 90px; min-width: 90px; text-align: center; }
+  .clients-col-status { width: 140px; min-width: 140px; }
+  .clients-col-actions { width: 120px; min-width: 120px; }
+
+  .clients-table td.clients-col-id,
+  .clients-table td.clients-col-name,
+  .clients-table td.clients-col-phone,
+  .clients-table td.clients-col-email,
+  .clients-table td.clients-col-last-booking,
+  .clients-table td.clients-col-total {
+    font-size: 12.6px;
+  }
+
+  .clients-table td.clients-col-status {
+    vertical-align: middle;
+  }
+
+  .client-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
+    padding: 2px 8px 1px;
+    border: 1px solid transparent;
+    border-radius: var(--cl-r);
+    font-size: 8.4px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1;
+    position: relative;
+  }
+
+  .client-status-standard {
+    color: #8fc8ff;
+    background: rgba(143, 200, 255, 0.12);
+    border-color: rgba(143, 200, 255, 0.28);
+    padding-top: 2.5px;
+  }
+
+  .client-status-new {
+    color: #ffd97a;
+    background: rgba(255, 217, 122, 0.12);
+    border-color: rgba(255, 217, 122, 0.28);
+    padding-top: 2.5px;
+  }
+
+  .client-status-regular {
+    color: #72ebc8;
+    background: rgba(114, 235, 200, 0.12);
+    border-color: rgba(114, 235, 200, 0.28);
+    padding-top: 2.5px;
+  }
+
+  .client-status-inactive {
+    color: #d3dae3;
+    background: rgba(211, 218, 227, 0.10);
+    border-color: rgba(211, 218, 227, 0.22);
+    padding-top: 2.5px;
+  }
+
+  .clients-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
+  .clients-actions form {
+    margin: 0;
+    flex: 0 0 auto;
+  }
+
+  .clients-btn,
+  .clients-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--cl-r);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background var(--cl-t),
+      color var(--cl-t),
+      border-color var(--cl-t),
+      transform var(--cl-t),
+      opacity var(--cl-t);
+  }
+
+  .clients-btn {
+    border: 1px solid var(--primary-color);
+    background: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .clients-btn:hover {
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--cl-text);
+    transform: translateY(-1px);
+  }
+
+  .clients-btn-secondary {
+    border: 1px solid var(--cl-border-2);
+    background: var(--cl-surface-3);
+    color: var(--cl-text-2);
+  }
+
+  .clients-btn-secondary:hover {
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--cl-text);
+    transform: translateY(-1px);
+  }
+
+  .clients-btn,
+  .clients-btn-secondary {
+    min-width: 56px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0 10px;
+    font-size: 9.45px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    flex: 0 0 auto;
+  }
+
+  .clients-notes-row td {
+    padding: 9px 10px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--cl-text-3);
+    font-size: 10.5px;
+    line-height: 1.4;
+    font-style: italic;
+    white-space: normal;
+  }
+
+  .clients-notes-label {
+    color: var(--cl-text);
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .clients-name-link {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--cl-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: color var(--cl-t), opacity var(--cl-t);
+  }
+
+  .clients-name-link:hover {
+    color: var(--primary-color);
+  }
+
+  .clients-name-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 22%, transparent);
+    border-radius: var(--cl-r);
+  }
+
+  .client-edit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1270;
+    display: none;
+  }
+
+  .client-edit-modal.is-open {
+    display: block;
+  }
+
+  .client-edit-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 9, 12, 0.80);
+    backdrop-filter: blur(4px);
+  }
+
+  .client-edit-dialog {
+    position: relative;
+    width: min(1140px, calc(100vw - 28px));
+    max-width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+    margin: 14px auto;
+    overflow: hidden;
+    border: 1px solid var(--cl-border-2);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface);
+    box-shadow:
+      0 0 56px rgba(255, 255, 255, 0.03),
+      0 34px 80px rgba(0, 0, 0, 0.48);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .client-edit-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px 16px 13px;
+    border-bottom: 1px solid var(--cl-border);
+    background: var(--cl-surface-2);
+  }
+
+  .client-edit-header-text {
+    min-width: 0;
+  }
+
+  .client-edit-title {
+    margin: 0;
+    color: var(--cl-text);
+    font-size: 16.8px;
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .client-edit-note {
+    margin: 4px 0 0;
+    color: var(--cl-text-3);
+    font-size: 11.55px;
+    line-height: 1.42;
+  }
+
+  .client-edit-close {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--cl-border-2);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+    color: var(--cl-text-2);
+    cursor: pointer;
+    transition:
+      background var(--cl-t),
+      border-color var(--cl-t),
+      color var(--cl-t),
+      transform var(--cl-t);
+  }
+
+  .client-edit-close:hover {
+    transform: translateY(-1px);
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--cl-text);
+  }
+
+  .client-edit-body {
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 16px 18px 18px;
+    background: var(--cl-surface);
+  }
+
+  .client-edit-layout {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .client-edit-top-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .client-edit-panel {
+    min-width: 0;
+    overflow: hidden;
+    padding: 12px;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-2);
+  }
+
+  .client-edit-panel-full {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .client-edit-panel-title {
+    margin: 0 0 10px;
+    color: var(--cl-text);
+    font-size: 14.7px;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .client-edit-subtitle {
+    margin: 0 0 10px;
+    color: var(--cl-text);
+    font-size: 12.6px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .client-summary-grid,
+  .client-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .client-edit-grid-wide {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .client-edit-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    min-width: 0;
+    margin-bottom: 12px;
+  }
+
+  .client-edit-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+    gap: 12px;
+    min-width: 0;
+    align-items: start;
+  }
+
+  .client-edit-main-col {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .client-summary-item {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    align-content: start;
+  }
+
+  .client-summary-item-short {
+    min-width: 0;
+  }
+
+  .client-summary-item-label {
+    font-size: 7.35px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #cecece;
+    line-height: 1.1;
+  }
+
+  .client-summary-box,
+  .client-edit-preferences-card {
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+    align-content: start;
+  }
+
+  .client-summary-box-short {
+    min-height: 40px;
+    padding: 7px 10px;
+  }
+
+  .client-summary-box-short .client-summary-label {
+    margin: 0 0 2px;
+  }
+
+  .client-summary-box-short .client-summary-value {
+    font-size: 11.55px;
+    line-height: 1.25;
+  }
+
+  .client-summary-box-full,
+  .client-edit-field-full {
+    grid-column: 1 / -1;
+  }
+
+  .client-summary-label,
+  .client-edit-label {
+    margin: 0 0 4px;
+    color: var(--cl-text-4);
+    font-size: 7.35px;
+    line-height: 1.1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .client-summary-value {
+    min-width: 0;
+    color: var(--cl-text);
+    font-size: 12.6px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .client-summary-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+    color: var(--cl-text-2);
+    font-size: 11.55px;
+    line-height: 1.35;
+    cursor: pointer;
+  }
+
+  .client-summary-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .client-summary-help {
+    margin-top: 6px;
+    color: var(--cl-text-4);
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+
+  .client-edit-preferences-card {
+    padding-top: 10px;
+    margin-top: 16px;
+    padding-bottom: 15px;
+  }
+
+  .client-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .client-edit-field-short {
+    grid-column: span 1;
+  }
+
+  .client-edit-field-long {
+    grid-column: span 3;
+  }
+
+  .client-edit-static-box {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+  }
+
+  .client-edit-static-value {
+    color: var(--cl-text);
+    font-size: 11.55px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .client-edit-input,
+  .client-edit-textarea {
+    border: 1px solid var(--cl-border-2);
+    background: var(--cl-surface-3);
+    color: var(--cl-text);
+    transition:
+      border-color var(--cl-t),
+      background var(--cl-t),
+      box-shadow var(--cl-t),
+      color var(--cl-t);
+  }
+
+  .client-edit-input {
+    width: 100%;
+    min-width: 0;
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: var(--cl-r);
+    font-size: 11.55px;
+    line-height: 1;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .client-edit-input::placeholder,
+  .client-edit-textarea::placeholder {
+    color: var(--cl-text-4);
+    opacity: 1;
+  }
+
+  .client-edit-input:hover,
+  .client-edit-textarea:hover,
+  .client-edit-static-box:hover {
+    border-color: var(--cl-border-3);
+  }
+
+  .client-edit-input:focus,
+  .client-edit-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+  }
+
+  #clientEditStatus.client-edit-input,
+  #clientEditPreferredEmployeeSelect.client-edit-input {
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23c6cfdb' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+  }
+
+  .client-edit-textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 110px;
+    padding: 10px;
+    border-radius: var(--cl-r);
+    font-size: 11.55px;
+    line-height: 1.42;
+    resize: vertical;
+  }
+
+  .client-inline-list {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .client-inline-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+  }
+
+  .client-inline-item-main {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .client-inline-item-title {
+    min-width: 0;
+    color: var(--cl-text);
+    font-size: 11.55px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .client-inline-item-meta {
+    min-width: 0;
+    color: var(--cl-text-3);
+    font-size: 10.5px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .client-inline-item-note {
+    margin-top: 4px;
+    color: var(--cl-text-4);
+    font-size: 10.5px;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .client-inline-item-note-label {
+    color: var(--cl-text-3);
+    font-size: 8.4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .client-inline-item-status {
+    flex-shrink: 0;
+    color: var(--primary-color);
+    font-size: 10.5px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .client-inline-empty {
+    padding: 10px 11px;
+    border: 1px dashed var(--cl-border-2);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+    color: var(--cl-text-4);
+    font-size: 11.55px;
+    line-height: 1.45;
+  }
+
+  .client-history-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    border: 1px solid var(--cl-border);
+    border-radius: var(--cl-r);
+    background: var(--cl-surface-3);
+    width: 100%;
+  }
+
+  .client-history-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .client-history-table thead {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .client-history-table th,
+  .client-history-table td {
+    padding: 10px 11px;
+    border-right: 1px solid var(--cl-border);
+    border-bottom: 1px solid var(--cl-border);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .client-history-table th:last-child,
+  .client-history-table td:last-child {
+    border-right: none;
+  }
+
+  .client-history-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .client-history-table th {
+    color: var(--cl-text-4);
+    font-size: 8.4px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .client-history-table td {
+    color: var(--cl-text-2);
+    font-size: 11.55px;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .client-history-table th:last-child,
+  .client-history-table td:last-child {
+    min-width: 240px;
+    width: 240px;
+  }
+
+  #clientEditTopService {
+    font-size: 10.5px;
+    line-height: 1.25;
+  }
+
+  .client-history-note-cell {
+    color: var(--cl-text-3) !important;
+    font-size: 10.5px !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+    word-break: break-word;
+  }
+
+  .client-history-empty {
+    color: var(--cl-text-4) !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .client-edit-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .client-edit-save-btn,
+  .client-edit-cancel-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    height: 38px;
+    padding: 0 16px;
+    font-size: 12.6px;
+    font-weight: 400;
+  }
+
+  @media (max-width: 1180px) {
+    .client-edit-hero-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .client-edit-main-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .client-edit-grid-wide {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .client-edit-field-long {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .clients-page-topbar,
+    .clients-section {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .client-edit-dialog {
+      width: min(960px, calc(100vw - 18px));
+      max-width: calc(100vw - 18px);
+      max-height: calc(100vh - 18px);
+      margin: 9px auto;
+    }
+
+    .client-edit-top-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .clients-page-topbar {
+      padding: 14px;
+    }
+
+    .clients-section {
+      padding: 14px;
+    }
+
+    .clients-search-row {
+      flex-direction: column;
+    }
+
+    .clients-search-box {
+      max-width: 100%;
+    }
+
+    .clients-table-wrap {
+      margin-left: -14px;
+      margin-right: -14px;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+    }
+
+    .client-edit-dialog {
+      width: calc(100vw - 12px);
+      max-width: calc(100vw - 12px);
+      max-height: calc(100vh - 12px);
+      margin: 6px auto;
+    }
+
+    .client-edit-header,
+    .client-edit-body {
+      padding: 12px;
+    }
+
+    .client-edit-hero-grid,
+    .client-edit-grid,
+    .client-edit-grid-wide,
+    .client-edit-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .client-summary-box-full,
+    .client-edit-field-full,
+    .client-edit-field-short,
+    .client-edit-field-long {
+      grid-column: auto;
+    }
+
+    .client-inline-item {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .client-history-table {
+      min-width: 640px;
+    }
+  }
+
+ .client-edit-close,
+.bookings-details-close,
+.bookings-report-close,
+.waitlist-edit-close,
+.manual-booking-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-edit-close i,
+.bookings-details-close i,
+.bookings-report-close i,
+.waitlist-edit-close i,
+.manual-booking-modal-close i {
+  line-height: 1;
+  display: block;
+  transform: translateY(1px);
+} 
+
+/* ========================================
+   CLIENTS PAGE — PRZYCISKI W STAREJ CZCIONCE
+======================================== */
+
+/* tylko realne przyciski akcji */
+.clients-btn,
+.clients-btn-secondary,
+.client-edit-save-btn,
+.client-edit-cancel-btn,
+.client-edit-close,
+.clients-sort-btn,
+.clients-btn *,
+.clients-btn-secondary *,
+.client-edit-save-btn *,
+.client-edit-cancel-btn *,
+.client-edit-close *,
+.clients-sort-btn * {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.client-summary-box-short {
+  min-height: 32px;
+  padding: 5px 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.client-summary-box-short .client-summary-label {
+  margin: 0 0 1px;
+}
+
+.client-summary-box-short .client-summary-value {
+  font-size: 11.55px;
+  line-height: 1.15;
+}
+
+.client-summary-value {
+  line-height: 1.25;
+}
+
+.client-summary-item-label,
+.client-summary-label,
+.client-edit-label {
+  margin: 0 0 0px;
+  color: #e3eaf3;
+  font-size: 8.8px;
+  line-height: 1.1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.client-summary-item {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  align-content: start;
+}
+
+.client-summary-label {
+  margin: 0;
+  color: #e3eaf3;
+  font-size: 8.8px;
+  line-height: 1.1;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.client-summary-box {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--cl-border);
+  border-radius: var(--cl-r);
+  background: var(--cl-surface-3);
+}
+
+.client-summary-value {
+  min-width: 0;
+  color: var(--cl-text);
+  font-size: 12.6px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.client-summary-item .client-summary-label {
+  margin: 0 0 3px;
+}
+
+#clientEditTopEmployee,
+#clientEditTopService,
+#clientEditLastEmployee {
+  font-size: 11.55px;
+  line-height: 1.3;
+}
+
+/* ========================================
+   CLIENTS PAGE — INLINE SECTION HEADER
+======================================== */
+
+.clients-section-header-inline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+.clients-section-header-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.clients-section-header-main .clients-section-header {
+  margin-bottom: 0;
+}
+
+.clients-section-filters-inline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.clients-section-filters-inline .clients-search-box {
+  margin: 0;
+  flex: 0 0 auto;
+  width: 460px;
+  max-width: 460px;
+}
+
+.clients-section-filters-inline .clients-search-input-wrap,
+.clients-section-filters-inline .clients-search-input {
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .clients-section-header-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clients-section-filters-inline {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .clients-section-filters-inline .clients-search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+</style>
+
+<div class="clients-page">
+  <section class="card clients-page-card">
+    <div class="clients-page-topbar">
+      <div class="clients-page-topbar-text">
+        <h1 class="clients-page-title">Klienci</h1>
+      </div>
+    </div>
+
+    <div class="clients-section">
+      <div class="clients-section-header-inline">
+  <div class="clients-section-header-main">
+    <div class="clients-section-header">
+      <h2 class="clients-section-title">Lista klientów</h2>
+      <p class="clients-section-note">
+        Kliknij w nazwę klienta, aby otworzyć kartę klienta z dodatkowymi szczegółami.
+      </p>
+    </div>
+  </div>
+
+  {% if clients %}
+    <div class="clients-section-filters-inline" data-clients-block="clients">
+      <div class="clients-search-box">
+        <div class="clients-search-input-wrap">
+          <i class="bi bi-search clients-search-icon"></i>
+          <input
+            type="text"
+            class="clients-search-input"
+            data-role="search-text"
+            placeholder="Szukaj po imieniu, telefonie, e-mailu lub notatkach..."
+            autocomplete="off"
+          >
+        </div>
+      </div>
+    </div>
+</div>
+        
+
+        <div class="clients-table-wrap">
+          <table class="clients-table" data-role="table">
+            <thead>
+              <tr>
+                <th class="clients-col-id">
+                  <button type="button" class="clients-sort-btn" data-sort="id" data-type="number">
+                    <span class="clients-sort-label">ID</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-name">
+                  <button type="button" class="clients-sort-btn" data-sort="name" data-type="text">
+                    <span class="clients-sort-label">Klient</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-phone">
+                  <button type="button" class="clients-sort-btn" data-sort="phone" data-type="text">
+                    <span class="clients-sort-label">Telefon</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-email">
+                  <button type="button" class="clients-sort-btn" data-sort="email" data-type="text">
+                    <span class="clients-sort-label">E-mail</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-last-booking">
+                  <button type="button" class="clients-sort-btn" data-sort="last_booking" data-type="text">
+                    <span class="clients-sort-label">Ostatnia wizyta</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-total">
+                  <button type="button" class="clients-sort-btn" data-sort="total_bookings" data-type="number">
+                    <span class="clients-sort-label">Wizyty</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-status">
+                  <button type="button" class="clients-sort-btn" data-sort="status" data-type="text">
+                    <span class="clients-sort-label">Status</span>
+                    <span class="clients-sort-icons">
+                      <i class="bi bi-caret-up-fill"></i>
+                      <i class="bi bi-caret-down-fill"></i>
+                    </span>
+                  </button>
+                </th>
+
+                <th class="clients-col-actions">
+                  <div class="clients-th-content">
+                    <span>Akcje</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for client in clients %}
+                <tr
+                  class="clients-data-row"
+                  data-search="{{ ((client.full_name or '') ~ ' ' ~ (client.phone or '') ~ ' ' ~ (client.email or '') ~ ' ' ~ (client.notes or ''))|lower }}"
+                  data-id="{{ client.id or 0 }}"
+                  data-name="{{ client.full_name or '' }}"
+                  data-phone="{{ client.phone or '' }}"
+                  data-email="{{ client.email or '' }}"
+                  data-last-booking="{{ client.last_booking_at or '' }}"
+                  data-total-bookings="{{ client.total_bookings or 0 }}"
+                  data-status="{{ client.client_status or 'standard' }}"
+                  data-is-regular="{{ client.is_regular or 0 }}"
+                  data-notes="{{ client.notes or '' }}"
+                  data-created-at="{{ client.created_at or '' }}"
+                  data-updated-at="{{ client.updated_at or '' }}"
+                >
+                  <td class="clients-col-id">{{ client.id }}</td>
+
+                  <td class="clients-col-name">
+                    <button
+                      type="button"
+                      class="clients-name-link js-open-client-edit"
+                      data-client-id="{{ client.id }}"
+                      data-full-name="{{ client.full_name or '' }}"
+                      data-phone="{{ client.phone or '' }}"
+                      data-email="{{ client.email or '' }}"
+                      data-client-status="{{ client.client_status or 'standard' }}"
+                      data-is-regular="{{ client.is_regular or 0 }}"
+                      data-notes="{{ client.notes or '' }}"
+                      data-total-bookings="{{ client.total_bookings or 0 }}"
+                      data-last-booking="{{ client.last_booking_at or '' }}"
+                      data-created-at="{{ client.created_at or '' }}"
+                      data-updated-at="{{ client.updated_at or '' }}"
+                    >
+                      {{ client.full_name }}
+                    </button>
+                  </td>
+
+                  <td class="clients-col-phone">{{ client.phone or "—" }}</td>
+                  <td class="clients-col-email">{{ client.email or "—" }}</td>
+
+                  <td class="clients-col-last-booking">
+                    {% if client.last_booking_at %}
+                      {{ client.last_booking_at[:10].split('-')[2] ~ '.' ~ client.last_booking_at[:10].split('-')[1] ~ '.' ~ client.last_booking_at[:10].split('-')[0] if '-' in client.last_booking_at|string else client.last_booking_at }}
+                    {% else %}
+                      —
+                    {% endif %}
+                  </td>
+
+                  <td class="clients-col-total">{{ client.total_bookings or 0 }}</td>
+
+                  <td class="clients-col-status">
+  <span
+    class="client-status-badge
+      {% if client.client_status == 'regular' %}
+        client-status-regular
+      {% elif client.client_status == 'new' %}
+        client-status-new
+      {% elif client.client_status == 'inactive' %}
+        client-status-inactive
+      {% else %}
+        client-status-standard
+      {% endif %}"
+  >
+    {% if client.client_status == "regular" %}
+      Stały
+    {% elif client.client_status == "new" %}
+      Nowy
+    {% elif client.client_status == "inactive" %}
+      Nieaktywny
+    {% else %}
+      Standard
+    {% endif %}
+  </span>
+</td>
+
+                  <td class="clients-col-actions">
+                    <div class="clients-actions">
+                      <form
+                        action="{{ url_for('delete_client', client_id=client.id) }}"
+                        method="POST"
+                        class="clients-delete-form"
+                        onsubmit="return confirm('Czy na pewno chcesz usunąć tę kartę klienta?');"
+                      >
+                        <button type="submit" class="clients-btn-secondary">Usuń</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+
+                {% if client.notes %}
+                  <tr class="clients-notes-row">
+                    <td colspan="8">
+                      <span class="clients-notes-label">Notatka:</span>
+                      {{ client.notes }}
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="clients-empty-note">Baza klientów jest jeszcze pusta.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<div class="client-edit-modal" id="clientEditModal" aria-hidden="true">
+  <div class="client-edit-overlay" data-client-edit-close></div>
+
+  <div
+    class="client-edit-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="clientEditTitle"
+  >
+    <div class="client-edit-header">
+      <div class="client-edit-header-text">
+        <h3 class="client-edit-title" id="clientEditTitle">Karta klienta</h3>
+        <p class="client-edit-note">
+          Podgląd, edycja i historia wizyt klienta.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="client-edit-close"
+        id="clientEditCloseBtn"
+        aria-label="Zamknij okno"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="client-edit-body">
+      <form id="clientEditForm" method="POST">
+        <input type="hidden" id="clientEditId" name="client_id">
+
+        <div class="client-edit-layout">
+          <section class="client-edit-panel">
+  <h4 class="client-edit-panel-title">Podsumowanie i dane klienta</h4>
+
+  <div class="client-edit-hero-grid">
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">ID klienta</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditIdPreview">—</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Status</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditStatusPreview">Standard</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Liczba wizyt</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditTotalBookings">0</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Aktywne rezerwacje</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditActiveBookingsCount">0</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Ostatnia wizyta</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditLastBooking">—</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Anulowane wizyty</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditCancelledBookingsCount">0</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">Telefon kontaktowy</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditPhonePreview">—</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item client-summary-item-short">
+    <div class="client-summary-item-label">E-mail kontaktowy</div>
+    <div class="client-summary-box client-summary-box-short">
+      <div class="client-summary-value" id="clientEditEmailPreview">—</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item">
+    <div class="client-summary-item-label">RODO / polityka prywatności</div>
+    <div class="client-summary-box">
+      <label class="client-summary-toggle">
+        <input
+  type="checkbox"
+  id="clientEditPrivacyConsentCheckbox"
+  name="privacy_consent"
+  value="1"
+>
+        <span>Aktywne potwierdzenie</span>
+      </label>
+
+      <div class="client-summary-help">
+        To pole może zostać ustawione przez formularz rezerwacji lub ręcznie przez pracownika. <br>Możesz je tutaj edytować.
+      </div>
+    </div>
+  </div>
+
+  <div class="client-summary-item">
+    <div class="client-summary-item-label">Zgoda marketingowa</div>
+    <div class="client-summary-box">
+      <label class="client-summary-toggle">
+        <input
+          type="checkbox"
+          id="clientEditMarketingConsentCheckbox"
+          name="marketing_consent"
+          value="1"
+        >
+        <span>Aktywna zgoda marketingowa</span>
+      </label>
+
+      <div class="client-summary-help">
+        To pole może zostać ustawione przez formularz rezerwacji lub ręcznie przez pracownika. <br>Możesz je tutaj edytować.
+      </div>
+    </div>
+  </div>
+
+  <div class="client-summary-item">
+    <div class="client-summary-item-label">Data potwierdzenia</div>
+    <div class="client-summary-box">
+      <div class="client-summary-value" id="clientEditPrivacyNoticeMeta">—</div>
+    </div>
+  </div>
+
+  <div class="client-summary-item">
+    <div class="client-summary-item-label">Źródło i data zgody</div>
+    <div class="client-summary-box">
+      <div class="client-summary-value" id="clientEditConsentMeta">Brak informacji</div>
+    </div>
+  </div>
+</div>
+
+  <div class="client-edit-main-grid">
+    <div class="client-edit-main-col">
+      <div class="client-edit-grid client-edit-grid-wide">
+        <div class="client-edit-field client-edit-field-short">
+          <label for="clientEditStatus" class="client-edit-label">Status klienta</label>
+          <select class="client-edit-input" id="clientEditStatus" name="client_status">
+            <option value="standard">Standard</option>
+            <option value="new">Nowy</option>
+            <option value="regular">Stały klient</option>
+            <option value="inactive">Nieaktywny</option>
+          </select>
+        </div>
+
+        <div class="client-edit-field client-edit-field-long">
+          <label for="clientEditFullName" class="client-edit-label">Imię i nazwisko</label>
+          <input
+            type="text"
+            class="client-edit-input"
+            id="clientEditFullName"
+            name="full_name"
+            required
+          >
+        </div>
+
+        <div class="client-edit-field">
+          <label for="clientEditPhone" class="client-edit-label">Telefon</label>
+          <input
+            type="text"
+            class="client-edit-input"
+            id="clientEditPhone"
+            name="phone"
+          >
+        </div>
+
+        <div class="client-edit-field">
+          <label for="clientEditEmail" class="client-edit-label">E-mail</label>
+          <input
+            type="email"
+            class="client-edit-input"
+            id="clientEditEmail"
+            name="email"
+          >
+        </div>
+
+        <div class="client-edit-field">
+          <label class="client-edit-label">Utworzono</label>
+          <div class="client-edit-static-box">
+            <div class="client-edit-static-value" id="clientEditCreatedAt">—</div>
+          </div>
+        </div>
+
+        <div class="client-edit-field">
+          <label class="client-edit-label">Aktualizacja</label>
+          <div class="client-edit-static-box">
+            <div class="client-edit-static-value" id="clientEditUpdatedAt">—</div>
+          </div>
+        </div>
+
+        <div class="client-edit-field client-edit-field-full">
+          <label for="clientEditNotes" class="client-edit-label">Notatki</label>
+          <textarea
+            class="client-edit-textarea"
+            id="clientEditNotes"
+            name="notes"
+            placeholder="Wewnętrzne notatki o kliencie"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-edit-main-col">
+      <div class="client-edit-preferences-card">
+        <h5 class="client-edit-subtitle">Preferencje klienta</h5>
+
+        <div class="client-edit-grid">
+          <div class="client-edit-field client-edit-field-full">
+            <label for="clientEditPreferredEmployeeSelect" class="client-edit-label">
+              Preferowany specjalista
+            </label>
+            <select
+              class="client-edit-input"
+              id="clientEditPreferredEmployeeSelect"
+              name="preferred_employee_id"
+            >
+              <option value="">Brak preferencji</option>
+            </select>
+          </div>
+
+         <div class="client-summary-item">
+  <div class="client-summary-label">Najcz. wybierany specjalista</div>
+  <div class="client-summary-box">
+    <div class="client-summary-value" id="clientEditTopEmployee">—</div>
+  </div>
+</div>
+
+<div class="client-summary-item">
+  <div class="client-summary-label">Najczęściej wybierana usługa</div>
+  <div class="client-summary-box">
+    <div class="client-summary-value" id="clientEditTopService">—</div>
+  </div>
+</div>
+
+<div class="client-summary-item client-summary-box-full">
+  <div class="client-summary-label">Ostatni specjalista</div>
+  <div class="client-summary-box">
+    <div class="client-summary-value" id="clientEditLastEmployee">—</div>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+          <div class="client-edit-top-grid">
+            
+
+            <section class="client-edit-panel client-edit-panel-full">
+  <h4 class="client-edit-panel-title">Historia wizyt i rezerwacji</h4>
+
+  <div class="client-history-wrap">
+    <table class="client-history-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Godzina</th>
+          <th>Usługa</th>
+          <th>Specjalista</th>
+          <th>Status</th>
+          <th>Notatka</th>
+        </tr>
+      </thead>
+      <tbody id="clientEditHistoryBody">
+        <tr>
+          <td colspan="6" class="client-history-empty">
+            Brak historii wizyt i rezerwacji do wyświetlenia.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+        </div>
+
+        <div class="client-edit-actions">
+          <button type="submit" class="clients-btn client-edit-save-btn">
+            Zapisz zmiany
+          </button>
+
+          <button
+            type="button"
+            class="clients-btn-secondary client-edit-cancel-btn"
+            id="clientEditCancelBtn"
+          >
+            Anuluj
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script id="clientEmployeesData" type="application/json">
+  {{ employees|tojson }}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const dom = {};
+  const state = {
+    currentSortKey: "",
+    currentSortDirection: "asc",
+    currentSortType: "text",
+    activeClientId: null,
+    employees: []
+  };
+
+  init();
+
+  function init() {
+    cacheDom();
+    loadEmployeesFromTemplate();
+
+    if (!dom.table) return;
+
+    populatePreferredEmployeeOptions();
+    bindTableEvents();
+    bindModalEvents();
+    bindFormPreviewEvents();
+    updateSortButtonsUi();
+    filterRows();
+  }
+
+  function cacheDom() {
+    dom.clientsBlock = document.querySelector("[data-clients-block='clients']");
+    dom.searchInput = dom.clientsBlock?.querySelector("[data-role='search-text']") || null;
+
+    dom.table = document.querySelector("[data-role='table']");
+    dom.tableBody = dom.table?.querySelector("tbody") || null;
+    dom.dataRows = dom.tableBody
+      ? Array.from(dom.tableBody.querySelectorAll(".clients-data-row"))
+      : [];
+    dom.sortButtons = dom.table
+      ? Array.from(dom.table.querySelectorAll(".clients-sort-btn"))
+      : [];
+
+    dom.clientEditButtons = Array.from(document.querySelectorAll(".js-open-client-edit"));
+    dom.clientEditModal = document.getElementById("clientEditModal");
+    dom.clientEditForm = document.getElementById("clientEditForm");
+    dom.clientEditCloseBtn = document.getElementById("clientEditCloseBtn");
+    dom.clientEditCancelBtn = document.getElementById("clientEditCancelBtn");
+    dom.clientEditCloseTriggers = Array.from(
+      document.querySelectorAll("[data-client-edit-close]")
+    );
+
+    dom.clientEmployeesData = document.getElementById("clientEmployeesData");
+
+    dom.clientEditId = document.getElementById("clientEditId");
+    dom.clientEditIdPreview = document.getElementById("clientEditIdPreview");
+    dom.clientEditStatusPreview = document.getElementById("clientEditStatusPreview");
+    dom.clientEditStatus = document.getElementById("clientEditStatus");
+    dom.clientEditFullName = document.getElementById("clientEditFullName");
+    dom.clientEditPhone = document.getElementById("clientEditPhone");
+    dom.clientEditEmail = document.getElementById("clientEditEmail");
+    dom.clientEditPrivacyConsentCheckbox = document.getElementById("clientEditPrivacyConsentCheckbox");
+    dom.clientEditMarketingConsentCheckbox = document.getElementById("clientEditMarketingConsentCheckbox");
+    dom.clientEditNotes = document.getElementById("clientEditNotes");
+
+    dom.clientEditTotalBookings = document.getElementById("clientEditTotalBookings");
+    dom.clientEditActiveBookingsCount = document.getElementById("clientEditActiveBookingsCount");
+    dom.clientEditCancelledBookingsCount = document.getElementById("clientEditCancelledBookingsCount");
+    dom.clientEditLastBooking = document.getElementById("clientEditLastBooking");
+    dom.clientEditCreatedAt = document.getElementById("clientEditCreatedAt");
+    dom.clientEditUpdatedAt = document.getElementById("clientEditUpdatedAt");
+
+    dom.clientEditPhonePreview = document.getElementById("clientEditPhonePreview");
+    dom.clientEditEmailPreview = document.getElementById("clientEditEmailPreview");
+
+    dom.clientEditConsentMeta = document.getElementById("clientEditConsentMeta");
+    dom.clientEditPrivacyNoticeMeta = document.getElementById("clientEditPrivacyNoticeMeta");
+
+    dom.clientEditPreferredEmployeeSelect = document.getElementById("clientEditPreferredEmployeeSelect");
+    dom.clientEditTopEmployee = document.getElementById("clientEditTopEmployee");
+    dom.clientEditTopService = document.getElementById("clientEditTopService");
+    dom.clientEditLastEmployee = document.getElementById("clientEditLastEmployee");
+
+    dom.clientEditHistoryBody = document.getElementById("clientEditHistoryBody");
+  }
+
+  function loadEmployeesFromTemplate() {
+    if (!dom.clientEmployeesData) {
+      state.employees = [];
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(dom.clientEmployeesData.textContent || "[]");
+      state.employees = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.warn("Nie udało się wczytać listy specjalistów:", error);
+      state.employees = [];
+    }
+  }
+
+  function populatePreferredEmployeeOptions() {
+    if (!dom.clientEditPreferredEmployeeSelect) return;
+
+    const currentValue = dom.clientEditPreferredEmployeeSelect.value || "";
+
+    dom.clientEditPreferredEmployeeSelect.innerHTML = `
+      <option value="">Brak preferencji</option>
+    `;
+
+    state.employees.forEach((employee) => {
+      const option = document.createElement("option");
+      option.value = String(employee.id ?? "");
+      option.textContent = employee.full_name || employee.name || `Specjalista #${employee.id}`;
+      dom.clientEditPreferredEmployeeSelect.appendChild(option);
+    });
+
+    dom.clientEditPreferredEmployeeSelect.value = currentValue;
+  }
+
+  function bindTableEvents() {
+    if (dom.searchInput) {
+      dom.searchInput.addEventListener("input", filterRows);
+    }
+
+    dom.sortButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        sortRows(button.dataset.sort || "", button.dataset.type || "text");
+      });
+    });
+
+    dom.clientEditButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        openClientEditModal(button);
+      });
+    });
+  }
+
+  function bindModalEvents() {
+    dom.clientEditCloseBtn?.addEventListener("click", closeClientEditModal);
+    dom.clientEditCancelBtn?.addEventListener("click", closeClientEditModal);
+
+    dom.clientEditCloseTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", closeClientEditModal);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        dom.clientEditModal?.classList.contains("is-open")
+      ) {
+        closeClientEditModal();
+      }
+    });
+  }
+
+  function bindFormPreviewEvents() {
+    dom.clientEditStatus?.addEventListener("change", updateStatusPreview);
+  }
+
+  function lockBodyScroll() {
+    document.body.style.overflow = "hidden";
+  }
+
+  function unlockBodyScroll() {
+    document.body.style.overflow = "";
+  }
+
+  function filterRows() {
+    const query = (dom.searchInput?.value || "").trim().toLowerCase();
+
+    dom.dataRows.forEach((row) => {
+      const searchText = (row.dataset.search || "").toLowerCase();
+      const isVisible = !query || searchText.includes(query);
+
+      row.style.display = isVisible ? "" : "none";
+
+      const notesRow = getNotesRow(row);
+      if (notesRow) {
+        notesRow.style.display = isVisible ? "" : "none";
+      }
+    });
+  }
+
+  function sortRows(sortKey, sortType) {
+    if (!sortKey || !dom.tableBody || !dom.dataRows.length) return;
+
+    if (state.currentSortKey === sortKey) {
+      state.currentSortDirection =
+        state.currentSortDirection === "asc" ? "desc" : "asc";
+    } else {
+      state.currentSortKey = sortKey;
+      state.currentSortDirection = "asc";
+      state.currentSortType = sortType || "text";
+    }
+
+    dom.dataRows.sort((rowA, rowB) => {
+      const valueA = getRowSortValue(rowA, state.currentSortKey);
+      const valueB = getRowSortValue(rowB, state.currentSortKey);
+
+      let result = compareSortValues(valueA, valueB, state.currentSortType);
+
+      if (state.currentSortDirection === "desc") {
+        result *= -1;
+      }
+
+      return result;
+    });
+
+    dom.dataRows.forEach((row) => {
+      getRowGroup(row).forEach((element) => {
+        dom.tableBody.appendChild(element);
+      });
+    });
+
+    updateSortButtonsUi();
+    filterRows();
+  }
+
+  function getRowSortValue(row, key) {
+    switch (key) {
+      case "id":
+        return Number(row.dataset.id || 0);
+      case "name":
+        return (row.dataset.name || "").trim();
+      case "phone":
+        return (row.dataset.phone || "").trim();
+      case "email":
+        return (row.dataset.email || "").trim();
+      case "last_booking":
+        return normalizeDateTimeForSort(row.dataset.lastBooking || "");
+      case "total_bookings":
+        return Number(row.dataset.totalBookings || 0);
+      case "status":
+        return buildStatusForSort(row);
+      default:
+        return "";
+    }
+  }
+
+  function buildStatusForSort(row) {
+    return (row.dataset.status || "").trim().toLowerCase();
+  }
+
+  function normalizeDateTimeForSort(value) {
+    if (!value) return "";
+    const raw = String(value).trim();
+    if (!raw) return "";
+    return raw.replace("T", " ");
+  }
+
+  function compareSortValues(valueA, valueB, type) {
+    if (type === "number") {
+      return Number(valueA || 0) - Number(valueB || 0);
+    }
+
+    return String(valueA || "").localeCompare(String(valueB || ""), "pl", {
+      numeric: true,
+      sensitivity: "base"
+    });
+  }
+
+  function getNotesRow(row) {
+    const nextRow = row.nextElementSibling;
+    return nextRow?.classList.contains("clients-notes-row") ? nextRow : null;
+  }
+
+  function getRowGroup(row) {
+    const group = [row];
+    const notesRow = getNotesRow(row);
+
+    if (notesRow) {
+      group.push(notesRow);
+    }
+
+    return group;
+  }
+
+  function updateSortButtonsUi() {
+    dom.sortButtons.forEach((button) => {
+      const isActive = button.dataset.sort === state.currentSortKey;
+      button.classList.toggle("is-active", isActive);
+      button.dataset.direction = isActive ? state.currentSortDirection : "";
+    });
+  }
+
+  async function openClientEditModal(button) {
+    if (!dom.clientEditModal || !dom.clientEditForm) return;
+
+    const clientId = button.dataset.clientId || "";
+    state.activeClientId = clientId || null;
+
+    fillBaseClientData(button);
+    resetAsyncSections();
+    setClientFormAction(clientId);
+
+    dom.clientEditModal.classList.add("is-open");
+    dom.clientEditModal.setAttribute("aria-hidden", "false");
+    lockBodyScroll();
+
+    window.setTimeout(() => {
+      dom.clientEditFullName?.focus({ preventScroll: true });
+    }, 120);
+
+    await loadClientDetails(clientId);
+  }
+
+  function closeClientEditModal() {
+    if (!dom.clientEditModal) return;
+
+    dom.clientEditModal.classList.remove("is-open");
+    dom.clientEditModal.setAttribute("aria-hidden", "true");
+    unlockBodyScroll();
+    state.activeClientId = null;
+  }
+
+  function setClientFormAction(clientId) {
+    if (!dom.clientEditForm) return;
+    dom.clientEditForm.action = `/admin/clients/${clientId}/update`;
+  }
+
+  function fillBaseClientData(button) {
+    const clientId = button.dataset.clientId || "";
+
+    if (dom.clientEditId) dom.clientEditId.value = clientId;
+    if (dom.clientEditIdPreview) dom.clientEditIdPreview.textContent = clientId || "—";
+
+    if (dom.clientEditStatus) {
+      dom.clientEditStatus.value = button.dataset.clientStatus || "standard";
+    }
+
+    if (dom.clientEditFullName) dom.clientEditFullName.value = button.dataset.fullName || "";
+    if (dom.clientEditPhone) dom.clientEditPhone.value = button.dataset.phone || "";
+    if (dom.clientEditEmail) dom.clientEditEmail.value = button.dataset.email || "";
+    if (dom.clientEditNotes) dom.clientEditNotes.value = button.dataset.notes || "";
+
+    if (dom.clientEditPhonePreview) {
+      dom.clientEditPhonePreview.textContent = button.dataset.phone || "—";
+    }
+
+    if (dom.clientEditEmailPreview) {
+      dom.clientEditEmailPreview.textContent = button.dataset.email || "—";
+    }
+
+    if (dom.clientEditTotalBookings) {
+      dom.clientEditTotalBookings.textContent = button.dataset.totalBookings || "0";
+    }
+
+    if (dom.clientEditLastBooking) {
+      dom.clientEditLastBooking.textContent = formatDateTimeForDisplay(button.dataset.lastBooking);
+    }
+
+    if (dom.clientEditCreatedAt) {
+      dom.clientEditCreatedAt.textContent = formatDateTimeForDisplay(button.dataset.createdAt);
+    }
+
+    if (dom.clientEditUpdatedAt) {
+      dom.clientEditUpdatedAt.textContent = formatDateTimeForDisplay(button.dataset.updatedAt);
+    }
+
+    updateStatusPreview();
+  }
+
+  function updateStatusPreview() {
+    if (!dom.clientEditStatusPreview || !dom.clientEditStatus) return;
+
+    const status = String(dom.clientEditStatus.value || "standard").toLowerCase();
+
+    switch (status) {
+      case "regular":
+        dom.clientEditStatusPreview.textContent = "Stały klient";
+        break;
+      case "new":
+        dom.clientEditStatusPreview.textContent = "Nowy";
+        break;
+      case "inactive":
+        dom.clientEditStatusPreview.textContent = "Nieaktywny";
+        break;
+      default:
+        dom.clientEditStatusPreview.textContent = "Standard";
+        break;
+    }
+  }
+
+  function resetAsyncSections() {
+    if (dom.clientEditActiveBookingsCount) dom.clientEditActiveBookingsCount.textContent = "0";
+    if (dom.clientEditCancelledBookingsCount) dom.clientEditCancelledBookingsCount.textContent = "0";
+
+    if (dom.clientEditConsentMeta) dom.clientEditConsentMeta.textContent = "Brak informacji";
+    if (dom.clientEditPrivacyNoticeMeta) dom.clientEditPrivacyNoticeMeta.textContent = "—";
+
+    if (dom.clientEditPrivacyConsentCheckbox) {
+        dom.clientEditPrivacyConsentCheckbox.checked = false;
+        }
+
+    if (dom.clientEditMarketingConsentCheckbox) {
+      dom.clientEditMarketingConsentCheckbox.checked = false;
+    }
+
+    if (dom.clientEditPreferredEmployeeSelect) {
+      dom.clientEditPreferredEmployeeSelect.value = "";
+    }
+
+    if (dom.clientEditTopEmployee) dom.clientEditTopEmployee.textContent = "—";
+    if (dom.clientEditTopService) dom.clientEditTopService.textContent = "—";
+    if (dom.clientEditLastEmployee) dom.clientEditLastEmployee.textContent = "—";
+
+    renderMergedHistory([], []);
+  }
+
+  async function loadClientDetails(clientId) {
+    if (!clientId) return;
+
+    try {
+      const response = await fetch(`/admin/clients/${clientId}/details`, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      if (!data?.client) return;
+
+      fillStats(data.stats || {});
+      fillConsentData(data.consents || {});
+      fillPreferences(data.preferences || {});
+
+      const activeBookings = Array.isArray(data.active_bookings) ? data.active_bookings : [];
+      const historyBookings = Array.isArray(data.history) ? data.history : [];
+
+      renderMergedHistory(activeBookings, historyBookings);
+    } catch (error) {
+      console.warn("Nie udało się pobrać szczegółów klienta:", error);
+    }
+  }
+
+  function fillStats(stats) {
+    if (dom.clientEditActiveBookingsCount) {
+      dom.clientEditActiveBookingsCount.textContent = stats.active_bookings ?? "0";
+    }
+
+    if (dom.clientEditCancelledBookingsCount) {
+      dom.clientEditCancelledBookingsCount.textContent = stats.cancelled_bookings ?? "0";
+    }
+  }
+
+  function fillConsentData(consents) {
+    if (dom.clientEditPrivacyNoticeMeta) {
+  dom.clientEditPrivacyNoticeMeta.textContent = consents.privacy_consent_at
+    ? formatDateTimeForDisplay(consents.privacy_consent_at)
+    : "—";
+}
+
+if (dom.clientEditPrivacyConsentCheckbox) {
+  dom.clientEditPrivacyConsentCheckbox.checked = !!consents.privacy_consent;
+}
+
+    if (dom.clientEditMarketingConsentCheckbox) {
+      dom.clientEditMarketingConsentCheckbox.checked = !!consents.marketing_consent;
+    }
+
+    if (dom.clientEditConsentMeta) {
+      dom.clientEditConsentMeta.textContent = buildConsentMetaText(consents);
+    }
+  }
+
+  function buildConsentMetaText(consents) {
+    const sourceMap = {
+      booking_form: "Formularz rezerwacji",
+      admin_manual: "Panel administratora"
+    };
+
+    const sourceLabel = consents.consent_source
+      ? sourceMap[consents.consent_source] || consents.consent_source
+      : "Brak informacji";
+
+    const privacyAt = consents.privacy_consent_at
+      ? formatDateTimeForDisplay(consents.privacy_consent_at)
+      : null;
+
+    const marketingAt = consents.marketing_consent_at
+      ? formatDateTimeForDisplay(consents.marketing_consent_at)
+      : null;
+
+    if (privacyAt && marketingAt) {
+      return `${sourceLabel} · RODO: ${privacyAt} · Marketing: ${marketingAt}`;
+    }
+
+    if (privacyAt) {
+      return `${sourceLabel} · RODO: ${privacyAt}`;
+    }
+
+    if (marketingAt) {
+      return `${sourceLabel} · Marketing: ${marketingAt}`;
+    }
+
+    return sourceLabel;
+  }
+
+  function fillPreferences(preferences) {
+    if (dom.clientEditPreferredEmployeeSelect) {
+      dom.clientEditPreferredEmployeeSelect.value = preferences.preferred_employee_id
+        ? String(preferences.preferred_employee_id)
+        : "";
+    }
+
+    if (dom.clientEditTopEmployee) {
+      dom.clientEditTopEmployee.textContent = preferences.top_employee || "—";
+    }
+
+    if (dom.clientEditTopService) {
+      dom.clientEditTopService.textContent = preferences.top_service || "—";
+    }
+
+    if (dom.clientEditLastEmployee) {
+      dom.clientEditLastEmployee.textContent = preferences.last_employee || "—";
+    }
+  }
+
+  function renderMergedHistory(activeBookings, historyBookings) {
+  if (!dom.clientEditHistoryBody) return;
+
+  const mergedRaw = [...activeBookings, ...historyBookings];
+  const dedupedMap = new Map();
+
+  mergedRaw.forEach((item) => {
+    const bookingId = String(item.id || "").trim();
+    const fallbackKey = [
+      item.booking_date || "",
+      item.booking_time || "",
+      item.service_name || "",
+      item.employee_name || "",
+      item.status || ""
+    ].join("|");
+
+    const uniqueKey = bookingId || fallbackKey;
+
+    if (!dedupedMap.has(uniqueKey)) {
+      dedupedMap.set(uniqueKey, item);
+    }
+  });
+
+  const merged = Array.from(dedupedMap.values());
+
+  if (!merged.length) {
+    dom.clientEditHistoryBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="client-history-empty">Brak historii wizyt i rezerwacji do wyświetlenia.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  merged.sort((a, b) => {
+    const dateA = `${a.booking_date || ""} ${a.booking_time || ""}`.trim();
+    const dateB = `${b.booking_date || ""} ${b.booking_time || ""}`.trim();
+    return dateB.localeCompare(dateA, "pl", { numeric: true });
+  });
+
+  dom.clientEditHistoryBody.innerHTML = merged
+    .map((item) => {
+      return `
+        <tr>
+          <td>${escapeHtml(formatDateForDisplay(item.booking_date))}</td>
+          <td>${escapeHtml(item.booking_time || "—")}</td>
+          <td>${escapeHtml(item.service_name || "—")}</td>
+          <td>${escapeHtml(item.employee_name || "—")}</td>
+          <td>${escapeHtml(mapBookingStatus(item.status))}</td>
+          <td class="client-history-note-cell">${escapeHtml(item.notes || "—")}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+  function mapBookingStatus(status) {
+    const value = String(status || "").toLowerCase();
+
+    switch (value) {
+      case "new":
+        return "Nowa";
+      case "confirmed":
+        return "Potwierdzona";
+      case "cancelled":
+        return "Anulowana";
+      case "completed":
+        return "Ukończona";
+      case "archived":
+        return "Archiwalna";
+      case "matched":
+        return "Dopasowano";
+      case "booked":
+        return "Zarezerwowano";
+      default:
+        return value || "—";
+    }
+  }
+
+  function formatDateForDisplay(value) {
+    if (!value) return "—";
+
+    const raw = String(value).trim();
+    if (!raw) return "—";
+
+    const datePart = raw.includes("T")
+      ? raw.split("T")[0]
+      : raw.split(" ")[0];
+
+    const parts = datePart.split("-");
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+      if (year && month && day) {
+        return `${day}.${month}.${year}`;
+      }
+    }
+
+    return raw;
+  }
+
+  function formatDateTimeForDisplay(value) {
+    if (!value) return "—";
+
+    const raw = String(value).trim();
+    if (!raw) return "—";
+
+    const normalized = raw.replace("T", " ");
+    const [datePart, timePart = ""] = normalized.split(" ");
+
+    const formattedDate = formatDateForDisplay(datePart);
+    if (!timePart) return formattedDate;
+
+    return `${formattedDate} ${timePart.slice(0, 5)}`;
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  window.refreshOpenClientCard = async function refreshOpenClientCard() {
+    if (!state.activeClientId) return;
+    if (!dom.clientEditModal?.classList.contains("is-open")) return;
+
+    await loadClientDetails(state.activeClientId);
+  };
+});
+</script>
+{% endblock %}
