@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potwierdzenie anulowania rezerwacji</title>
+
+  <style>
+    @font-face {
+      font-family: "LexendDecaLocal";
+      src: url("{{ url_for('static', filename='fonts/LexendDeca-Regular.ttf', _external=True) }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f5f7fb; font-family:'LexendDecaLocal', Arial, sans-serif; color:#18212f;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse; background-color:#f5f7fb; margin:0; padding:0;">
+    <tr>
+      <td align="center" style="padding:28px 14px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; max-width:620px; border-collapse:collapse; margin:0 auto;">
+
+          <tr>
+            <td style="padding:0 0 12px; text-align:center;">
+              <div style="font-size:11px; line-height:1.5; letter-spacing:0.16em; text-transform:uppercase; color:#7a8798; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                Potwierdzenie anulowania
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#ffffff; border:1px solid #e3e8f0; border-radius:12px; padding:30px 26px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;">
+
+                <tr>
+                  <td style="padding:0 0 16px;">
+                    <h1 style="margin:0; font-size:28px; line-height:1.2; font-weight:400; color:#132033; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Rezerwacja została anulowana
+                    </h1>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 20px;">
+                    <p style="margin:0; font-size:15px; line-height:1.75; color:#334155; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Potwierdzamy, że Twoja rezerwacja została skutecznie anulowana w systemie.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 24px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;">
+                      <tr>
+                        <td style="padding:0 0 10px; font-size:13px; line-height:1.6; color:#7a8798; width:140px; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          Klient
+                        </td>
+                        <td style="padding:0 0 10px; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          {{ data.client_name or "—" }}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:0 0 10px; font-size:13px; line-height:1.6; color:#7a8798; width:140px; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          Usługa
+                        </td>
+                        <td style="padding:0 0 10px; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          {{ data.service_name or "—" }}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:0 0 10px; font-size:13px; line-height:1.6; color:#7a8798; width:140px; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          Specjalista
+                        </td>
+                        <td style="padding:0 0 10px; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          {{ data.employee_name or "—" }}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:0 0 10px; font-size:13px; line-height:1.6; color:#7a8798; width:140px; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          Data
+                        </td>
+                        <td style="padding:0 0 10px; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          {{ data.booking_date or "—" }}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:0; font-size:13px; line-height:1.6; color:#7a8798; width:140px; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          Godzina
+                        </td>
+                        <td style="padding:0; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; vertical-align:top; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                          {{ data.booking_time or "—" }}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 18px;">
+                    <p style="margin:0; font-size:15px; line-height:1.75; color:#334155; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Jeśli chcesz umówić nowy termin, możesz ponownie skorzystać z systemu rezerwacji online lub skontaktować się bezpośrednio z salonem.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:18px 0 0; border-top:1px solid #edf1f6;">
+                    <p style="margin:0 0 4px; font-size:14px; line-height:1.6; color:#18212f; font-weight:400; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      {{ data.company_name or "Booking System" }}
+                    </p>
+                    <p style="margin:0; font-size:13px; line-height:1.7; color:#7a8798; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      {{ data.contact_email or "office@sddestonie.com" }}{% if data.contact_phone %} · {{ data.contact_phone }}{% endif %}
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:14px 8px 0; text-align:center;">
+              <p style="margin:0; font-size:12px; line-height:1.6; color:#8a94a6; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                Ta wiadomość została wygenerowana automatycznie przez system rezerwacji.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
