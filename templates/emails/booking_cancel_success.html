@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezerwacja anulowana</title>
+
+  <style>
+    @font-face {
+      font-family: "LexendDecaLocal";
+      src: url("{{ url_for('static', filename='fonts/LexendDeca-Regular.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: fallback;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f5f7fb;
+      color: #18212f;
+      font-family: "LexendDecaLocal", Arial, sans-serif;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: #ffffff;
+      border: 1px solid #e3e8f0;
+      border-radius: 14px;
+      padding: 34px 28px;
+      box-sizing: border-box;
+      text-align: center;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #7a8798;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 400;
+      color: #132033;
+    }
+
+    p {
+      margin: 0 0 16px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: #334155;
+    }
+
+    .summary {
+      margin: 24px 0;
+      padding: 18px 20px;
+      border: 1px solid #e8edf4;
+      border-radius: 12px;
+      background: #f8fafc;
+      text-align: left;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #7a8798;
+    }
+
+    .value {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #18212f;
+    }
+
+    .actions {
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 10px;
+      border: 1px solid #1f4ed8;
+      background: #1f4ed8;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      line-height: 1.2;
+      transition: 0.18s ease;
+    }
+
+    .btn:hover {
+      background: #ffffff;
+      color: #1f4ed8;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 26px 18px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="eyebrow">Anulowanie rezerwacji</div>
+
+      <h1>Rezerwacja została anulowana</h1>
+
+      <p>
+        Twoja rezerwacja została skutecznie anulowana. Status wizyty został zaktualizowany w systemie.
+      </p>
+
+      <div class="summary">
+        <div class="row">
+          <div class="label">Usługa</div>
+          <div class="value">{{ data.service_name or "—" }}</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Specjalista</div>
+          <div class="value">{{ data.employee_name or "—" }}</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Data</div>
+          <div class="value">{{ data.booking_date or "—" }}</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Godzina</div>
+          <div class="value">{{ data.booking_time or "—" }}</div>
+        </div>
+      </div>
+
+      <p>
+        Salon oraz przypisany specjalista otrzymali informację o anulowaniu. Jeśli chcesz, możesz ponownie dokonać rezerwacji w innym terminie.
+      </p>
+
+      <div class="actions">
+        <a href="{{ url_for('booking') }}" class="btn">Wróć do rezerwacji</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
