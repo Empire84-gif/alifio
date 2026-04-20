@@ -23,6 +23,10 @@
   --st-r: 2px;
 }
 
+/* =========================
+   BASE
+========================= */
+
 html,
 body,
 .page-wrap {
@@ -291,7 +295,7 @@ body {
 }
 
 /* =========================
-   FORM / INPUT BASE
+   GRID / FORM BASE
 ========================= */
 
 .settings-form-grid,
@@ -440,13 +444,16 @@ body {
   background-position: right 9px center;
 }
 
-#side_panels_interval {
+#side_panels_interval,
+#slot_interval_minutes {
   appearance: textfield;
   -moz-appearance: textfield;
 }
 
 #side_panels_interval::-webkit-outer-spin-button,
-#side_panels_interval::-webkit-inner-spin-button {
+#side_panels_interval::-webkit-inner-spin-button,
+#slot_interval_minutes::-webkit-outer-spin-button,
+#slot_interval_minutes::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -567,7 +574,7 @@ body {
   width: 100%;
   min-width: 0;
   min-height: 38px;
-  padding: 6px 8px;
+  padding: 6px 6px 6px 4px;
   border: 1px solid var(--st-border-2);
   border-radius: var(--st-r);
   background: var(--st-surface-3);
@@ -606,7 +613,7 @@ body {
 }
 
 /* =========================
-   SECTIONS
+   GENERIC SECTIONS
 ========================= */
 
 .booking-media-layout,
@@ -643,6 +650,29 @@ body {
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 3000 !important;
+  width: 100% !important;
+}
+
+.site-header,
+.site-header.is-scrolled {
+  transform: none !important;
+}
+
+.site-header::before,
+.site-header::after {
+  pointer-events: none;
 }
 
 /* =========================
@@ -701,12 +731,6 @@ body {
   max-width: 260px;
 }
 
-#view-wyglad .booking-media-upload-form .settings-form-row:last-of-type {
-  width: 900px !important;
-  max-width: 900px !important;
-  min-width: 750px !important;
-}
-
 .booking-media-upload-form .file-upload-ui {
   min-height: 34px !important;
   height: 34px !important;
@@ -723,6 +747,37 @@ body {
 .booking-media-upload-form .file-upload-name {
   font-size: 11.55px;
   line-height: 1;
+}
+
+#view-wyglad .booking-media-upload-form {
+  display: grid !important;
+  grid-template-columns: 180px minmax(0, 560px) auto !important;
+  align-items: end !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#view-wyglad .booking-media-upload-form .settings-form-row {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: unset !important;
+}
+
+#view-wyglad .booking-media-upload-form .booking-media-settings-submit {
+  margin-left: auto !important;
+  justify-content: flex-end !important;
+  align-self: end !important;
+}
+
+#view-wyglad .booking-media-upload-form .booking-media-settings-submit .settings-btn {
+  min-width: 170px !important;
+}
+
+#view-wyglad .booking-media-upload-form .file-upload-field,
+#view-wyglad .booking-media-upload-form .file-upload-ui {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .booking-media-divider,
@@ -1006,8 +1061,13 @@ body {
   word-break: break-word !important;
 }
 
-.employee-role-pill { order: 2; }
-.employee-status { order: 3; }
+.employee-role-pill {
+  order: 2;
+}
+
+.employee-status {
+  order: 3;
+}
 
 .employee-card-email {
   order: 4;
@@ -1222,9 +1282,17 @@ body {
   text-align: center !important;
 }
 
-.employee-editor-photo-stage {
+.employee-editor-photo-stage,
+.employee-editor-photo-preview {
   width: 220px;
   max-width: 100%;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.employee-editor-photo-stage {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .employee-editor-photo-preview {
@@ -1232,22 +1300,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 220px;
-  max-width: 100%;
   aspect-ratio: 1 / 1;
-  margin-left: auto !important;
-  margin-right: auto !important;
   overflow: hidden;
   border: 1px solid var(--st-border);
   border-radius: 50%;
   background: var(--st-surface-3);
   color: var(--st-text-4);
   font-size: 64px;
-}
-
-.employee-editor-photo-stage {
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 
 .employee-editor-photo-preview-img {
@@ -1462,6 +1521,24 @@ body {
   margin-bottom: 16px;
 }
 
+#view-dni .closed-days-form {
+  margin-top: 16px !important;
+}
+
+#view-dni .settings-form-grid.compact-grid {
+  grid-template-columns: 180px minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+#view-dni .settings-form-grid.compact-grid .settings-form-row:nth-child(2) {
+  max-width: 320px;
+}
+
+#view-dni .settings-form-grid.compact-grid .settings-submit-wrap {
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+}
+
 .closed-days-list-head {
   display: flex;
   align-items: center;
@@ -1573,6 +1650,29 @@ body {
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+
+#view-bezpieczenstwo .settings-security-text {
+  margin-top: 18px !important;
+  margin-bottom: 6px !important;
+}
+
+#view-bezpieczenstwo .settings-security-form {
+  grid-template-columns: 320px 320px 1fr !important;
+  align-items: end !important;
+  gap: 10px !important;
+}
+
+#view-bezpieczenstwo .settings-security-form .settings-submit-wrap {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: end !important;
+  width: 100% !important;
+  margin-left: auto !important;
+}
+
+#view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn {
+  min-width: 170px !important;
 }
 
 .settings-security-password-actions {
@@ -1749,29 +1849,6 @@ body {
 }
 
 /* =========================
-   HEADER
-========================= */
-
-.site-header {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 3000 !important;
-  width: 100% !important;
-}
-
-.site-header,
-.site-header.is-scrolled {
-  transform: none !important;
-}
-
-.site-header::before,
-.site-header::after {
-  pointer-events: none;
-}
-
-/* =========================
    KONTO PERSONELU
 ========================= */
 
@@ -1789,7 +1866,7 @@ body {
 }
 
 #view-konta-pracownikow .staff-account-create-form {
-  margin: 0;
+  margin: 17px 0 0;
 }
 
 #view-konta-pracownikow .staff-account-create-grid {
@@ -1877,7 +1954,7 @@ body {
 
 #view-konta-pracownikow .staff-account-name {
   min-width: 0;
-  margin: 6px 0 6px;
+  margin: 6px 0;
   font-family: "MonomakhLocal", serif !important;
   color: var(--st-text) !important;
   font-size: 20px !important;
@@ -2027,71 +2104,13 @@ body {
     width: 100%;
     justify-content: flex-end;
   }
-}
 
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 767px) {
-  #view-konta-pracownikow .staff-account-create-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  #view-wyglad .booking-media-upload-form {
+    grid-template-columns: 1fr !important;
   }
 
-  #view-konta-pracownikow .staff-account-create-submit {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  #view-konta-pracownikow .staff-account-create-submit .settings-btn {
-    width: 100%;
-    min-width: 0;
-  }
-
-  #view-konta-pracownikow .staff-account-name {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 17px !important;
-    text-align: center;
-  }
-
-  #view-konta-pracownikow .staff-account-meta {
-    justify-content: center;
-    text-align: center;
-  }
-
-  #view-konta-pracownikow .staff-account-actions {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  #view-konta-pracownikow .staff-account-password-form {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px;
-  }
-
-  #view-konta-pracownikow .staff-account-password-form .settings-form-row {
-    max-width: 100%;
-  }
-
-  #view-konta-pracownikow .staff-account-password-form .settings-btn-secondary {
-    min-width: 140px;
-  }
-
-  #view-konta-pracownikow .staff-account-toggle-form {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  #view-konta-pracownikow .staff-account-toggle-form .settings-btn {
-    width: 100%;
-    min-width: 0;
-  }
-
-  #view-konta-pracownikow .staff-account-delete-form {
-    top: 8px;
-    right: 8px;
+  #view-wyglad .booking-media-upload-form .booking-media-settings-submit {
+    justify-content: flex-end !important;
   }
 }
 
@@ -2150,7 +2169,10 @@ body {
   #view-firma .settings-submit-wrap,
   #view-wyglad .booking-media-settings-submit,
   #view-wyglad .booking-media-upload-form .booking-media-settings-submit,
-  .staff-accounts-submit-wrap {
+  .staff-accounts-submit-wrap,
+  #view-dni .settings-form-grid.compact-grid .settings-submit-wrap,
+  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap,
+  #view-bezpieczenstwo .settings-security-password-actions {
     width: 100% !important;
     display: flex !important;
     justify-content: stretch !important;
@@ -2161,9 +2183,17 @@ body {
   #view-firma .settings-submit-wrap .settings-btn,
   #view-wyglad .booking-media-settings-submit .settings-btn,
   #view-wyglad .booking-media-upload-form .booking-media-settings-submit .settings-btn,
-  .staff-accounts-submit-wrap .settings-btn {
+  .staff-accounts-submit-wrap .settings-btn,
+  #view-dni .settings-form-grid.compact-grid .settings-submit-wrap .settings-btn,
+  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn,
+  #view-bezpieczenstwo .settings-security-password-actions .settings-btn {
     width: 100% !important;
     min-width: 0 !important;
+  }
+
+  #view-wyglad .booking-media-upload-form .booking-media-settings-submit {
+    width: 100% !important;
+    justify-content: stretch !important;
   }
 
   .employee-card-top,
@@ -2189,6 +2219,11 @@ body {
     width: 100%;
     margin-top: 2px;
     text-align: center;
+  }
+
+  #view-pracownicy .employees-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 
   #view-pracownicy .employee-role-pill,
@@ -2278,6 +2313,276 @@ body {
     padding: 0 8px !important;
     min-height: 24px !important;
     font-size: 8.8px !important;
+  }
+
+  #view-pracownicy > form .settings-form-grid.staff-grid {
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+  }
+
+  #view-pracownicy > form .settings-form-row {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #view-pracownicy > form .settings-submit-wrap {
+    grid-column: auto !important;
+    width: 100% !important;
+    justify-content: stretch !important;
+    margin-top: 12px !important;
+  }
+
+  #view-pracownicy > form .settings-submit-wrap .settings-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #view-pracownicy .employee-editor-card {
+    padding: 10px !important;
+  }
+
+  #view-pracownicy .employee-editor-layout {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  #view-pracownicy .employee-editor-main,
+  #view-pracownicy .employee-editor-side {
+    gap: 12px !important;
+  }
+
+  #view-pracownicy .employee-editor-section {
+    padding: 12px !important;
+  }
+
+  #view-pracownicy .employee-editor-basic-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  #view-pracownicy .employee-editor-basic-left,
+  #view-pracownicy .employee-editor-basic-right {
+    width: 100% !important;
+  }
+
+  #view-pracownicy .employee-editor-basic-right .settings-form-row,
+  #view-pracownicy .employee-editor-basic-right .settings-form-row input,
+  #view-pracownicy .employee-editor-basic-right .settings-form-row select {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .employee-editor-day-row {
+    grid-template-columns: 1fr auto !important;
+    align-items: end !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .employee-editor-day-toggle {
+    min-height: 34px !important;
+    font-size: 10.5px !important;
+  }
+
+  .employee-editor-day-time {
+    grid-template-columns: repeat(2, 92px) !important;
+    justify-content: end !important;
+    gap: 6px !important;
+  }
+
+  .employee-editor-day-time .settings-form-row label {
+    margin-bottom: 3px !important;
+    font-size: 7.35px !important;
+  }
+
+  .employee-editor-day-time .settings-form-row input {
+    width: 92px !important;
+    min-width: 92px !important;
+    max-width: 92px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 8px !important;
+    font-size: 10.5px !important;
+  }
+
+  .employee-editor-basic-left {
+    display: block !important;
+  }
+
+  .employee-editor-photo-row label {
+    display: block !important;
+    margin-bottom: 6px !important;
+    text-align: left !important;
+  }
+
+  .employee-editor-photo-tools {
+    justify-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+  }
+
+  .employee-editor-photo-stage,
+  .employee-editor-photo-preview {
+    width: 220px !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  #view-pracownicy .employee-editor-photo-stage,
+  #view-pracownicy .employee-editor-photo-preview {
+    width: 180px !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .employee-editor-photo-controls {
+    display: grid !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
+  }
+
+  #view-pracownicy .employee-editor-photo-controls {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .employee-editor-photo-controls .file-upload-field,
+  .employee-editor-photo-controls .file-upload-ui {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .employee-editor-photo-controls .file-upload-ui {
+    min-height: 34px !important;
+    height: 34px !important;
+    padding: 4px 8px !important;
+  }
+
+  .employee-editor-photo-controls .file-upload-btn {
+    min-height: 22px !important;
+    height: 22px !important;
+    padding: 0 1px !important;
+    font-size: 9.45px !important;
+  }
+
+  .employee-editor-photo-controls .file-upload-name {
+    line-height: 1 !important;
+    text-align: left !important;
+  }
+
+  #view-pracownicy .employee-editor-week {
+    gap: 10px !important;
+  }
+
+  #view-pracownicy .employee-editor-day-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    border: 1px solid var(--st-border) !important;
+    background: var(--st-surface) !important;
+  }
+
+  #view-pracownicy .employee-editor-day-main {
+    width: 100% !important;
+  }
+
+  #view-pracownicy .employee-editor-day-toggle {
+    width: 100% !important;
+    min-height: 30px !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time {
+    grid-template-columns: 1fr 1fr !important;
+    justify-content: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time .settings-form-row,
+  #view-pracownicy .employee-editor-day-time .settings-form-row input {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .employee-timeoff-item-top {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .employee-timeoff-item-main {
+    min-width: 0 !important;
+    flex: none !important;
+  }
+
+  .employee-timeoff-item-right {
+    display: contents !important;
+  }
+
+  .employee-timeoff-item-type {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--st-text-4) !important;
+    font-size: 9px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    justify-self: start !important;
+    align-self: center !important;
+  }
+
+  .employee-timeoff-delete-btn {
+    justify-self: end !important;
+    align-self: center !important;
+  }
+
+  .employee-timeoff-form-grid .settings-submit-wrap {
+    justify-content: flex-end !important;
+  }
+
+  .employee-timeoff-form-grid .settings-submit-wrap .settings-btn {
+    width: auto !important;
+    min-width: 150px !important;
+  }
+
+  #view-pracownicy .employee-timeoff-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  #view-pracownicy .employee-timeoff-note-row {
+    grid-column: auto !important;
+  }
+
+  #view-pracownicy .employee-timeoff-form-grid .settings-submit-wrap {
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  #view-pracownicy .employee-timeoff-form-grid .settings-submit-wrap .settings-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .employee-editor-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+  }
+
+  .employee-editor-actions .settings-btn,
+  .employee-editor-actions .settings-btn-secondary,
+  #view-pracownicy .employee-editor-actions .settings-btn,
+  #view-pracownicy .employee-editor-actions .settings-btn-secondary {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
   .side-image-card {
@@ -2377,185 +2682,27 @@ body {
     flex: 0 0 auto !important;
   }
 
-  #view-pracownicy > form .settings-form-grid.staff-grid {
+  #view-dni .settings-form-grid.compact-grid.closed-days-form {
     grid-template-columns: 1fr !important;
-    align-items: stretch !important;
-  }
-
-  #view-pracownicy > form .settings-form-row {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-pracownicy > form .settings-submit-wrap {
-    grid-column: auto !important;
-    width: 100% !important;
-    justify-content: stretch !important;
-    margin-top: 12px !important;
-  }
-
-  #view-pracownicy > form .settings-submit-wrap .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .employee-editor-day-row {
-    grid-template-columns: 1fr auto !important;
-    align-items: end !important;
-    gap: 8px !important;
-    padding: 0 !important;
-    border: none !important;
-    background: transparent !important;
-  }
-
-  .employee-editor-day-toggle {
-    min-height: 34px !important;
-    font-size: 10.5px !important;
-  }
-
-  .employee-editor-day-time {
-    grid-template-columns: repeat(2, 92px) !important;
-    justify-content: end !important;
-    gap: 6px !important;
-  }
-
-  .employee-editor-day-time .settings-form-row label {
-    margin-bottom: 3px !important;
-    font-size: 7.35px !important;
-  }
-
-  .employee-editor-day-time .settings-form-row input {
-    width: 92px !important;
-    min-width: 92px !important;
-    max-width: 92px !important;
-    height: 30px !important;
-    min-height: 30px !important;
-    padding: 0 8px !important;
-    font-size: 10.5px !important;
-  }
-
-  .employee-editor-basic-left {
-    display: block !important;
-  }
-
-  .employee-editor-photo-row label {
-    display: block !important;
-    margin-bottom: 6px !important;
-    text-align: left !important;
-  }
-
-  .employee-editor-photo-tools {
-    justify-items: center !important;
-    text-align: center !important;
     gap: 10px !important;
   }
 
-  .employee-editor-photo-stage,
-  .employee-editor-photo-preview {
-    width: 220px !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-  }
-
-  .employee-editor-photo-controls {
-    display: grid !important;
-    gap: 10px !important;
-    width: 100% !important;
-    max-width: 340px !important;
-    margin: 0 auto !important;
-  }
-
-  .employee-editor-photo-controls .file-upload-field,
-  .employee-editor-photo-controls .file-upload-ui {
+  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-form-row {
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  .employee-editor-photo-controls .file-upload-ui {
-    min-height: 34px !important;
-    height: 34px !important;
-    padding: 4px 8px !important;
-  }
-
-  .employee-editor-photo-controls .file-upload-btn {
-    min-height: 22px !important;
-    height: 22px !important;
-    padding: 0 8px !important;
-    font-size: 9.45px !important;
-  }
-
-  .employee-editor-photo-controls .file-upload-name {
-    line-height: 1 !important;
-    text-align: left !important;
-  }
-
-  .employee-timeoff-item-top {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto auto !important;
-    align-items: center !important;
-    gap: 8px !important;
-  }
-
-  .employee-timeoff-item-main {
-    min-width: 0 !important;
-    flex: none !important;
-  }
-
-  .employee-timeoff-item-right {
-    display: contents !important;
-  }
-
-  .employee-timeoff-item-type {
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    color: var(--st-text-4) !important;
-    font-size: 9px !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    justify-self: start !important;
-    align-self: center !important;
-  }
-
-  .employee-timeoff-delete-btn {
-    justify-self: end !important;
-    align-self: center !important;
-  }
-
-  .employee-timeoff-form-grid .settings-submit-wrap {
-    justify-content: flex-end !important;
-  }
-
-  .employee-timeoff-form-grid .settings-submit-wrap .settings-btn {
-    width: auto !important;
-    min-width: 150px !important;
-  }
-
-  .employee-editor-actions {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    margin-top: 14px !important;
-  }
-
-  .employee-editor-actions .settings-btn,
-  .employee-editor-actions .settings-btn-secondary {
+  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-form-row input {
     width: 100% !important;
-    min-width: 0 !important;
   }
 
-  #view-dni .settings-form-grid.compact-grid .settings-submit-wrap,
-  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap,
-  #view-bezpieczenstwo .settings-security-password-actions {
+  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-submit-wrap {
     width: 100% !important;
-    display: flex !important;
+    margin-left: 0 !important;
     justify-content: stretch !important;
   }
 
-  #view-dni .settings-form-grid.compact-grid .settings-submit-wrap .settings-btn,
-  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn,
-  #view-bezpieczenstwo .settings-security-password-actions .settings-btn {
+  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-submit-wrap .settings-btn {
     width: 100% !important;
     min-width: 0 !important;
   }
@@ -2567,12 +2714,61 @@ body {
     color: #ffffff !important;
   }
 
-  #view-bezpieczenstwo .settings-security-password-actions {
+  #view-bezpieczenstwo .settings-security-form {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
     margin-top: 12px !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-form .settings-form-row {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-form .settings-form-row input,
+  #view-bezpieczenstwo .settings-security-form .settings-security-static-field {
+    width: 100% !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap {
+    width: 100% !important;
+    margin-left: 0 !important;
+    justify-content: stretch !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-password-actions {
+    width: 100% !important;
+    justify-content: stretch !important;
+    margin-top: 12px !important;
+  }
+
+  #view-bezpieczenstwo .settings-security-password-actions .settings-btn {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
   #view-bezpieczenstwo .settings-security-title {
     margin-top: 15px !important;
+  }
+
+  #view-konta-pracownikow .staff-account-create-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  #view-konta-pracownikow .staff-account-create-submit {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  #view-konta-pracownikow .staff-account-create-submit .settings-btn {
+    width: 100%;
+    min-width: 0;
   }
 
   .staff-account-card {
@@ -2588,7 +2784,8 @@ body {
     text-align: center !important;
   }
 
-  .staff-account-meta {
+  .staff-account-meta,
+  #view-konta-pracownikow .staff-account-meta {
     flex-wrap: wrap;
     justify-content: center;
     white-space: normal;
@@ -2617,6 +2814,10 @@ body {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
+  }
+
+  #view-konta-pracownikow .staff-account-password-form .settings-form-row {
+    max-width: 100%;
   }
 
   .staff-account-password-form .settings-btn-secondary,
@@ -2669,306 +2870,6 @@ body {
 
   .nav-drawer {
     z-index: 4999 !important;
-  }
-}
-
-/* ========================================
-   WYGLĄD STRONY REZERWACJI — FORMULARZ UPLOADU
-======================================== */
-
-#view-wyglad .booking-media-upload-form {
-  display: grid !important;
-  grid-template-columns: 180px minmax(0, 560px) auto !important;
-  align-items: end !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-#view-wyglad .booking-media-upload-form .settings-form-row {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  flex: unset !important;
-}
-
-#view-wyglad .booking-media-upload-form .booking-media-settings-submit {
-  margin-left: auto !important;
-  justify-content: flex-end !important;
-  align-self: end !important;
-}
-
-#view-wyglad .booking-media-upload-form .booking-media-settings-submit .settings-btn {
-  min-width: 170px !important;
-}
-
-#view-wyglad .booking-media-upload-form .file-upload-field,
-#view-wyglad .booking-media-upload-form .file-upload-ui {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-@media (max-width: 1180px) {
-  #view-wyglad .booking-media-upload-form {
-    grid-template-columns: 1fr !important;
-  }
-
-  #view-wyglad .booking-media-upload-form .booking-media-settings-submit {
-    justify-content: flex-end !important;
-  }
-}
-
-@media (max-width: 767px) {
-  #view-wyglad .booking-media-upload-form .booking-media-settings-submit {
-    width: 100% !important;
-    justify-content: stretch !important;
-  }
-
-  #view-wyglad .booking-media-upload-form .booking-media-settings-submit .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-}
-
-#slot_interval_minutes {
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-#slot_interval_minutes::-webkit-outer-spin-button,
-#slot_interval_minutes::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-#view-konta-pracownikow .staff-account-create-form {
-  margin-top: 17px;
-}
-
-#view-dni .settings-form-grid.compact-grid {
-  grid-template-columns: 180px minmax(0, 1fr) auto;
-  align-items: end;
-}
-
-#view-dni .settings-form-grid.compact-grid .settings-form-row:nth-child(2) {
-  max-width: 320px;
-}
-
-#view-dni .settings-form-grid.compact-grid .settings-submit-wrap {
-  justify-content: flex-end !important;
-  margin-left: auto !important;
-}
-
-#view-bezpieczenstwo .settings-security-text {
-  margin-top: 18px !important;
-  margin-bottom: 6px !important;
-}
-
-#view-bezpieczenstwo .settings-security-form {
-  grid-template-columns: 320px 320px 1fr !important;
-  align-items: end !important;
-  gap: 10px !important;
-}
-
-#view-bezpieczenstwo .settings-security-form .settings-submit-wrap {
-  display: flex !important;
-  justify-content: flex-end !important;
-  align-items: end !important;
-  width: 100% !important;
-  margin-left: auto !important;
-}
-
-#view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn {
-  min-width: 170px !important;
-}
-
-#view-dni .closed-days-form {
-  margin-top: 16px !important;
-}
-
-
-@media (max-width: 767px) {
-  #view-dni .settings-form-grid.compact-grid.closed-days-form {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-form-row {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-form-row input {
-    width: 100% !important;
-  }
-
-  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-submit-wrap {
-    width: 100% !important;
-    margin-left: 0 !important;
-    justify-content: stretch !important;
-  }
-
-  #view-dni .settings-form-grid.compact-grid.closed-days-form .settings-submit-wrap .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-}
-
-@media (max-width: 767px) {
-  #view-bezpieczenstwo .settings-security-form {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-    margin-top: 12px !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-form .settings-form-row {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-form .settings-form-row input,
-  #view-bezpieczenstwo .settings-security-form .settings-security-static-field {
-    width: 100% !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap {
-    width: 100% !important;
-    margin-left: 0 !important;
-    justify-content: stretch !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-form .settings-submit-wrap .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-password-actions {
-    width: 100% !important;
-    justify-content: stretch !important;
-  }
-
-  #view-bezpieczenstwo .settings-security-password-actions .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-}
-
-@media (max-width: 767px) {
-  #view-pracownicy .employees-cards-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-}
-
-@media (max-width: 767px) {
-  #view-pracownicy .employee-editor-card {
-    padding: 10px !important;
-  }
-
-  #view-pracownicy .employee-editor-layout {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-
-  #view-pracownicy .employee-editor-main,
-  #view-pracownicy .employee-editor-side {
-    gap: 12px !important;
-  }
-
-  #view-pracownicy .employee-editor-section {
-    padding: 12px !important;
-  }
-
-  #view-pracownicy .employee-editor-basic-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-
-  #view-pracownicy .employee-editor-basic-left,
-  #view-pracownicy .employee-editor-basic-right {
-    width: 100% !important;
-  }
-
-  #view-pracownicy .employee-editor-basic-right .settings-form-row,
-  #view-pracownicy .employee-editor-basic-right .settings-form-row input,
-  #view-pracownicy .employee-editor-basic-right .settings-form-row select {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-pracownicy .employee-editor-photo-stage,
-  #view-pracownicy .employee-editor-photo-preview {
-    width: 180px !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-  }
-
-  #view-pracownicy .employee-editor-photo-controls {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-pracownicy .employee-editor-week {
-    gap: 10px !important;
-  }
-
-  #view-pracownicy .employee-editor-day-row {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    padding: 10px !important;
-    border: 1px solid var(--st-border) !important;
-    background: var(--st-surface) !important;
-  }
-
-  #view-pracownicy .employee-editor-day-main {
-    width: 100% !important;
-  }
-
-  #view-pracownicy .employee-editor-day-toggle {
-    width: 100% !important;
-    min-height: 30px !important;
-  }
-
-  #view-pracownicy .employee-editor-day-time {
-    grid-template-columns: 1fr 1fr !important;
-    justify-content: stretch !important;
-    gap: 8px !important;
-    width: 100% !important;
-  }
-
-  #view-pracownicy .employee-editor-day-time .settings-form-row,
-  #view-pracownicy .employee-editor-day-time .settings-form-row input {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #view-pracownicy .employee-timeoff-form-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  #view-pracownicy .employee-timeoff-note-row {
-    grid-column: auto !important;
-  }
-
-  #view-pracownicy .employee-timeoff-form-grid .settings-submit-wrap {
-    width: 100% !important;
-    justify-content: stretch !important;
-  }
-
-  #view-pracownicy .employee-timeoff-form-grid .settings-submit-wrap .settings-btn {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  #view-pracownicy .employee-editor-actions {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-
-  #view-pracownicy .employee-editor-actions .settings-btn,
-  #view-pracownicy .employee-editor-actions .settings-btn-secondary {
-    width: 100% !important;
-    min-width: 0 !important;
   }
 }
 </style>
