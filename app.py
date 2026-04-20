@@ -865,6 +865,30 @@ def get_weekday_key(date_str: str) -> str:
 def normalize_time_value(value: str | None) -> str:
     return (value or "").strip()
 
+
+def normalize_text_date_to_db(value: str | None) -> str:
+    value = (value or "").strip()
+    if not value:
+        return ""
+
+    try:
+        return datetime.strptime(value, "%d.%m.%Y").strftime("%Y-%m-%d")
+    except ValueError:
+        return ""
+
+
+def normalize_text_time_value(value: str | None) -> str:
+    value = (value or "").strip()
+    if not value:
+        return ""
+
+    try:
+        return datetime.strptime(value, "%H:%M").strftime("%H:%M")
+    except ValueError:
+        return ""
+    
+
+
 def delete_static_file(relative_path: str | None):
     if not relative_path:
         return
@@ -3047,7 +3071,6 @@ def update_employee_schedule():
 
     conn = get_connection()
     cursor = conn.cursor()
-
     weekday_keys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
     try:
@@ -3057,8 +3080,7 @@ def update_employee_schedule():
 
             employee_name = (request.form.get("employee_name") or "").strip()
             employee_email = (request.form.get("employee_email") or "").strip()
-            active_value = request.form.get("active", "1")
-            active = 1 if str(active_value) == "1" else 0
+            active = 1 if str(request.form.get("active", "1")) == "1" else 0
 
             remove_employee_photo = (request.form.get("remove_employee_photo") or "0").strip()
             cropped_employee_photo_data = (request.form.get("cropped_employee_photo_data") or "").strip()
@@ -3095,7 +3117,7 @@ def update_employee_schedule():
                     employee_name,
                     employee_email or None,
                     active,
-                    employee_id
+                    employee_id,
                 )
             )
 
@@ -3195,8 +3217,8 @@ def update_employee_schedule():
 
             for day_key in weekday_keys:
                 enabled = 1 if request.form.get(f"{day_key}_enabled") else 0
-                start_time = (request.form.get(f"{day_key}_start") or "").strip()
-                end_time = (request.form.get(f"{day_key}_end") or "").strip()
+                start_time = normalize_text_time_value(request.form.get(f"{day_key}_start"))
+                end_time = normalize_text_time_value(request.form.get(f"{day_key}_end"))
 
                 if enabled:
                     cursor.execute(
@@ -3215,7 +3237,7 @@ def update_employee_schedule():
                             day_key,
                             1,
                             start_time or None,
-                            end_time or None
+                            end_time or None,
                         )
                     )
                 else:
@@ -3237,12 +3259,12 @@ def update_employee_schedule():
             flash("Zapisano dane pracownika.", "success")
 
         elif time_off_action == "add_vacation":
-            date_from = (request.form.get("vacation_date_from") or "").strip()
-            date_to = (request.form.get("vacation_date_to") or "").strip()
+            date_from = normalize_text_date_to_db(request.form.get("vacation_date_from"))
+            date_to = normalize_text_date_to_db(request.form.get("vacation_date_to"))
             note = (request.form.get("vacation_note") or "").strip()
 
             if not date_from or not date_to:
-                flash("Podaj zakres dat dla urlopu.", "error")
+                flash("Podaj poprawny zakres dat dla urlopu w formacie DD.MM.YYYY.", "error")
             else:
                 cursor.execute(
                     """
@@ -3261,12 +3283,12 @@ def update_employee_schedule():
                 flash("Dodano urlop pracownika.", "success")
 
         elif time_off_action == "add_sick_leave":
-            date_from = (request.form.get("sick_date_from") or "").strip()
-            date_to = (request.form.get("sick_date_to") or "").strip()
+            date_from = normalize_text_date_to_db(request.form.get("sick_date_from"))
+            date_to = normalize_text_date_to_db(request.form.get("sick_date_to"))
             note = (request.form.get("sick_note") or "").strip()
 
             if not date_from or not date_to:
-                flash("Podaj zakres dat dla chorobowego.", "error")
+                flash("Podaj poprawny zakres dat dla chorobowego w formacie DD.MM.YYYY.", "error")
             else:
                 cursor.execute(
                     """
@@ -3313,20 +3335,20 @@ def update_employee_schedule():
                 flash("Usunięto chorobowe.", "success")
 
         elif time_off_action == "add_schedule_exception":
-            exception_date = (request.form.get("exception_date") or "").strip()
+            exception_date = normalize_text_date_to_db(request.form.get("exception_date"))
             exception_type = (request.form.get("exception_type") or "").strip()
-            exception_start_time = (request.form.get("exception_start_time") or "").strip()
-            exception_end_time = (request.form.get("exception_end_time") or "").strip()
+            exception_start_time = normalize_text_time_value(request.form.get("exception_start_time"))
+            exception_end_time = normalize_text_time_value(request.form.get("exception_end_time"))
             exception_note = (request.form.get("exception_note") or "").strip()
 
             if not exception_date:
-                flash("Podaj datę wyjątkowego dnia.", "error")
+                flash("Podaj poprawną datę wyjątkowego dnia w formacie DD.MM.YYYY.", "error")
 
             elif exception_type not in ["custom_hours", "day_off"]:
                 flash("Nieprawidłowy rodzaj wyjątku.", "error")
 
             elif exception_type == "custom_hours" and (not exception_start_time or not exception_end_time):
-                flash("Podaj godziny dla niestandardowego dnia pracy.", "error")
+                flash("Podaj poprawne godziny dla niestandardowego dnia pracy w formacie HH:MM.", "error")
 
             else:
                 is_day_off = 1 if exception_type == "day_off" else 0
@@ -3357,7 +3379,7 @@ def update_employee_schedule():
                         is_day_off,
                         start_time,
                         end_time,
-                        exception_note or None
+                        exception_note or None,
                     )
                 )
                 conn.commit()
