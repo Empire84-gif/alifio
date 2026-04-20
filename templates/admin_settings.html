@@ -2465,7 +2465,7 @@ body {
   .employee-editor-photo-controls .file-upload-btn {
     min-height: 22px !important;
     height: 22px !important;
-    padding: 0 1px !important;
+    padding: 0 6px !important;
     font-size: 9.45px !important;
   }
 
@@ -2870,6 +2870,68 @@ body {
 
   .nav-drawer {
     z-index: 4999 !important;
+  }
+}
+
+
+@media (max-width: 767px) {
+  #view-pracownicy .employee-editor-day-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    border: 1px solid var(--st-border) !important;
+    background: var(--st-surface) !important;
+  }
+
+  #view-pracownicy .employee-editor-day-main {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #view-pracownicy .employee-editor-day-toggle {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 30px !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-content: stretch !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time .settings-form-row {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time .settings-form-row label {
+    margin-bottom: 3px !important;
+    font-size: 7.35px !important;
+  }
+
+  #view-pracownicy .employee-editor-day-time .settings-form-row input {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    font-size: 10.5px !important;
+    box-sizing: border-box !important;
+  }
+
+  #view-pracownicy .employee-editor-section,
+  #view-pracownicy .employee-editor-layout,
+  #view-pracownicy .employee-editor-main,
+  #view-pracownicy .employee-editor-side,
+  #view-pracownicy .employee-editor-week {
+    min-width: 0 !important;
   }
 }
 </style>
