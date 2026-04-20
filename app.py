@@ -106,10 +106,18 @@ from urllib.parse import urlparse
 
 UPLOAD_EMPLOYEES_DIR = os.path.join("static", "images")
 UPLOAD_BOOKING_SIDE_IMAGES_DIR = os.path.join("static", "uploads", "booking_side_images")
+
 B2_ENDPOINT = os.getenv("B2_ENDPOINT", "").strip()
 B2_KEY_ID = os.getenv("B2_KEY_ID", "").strip()
 B2_APPLICATION_KEY = os.getenv("B2_APPLICATION_KEY", "").strip()
 B2_BUCKET_NAME = os.getenv("B2_BUCKET_NAME", "").strip()
+
+print("B2_ENDPOINT exists =", bool(B2_ENDPOINT))
+print("B2_KEY_ID exists =", bool(B2_KEY_ID))
+print("B2_APPLICATION_KEY exists =", bool(B2_APPLICATION_KEY))
+print("B2_BUCKET_NAME exists =", bool(B2_BUCKET_NAME))
+print("B2 configured =", all([B2_ENDPOINT, B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME]))
+
 
 # =========================================================
 # APP
