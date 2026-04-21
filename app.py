@@ -2034,7 +2034,8 @@ def booking():
             "employee_id": row["employee_id"],
             "employee_name": row["employee_name"],
             "employee_role": row["employee_role"] or "",
-            "employee_photo_path": row["employee_photo_path"] or ""
+            "employee_photo_path": row["employee_photo_path"] or "",
+            "employee_photo_url": media_url(row["employee_photo_path"]) if row["employee_photo_path"] else ""
         })
 
     business_id = 1
@@ -2042,8 +2043,16 @@ def booking():
     if settings and "business_id" in settings.keys() and settings["business_id"]:
         business_id = settings["business_id"]
 
-    booking_left_images = get_booking_side_images(business_id=business_id, side="left", only_active=True)
-    booking_right_images = get_booking_side_images(business_id=business_id, side="right", only_active=True)
+    booking_left_images = get_booking_side_images(
+        business_id=business_id,
+        side="left",
+        only_active=True
+    )
+    booking_right_images = get_booking_side_images(
+        business_id=business_id,
+        side="right",
+        only_active=True
+    )
 
     booking_left_image = booking_left_images[0] if booking_left_images else None
     booking_right_image = booking_right_images[0] if booking_right_images else None
@@ -3163,7 +3172,6 @@ def update_employee_schedule():
 
     try:
         if time_off_action == "save_schedule":
-
             employee_name = (request.form.get("employee_name") or "").strip()
             employee_email = (request.form.get("employee_email") or "").strip()
             active = 1 if str(request.form.get("active", "1")) == "1" else 0
@@ -3191,7 +3199,7 @@ def update_employee_schedule():
                 flash("Nie znaleziono pracownika.", "error")
                 return redirect(url_for("admin_settings"))
 
-            old_photo_path = employee_row["photo_path"] if employee_row["photo_path"] else None
+            old_photo_path = employee_row["photo_path"] or None
 
             cursor.execute(
                 """
@@ -3246,7 +3254,10 @@ def update_employee_schedule():
                     )
 
                     if old_photo_path and old_photo_path != new_photo_path:
-                        delete_r2_file(old_photo_path)
+                        if old_photo_path.startswith("images/") or old_photo_path.startswith("uploads/"):
+                            delete_static_file(old_photo_path)
+                        else:
+                            delete_r2_file(old_photo_path)
 
                 except (ValueError, binascii.Error) as e:
                     print("Błąd zapisu przyciętego zdjęcia:", e)
@@ -3254,7 +3265,7 @@ def update_employee_schedule():
                     return redirect(url_for("admin_settings"))
 
                 except Exception as e:
-                    print("Błąd uploadu przyciętego zdjęcia do B2:", e)
+                    print("Błąd uploadu przyciętego zdjęcia do R2:", e)
                     flash("Nie udało się zapisać przyciętego zdjęcia.", "error")
                     return redirect(url_for("admin_settings"))
 
@@ -3269,7 +3280,10 @@ def update_employee_schedule():
                 )
 
                 if old_photo_path:
-                    delete_r2_file(old_photo_path)
+                    if old_photo_path.startswith("images/") or old_photo_path.startswith("uploads/"):
+                        delete_static_file(old_photo_path)
+                    else:
+                        delete_r2_file(old_photo_path)
 
             elif photo_file and photo_file.filename:
                 original_filename = secure_filename(photo_file.filename)
@@ -3277,7 +3291,6 @@ def update_employee_schedule():
                 extension = extension.lower()
 
                 allowed_extensions = {".png", ".jpg", ".jpeg", ".webp"}
-
                 if extension not in allowed_extensions:
                     flash("Dozwolone formaty zdjęcia to: PNG, JPG, JPEG, WEBP.", "error")
                     return redirect(url_for("admin_settings"))
@@ -3308,7 +3321,10 @@ def update_employee_schedule():
                 )
 
                 if old_photo_path and old_photo_path != new_photo_path:
-                    delete_r2_file(old_photo_path)
+                    if old_photo_path.startswith("images/") or old_photo_path.startswith("uploads/"):
+                        delete_static_file(old_photo_path)
+                    else:
+                        delete_r2_file(old_photo_path)
 
             cursor.execute(
                 """
@@ -6302,18 +6318,6 @@ def run_day_before_booking_reminders():
     result = send_day_before_booking_reminders()
     status_code = 200 if result.get("success") else 500
     return jsonify(result), status_code
-
-
-@app.route("/debug-r2-config")
-def debug_r2_config():
-    return {
-        "R2_BUCKET_NAME": R2_BUCKET_NAME,
-        "R2_ENDPOINT_URL": R2_ENDPOINT_URL,
-        "R2_REGION": R2_REGION,
-        "USE_R2_STORAGE": USE_R2_STORAGE,
-        "R2_ACCESS_KEY_ID_prefix": R2_ACCESS_KEY_ID[:8] if R2_ACCESS_KEY_ID else "",
-        "R2_SECRET_SET": bool(R2_SECRET_ACCESS_KEY),
-    }
 
 
 if __name__ == "__main__":
