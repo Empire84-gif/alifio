@@ -1,0 +1,6 @@
+Flask
+Werkzeug
+gunicorn
+requests
+boto3
+botocore

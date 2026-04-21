@@ -1,0 +1,110 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+  <p style="margin:0 0 16px 0; font-size:15px; line-height:1.8; color:#3d2e25;">
+    Dzień dobry {{ client_name }},
+  </p>
+
+  <p style="margin:0 0 20px 0; font-size:15px; line-height:1.8; color:#3d2e25;">
+    {{ intro_text }}
+  </p>
+
+  <table
+    role="presentation"
+    width="100%"
+    cellpadding="0"
+    cellspacing="0"
+    border="0"
+    style="margin:0 0 22px 0; border-collapse:collapse; border:1px solid #eae0d5; background:#fcfaf8;"
+  >
+    <tr>
+      <td style="padding:18px 20px;">
+        <div style="margin:0 0 10px 0; font-size:11px; line-height:1.2; letter-spacing:0.16em; text-transform:uppercase; color:#9a8578;">
+          Szczegóły wizyty
+        </div>
+
+        <table
+          role="presentation"
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          style="border-collapse:collapse; font-size:15px; line-height:1.8;"
+        >
+          <tr>
+            <td style="padding:8px 16px 8px 0; width:180px; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Klient
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ client_name or "—" }}
+            </td>
+          </tr>
+
+          {% if client_email %}
+          <tr>
+            <td style="padding:8px 16px 8px 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              E-mail klienta
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ client_email }}
+            </td>
+          </tr>
+          {% endif %}
+
+          {% if client_phone %}
+          <tr>
+            <td style="padding:8px 16px 8px 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Telefon klienta
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ client_phone }}
+            </td>
+          </tr>
+          {% endif %}
+
+          <tr>
+            <td style="padding:8px 16px 8px 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Usługa
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ service_name }}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 16px 8px 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Osoba wykonująca usługę
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ employee_name }}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 16px 8px 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Data wizyty
+            </td>
+            <td style="padding:8px 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ booking_date_pl }}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 16px 0 0; vertical-align:top; font-size:12px; line-height:1.65; color:#9a8578;">
+              Godzina wizyty
+            </td>
+            <td style="padding:8px 0 0 0; vertical-align:top; font-size:14px; line-height:1.7; color:#1a1410;">
+              {{ booking_time }}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  {% if extra_note %}
+    <p style="margin:0; font-size:15px; line-height:1.8; color:#3d2e25;">
+      {{ extra_note }}
+    </p>
+  {% endif %}
+{% endblock %}

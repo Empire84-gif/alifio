@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Błąd anulowania rezerwacji</title>
+
+  <style>
+    @font-face {
+      font-family: "LexendDecaLocal";
+      src: url("{{ url_for('static', filename='fonts/LexendDeca-Regular.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: fallback;
+    }
+
+    @font-face {
+      font-family: "MonomakhLocal";
+      src: url("{{ url_for('static', filename='fonts/Monomakh-Regular.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: fallback;
+    }
+
+    :root {
+      --bg: #f7f4f0;
+      --card: #ffffff;
+      --card-soft: #fdfaf6;
+      --border: #eae0d5;
+      --border-soft: #e2d8ce;
+      --text: #1a1410;
+      --text-2: #3d2e25;
+      --text-3: #5c4d42;
+      --text-soft: #9a8578;
+      --accent: #c9a96e;
+      --shadow:
+        0 2px 4px rgba(26, 20, 16, 0.04),
+        0 8px 24px rgba(26, 20, 16, 0.06);
+      --transition: 0.18s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "LexendDecaLocal", Arial, sans-serif;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: var(--accent);
+    }
+
+    .card-head {
+      padding: 34px 38px 24px;
+      background: var(--card-soft);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .brand {
+      margin: 0 0 8px;
+      font-size: 13px;
+      line-height: 1.35;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      font-size: 10px;
+      line-height: 1.2;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .accent-line {
+      width: 180px;
+      height: 2px;
+      margin: 0 auto;
+      background: var(--border);
+    }
+
+    .card-body {
+      padding: 34px 38px 30px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-family: "MonomakhLocal", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.18;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    p {
+      margin: 0 0 16px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-2);
+    }
+
+    .note-box {
+      margin: 26px 0 0;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      background: #fcfaf8;
+      text-align: left;
+    }
+
+    .note-box-title {
+      margin: 0 0 8px;
+      font-size: 11px;
+      line-height: 1.2;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .note-box-text {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-3);
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 26px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition:
+        background var(--transition),
+        color var(--transition),
+        transform var(--transition),
+        border-color var(--transition);
+    }
+
+    .btn:hover {
+      background: #ffffff;
+      color: #b8935a;
+      border-color: #b8935a;
+      transform: translateY(-1px);
+    }
+
+    .card-footer {
+      padding: 20px 38px 26px;
+      border-top: 1px solid var(--border);
+      background: #f2ede7;
+      text-align: center;
+    }
+
+    .footer-signoff {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-3);
+    }
+
+    .footer-signoff strong {
+      color: var(--text-2);
+      font-weight: 600;
+    }
+
+    .footer-line {
+      width: 100%;
+      height: 1px;
+      margin: 0 0 14px;
+      background: var(--border-soft);
+    }
+
+    .footer-contact {
+      margin: 0 0 14px;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--text-soft);
+    }
+
+    .footer-contact a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .footer-text {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 16px 10px;
+      }
+
+      .card-head {
+        padding: 24px 20px 18px;
+      }
+
+      .card-body {
+        padding: 26px 20px 24px;
+      }
+
+      .card-footer {
+        padding: 18px 20px 22px;
+      }
+
+      .brand {
+        font-size: 12px;
+        letter-spacing: 0.07em;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .actions {
+        width: 100%;
+      }
+
+      .accent-line {
+        width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="card-head">
+        <div class="brand">System rezerwacji Alifio</div>
+        <div class="eyebrow">Anulowanie rezerwacji</div>
+        <div class="accent-line"></div>
+      </div>
+
+      <div class="card-body">
+        <h1>Nie udało się anulować rezerwacji</h1>
+
+        <p>
+          Wystąpił problem podczas przetwarzania Twojej prośby. Spróbuj ponownie za chwilę lub skontaktuj się bezpośrednio z punktem usługowym.
+        </p>
+
+        <div class="note-box">
+          <div class="note-box-title">Informacja</div>
+          <p class="note-box-text">
+            Jeżeli problem będzie się powtarzał, najlepiej skontaktować się bezpośrednio z punktem usługowym i potwierdzić status rezerwacji.
+          </p>
+        </div>
+
+        <div class="actions">
+          <a href="{{ url_for('booking') }}" class="btn">Wróć do rezerwacji</a>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <p class="footer-signoff">
+          Pozdrawiamy,<br>
+          <strong>{{ company_name or "Alifio" }}</strong>
+        </p>
+
+        <div class="footer-line"></div>
+
+        {% if company_address or contact_phone or contact_email or website_url %}
+          <p class="footer-contact">
+            {% if company_address %}
+              {{ company_address }}<br>
+            {% endif %}
+            {% if contact_phone %}
+              Tel.: {{ contact_phone }}<br>
+            {% endif %}
+            {% if contact_email %}
+              E-mail: {{ contact_email }}<br>
+            {% endif %}
+            {% if website_url %}
+              Strona: <a href="{{ website_url }}">{{ website_url }}</a>
+            {% endif %}
+          </p>
+        {% endif %}
+
+        <p class="footer-text">
+          Alifio · Profesjonalny system rezerwacji online
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
