@@ -2010,7 +2010,7 @@ body {
           {% for item in booking_left_images %}
           <div class="bp-side-slide {% if loop.first %}is-active{% endif %}">
             <img
-              src="{{ url_for('static', filename=item.image_path) }}"
+              src="{{ media_url(item.image_path) }}"
               alt="Zdjęcie po lewej stronie"
               class="bp-side-image"
               loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
@@ -2365,7 +2365,7 @@ body {
           {% for item in booking_right_images %}
           <div class="bp-side-slide {% if loop.first %}is-active{% endif %}">
             <img
-              src="{{ url_for('static', filename=item.image_path) }}"
+              src="{{ media_url(item.image_path) }}"
               alt="Zdjęcie po prawej stronie"
               class="bp-side-image"
               loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
@@ -2846,8 +2846,10 @@ document.addEventListener("DOMContentLoaded", () => {
       card.dataset.employeeId = String(employee.employee_id);
 
       const safeName = escapeHtml(employee.employee_name || "");
-      const photoHtml = employee.employee_photo_path
-        ? `<img src="/static/${employee.employee_photo_path}" alt="${safeName}">`
+      const safePhotoUrl = employee.employee_photo_url ? escapeHtml(employee.employee_photo_url) : "";
+
+      const photoHtml = safePhotoUrl
+        ? `<img src="${safePhotoUrl}" alt="${safeName}">`
         : `<i class="bi bi-person"></i>`;
 
       card.innerHTML = `
@@ -2956,50 +2958,50 @@ document.addEventListener("DOMContentLoaded", () => {
       currentMonthKey >= lastMonth.getFullYear() * 100 + lastMonth.getMonth();
   }
 
-async function handleDatePick(isoDate) {
-  if (!dom.serviceIdInput.value || !dom.employeeIdInput.value) {
-    showSlotsEmpty("Najpierw wybierz usługę i pracownika.");
-    toggleWaitlistCta(false);
-    return;
-  }
-
-  state.selectedDateIso = isoDate;
-  state.selectedTimeValue = "";
-
-  dom.bookingDateInput.value = isoDate;
-  dom.bookingTimeInput.value = "";
-
-  const displayDate = formatDisplayDate(isoDate);
-  dom.selectedDateLabel.textContent = `Wybrany dzień: ${displayDate}`;
-  dom.selectedSlotLabel.textContent = "Nie wybrano jeszcze godziny.";
-  dom.sideSummaryDate.textContent = displayDate;
-  dom.sideSummaryTime.textContent = "Nie wybrano godziny";
-
-  showSlotsEmpty("Ładowanie dostępnych godzin...");
-  toggleWaitlistCta(false);
-  hideAvailableSlotsNotice();
-  updateProgressState();
-
-  let slots = state.loadedSlotsByDate[isoDate];
-
-  if (!Array.isArray(slots)) {
-    slots = await loadAvailableSlotsForDate(isoDate);
-    state.loadedSlotsByDate[isoDate] = slots;
-  }
-
-  renderCalendar();
-  renderSlots(slots);
-
-  setTimeout(() => {
-    highlightSlotsSection();
-
-    if (window.innerWidth <= 767) {
-      smoothScrollToSection(dom.selectedDateLabel || dom.slotsSection || dom.calendarSection);
-    } else {
-      smoothScrollToSection(dom.slotsSection || dom.calendarSection);
+  async function handleDatePick(isoDate) {
+    if (!dom.serviceIdInput.value || !dom.employeeIdInput.value) {
+      showSlotsEmpty("Najpierw wybierz usługę i pracownika.");
+      toggleWaitlistCta(false);
+      return;
     }
-  }, 140);
-}
+
+    state.selectedDateIso = isoDate;
+    state.selectedTimeValue = "";
+
+    dom.bookingDateInput.value = isoDate;
+    dom.bookingTimeInput.value = "";
+
+    const displayDate = formatDisplayDate(isoDate);
+    dom.selectedDateLabel.textContent = `Wybrany dzień: ${displayDate}`;
+    dom.selectedSlotLabel.textContent = "Nie wybrano jeszcze godziny.";
+    dom.sideSummaryDate.textContent = displayDate;
+    dom.sideSummaryTime.textContent = "Nie wybrano godziny";
+
+    showSlotsEmpty("Ładowanie dostępnych godzin...");
+    toggleWaitlistCta(false);
+    hideAvailableSlotsNotice();
+    updateProgressState();
+
+    let slots = state.loadedSlotsByDate[isoDate];
+
+    if (!Array.isArray(slots)) {
+      slots = await loadAvailableSlotsForDate(isoDate);
+      state.loadedSlotsByDate[isoDate] = slots;
+    }
+
+    renderCalendar();
+    renderSlots(slots);
+
+    setTimeout(() => {
+      highlightSlotsSection();
+
+      if (window.innerWidth <= 767) {
+        smoothScrollToSection(dom.selectedDateLabel || dom.slotsSection || dom.calendarSection);
+      } else {
+        smoothScrollToSection(dom.slotsSection || dom.calendarSection);
+      }
+    }, 140);
+  }
 
   function renderSlots(slots) {
     dom.bookingSlotsGrid.innerHTML = "";
