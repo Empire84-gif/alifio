@@ -6304,5 +6304,18 @@ def run_day_before_booking_reminders():
     return jsonify(result), status_code
 
 
+@app.route("/debug-r2")
+def debug_r2():
+    return f"""
+    <pre>
+R2_BUCKET_NAME = {R2_BUCKET_NAME}
+R2_ENDPOINT_URL = {R2_ENDPOINT_URL}
+R2_ACCESS_KEY_ID = {R2_ACCESS_KEY_ID}
+R2_REGION = {R2_REGION}
+USE_R2_STORAGE = {USE_R2_STORAGE}
+    </pre>
+    """
+
+
 if __name__ == "__main__":
     app.run(debug=True)
