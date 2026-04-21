@@ -1,23 +1,19 @@
 import os
-
-import requests
-from flask import request, flash, redirect, url_for
-
-TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "").strip()
-TURNSTILE_ENABLED = False
-
-from functools import wraps
-from datetime import datetime
-
+import re
 import uuid
+import mimetypes
+import requests
+import base64
+import binascii
+
+from datetime import datetime, timedelta
+from functools import wraps
+from textwrap import dedent
+from urllib.parse import urlparse
 
 import boto3
 from botocore.config import Config
-from urllib.parse import urlparse
-
-from datetime import datetime
-
-from flask import jsonify
+from botocore.exceptions import BotoCoreError, ClientError
 
 from flask import (
     Flask,
@@ -30,6 +26,7 @@ from flask import (
     session,
     current_app,
 )
+
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -43,38 +40,19 @@ from services.auth_service import (
     update_user_password,
     update_user_last_login,
     create_client_admin,
+    create_staff_user,
 )
 from services.token_service import (
     create_password_reset_token,
     get_valid_reset_token,
     mark_token_as_used,
 )
-
-from datetime import datetime, timedelta
-
 from services.account_activation_service import (
     create_account_activation_invite,
     get_valid_account_activation_invite,
     mark_account_activation_invite_as_used,
     build_activation_link,
 )
-from services.auth_service import (
-    create_client_admin,
-    get_user_by_email,
-)
-
-from services.auth_service import (
-    get_user_by_email,
-    get_user_by_id,
-    verify_password,
-    update_user_password,
-    update_user_last_login,
-    create_client_admin,
-    create_staff_user,
-)
-
-from datetime import datetime
-
 from services.email_notifications import (
     send_email_smtp,
     send_booking_verification_email,
@@ -85,7 +63,6 @@ from services.email_notifications import (
     send_booking_cancellation_internal_notifications,
     send_booking_cancellation_confirmation_email,
 )
-
 from services.booking_cancel_tokens import (
     create_booking_cancel_token,
     get_booking_cancel_token_record,
@@ -93,31 +70,23 @@ from services.booking_cancel_tokens import (
     mark_booking_cancel_token_used,
 )
 
-from datetime import datetime
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "").strip()
+TURNSTILE_ENABLED = False
 
-from textwrap import dedent
-
-import boto3
-from botocore.client import Config
-from urllib.parse import urlparse
 # =========================================================
-# STAŁE / UPLOAD
+# STAŁE / UPLOAD / R2
 # =========================================================
 
 UPLOAD_EMPLOYEES_DIR = os.path.join("static", "images")
 UPLOAD_BOOKING_SIDE_IMAGES_DIR = os.path.join("static", "uploads", "booking_side_images")
 
-B2_ENDPOINT = os.getenv("B2_ENDPOINT", "").strip()
-B2_KEY_ID = os.getenv("B2_KEY_ID", "").strip()
-B2_APPLICATION_KEY = os.getenv("B2_APPLICATION_KEY", "").strip()
-B2_BUCKET_NAME = os.getenv("B2_BUCKET_NAME", "").strip()
-
-print("B2_ENDPOINT exists =", bool(B2_ENDPOINT))
-print("B2_KEY_ID exists =", bool(B2_KEY_ID))
-print("B2_APPLICATION_KEY exists =", bool(B2_APPLICATION_KEY))
-print("B2_BUCKET_NAME exists =", bool(B2_BUCKET_NAME))
-print("B2 configured =", all([B2_ENDPOINT, B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME]))
-
+R2_BUCKET_NAME = os.getenv("R2_BUCKET_NAME", "").strip()
+R2_ENDPOINT_URL = os.getenv("R2_ENDPOINT_URL", "").strip()
+R2_ACCESS_KEY_ID = os.getenv("R2_ACCESS_KEY_ID", "").strip()
+R2_SECRET_ACCESS_KEY = os.getenv("R2_SECRET_ACCESS_KEY", "").strip()
+R2_REGION = os.getenv("R2_REGION", "auto").strip()
+R2_PUBLIC_BASE_URL = os.getenv("R2_PUBLIC_BASE_URL", "").strip()
+USE_R2_STORAGE = os.getenv("USE_R2_STORAGE", "0") == "1"
 
 # =========================================================
 # APP
@@ -137,11 +106,125 @@ app.config["MAIL_SMTP_USE_SSL"] = os.getenv("MAIL_SMTP_USE_SSL", "true").lower()
 app.config["INTERNAL_TASK_TOKEN"] = os.getenv("INTERNAL_TASK_TOKEN", "").strip()
 
 # =========================================================
-# BASIC HELPERS
+# STORAGE HELPERS / R2
 # =========================================================
 
-import re
+def r2_is_configured() -> bool:
+    return all([
+        R2_BUCKET_NAME,
+        R2_ENDPOINT_URL,
+        R2_ACCESS_KEY_ID,
+        R2_SECRET_ACCESS_KEY,
+    ])
 
+
+def get_r2_client():
+    if not r2_is_configured():
+        raise RuntimeError("Cloudflare R2 nie jest poprawnie skonfigurowany.")
+
+    return boto3.client(
+        "s3",
+        endpoint_url=R2_ENDPOINT_URL,
+        aws_access_key_id=R2_ACCESS_KEY_ID,
+        aws_secret_access_key=R2_SECRET_ACCESS_KEY,
+        region_name=R2_REGION,
+        config=Config(
+            signature_version="s3v4",
+            s3={"addressing_style": "path"},
+        ),
+    )
+
+
+def upload_fileobj_to_r2(fileobj, object_key: str, content_type: str | None = None) -> str:
+    client = get_r2_client()
+
+    extra_args = {}
+    if content_type:
+        extra_args["ContentType"] = content_type
+
+    fileobj.seek(0)
+
+    client.upload_fileobj(
+        Fileobj=fileobj,
+        Bucket=R2_BUCKET_NAME,
+        Key=object_key,
+        ExtraArgs=extra_args,
+    )
+
+    return object_key
+
+
+def upload_bytes_to_r2(file_bytes: bytes, object_key: str, content_type: str | None = None) -> str:
+    client = get_r2_client()
+
+    extra_args = {}
+    if content_type:
+        extra_args["ContentType"] = content_type
+
+    client.put_object(
+        Bucket=R2_BUCKET_NAME,
+        Key=object_key,
+        Body=file_bytes,
+        **extra_args,
+    )
+
+    return object_key
+
+
+def extract_r2_object_key(file_path_or_url: str | None) -> str | None:
+    value = (file_path_or_url or "").strip()
+    if not value:
+        return None
+
+    if value.startswith("http://") or value.startswith("https://"):
+        parsed = urlparse(value)
+        path = parsed.path.lstrip("/")
+
+        bucket_prefix = f"{R2_BUCKET_NAME}/"
+        if path.startswith(bucket_prefix):
+            return path[len(bucket_prefix):]
+
+        return path
+
+    return value
+
+
+def delete_r2_file(file_path_or_url: str | None) -> None:
+    object_key = extract_r2_object_key(file_path_or_url)
+    if not object_key:
+        return
+
+    try:
+        client = get_r2_client()
+        client.delete_object(Bucket=R2_BUCKET_NAME, Key=object_key)
+    except Exception as e:
+        print("Błąd delete_r2_file:", e)
+
+
+def media_url(file_path_or_url: str | None) -> str:
+    value = (file_path_or_url or "").strip()
+    if not value:
+        return ""
+
+    if value.startswith("http://") or value.startswith("https://"):
+        return value
+
+    if value.startswith("images/") or value.startswith("uploads/"):
+        return url_for("static", filename=value)
+
+    if USE_R2_STORAGE and r2_is_configured():
+        if R2_PUBLIC_BASE_URL:
+            return f"{R2_PUBLIC_BASE_URL.rstrip('/')}/{value.lstrip('/')}"
+        return f"{R2_ENDPOINT_URL.rstrip('/')}/{R2_BUCKET_NAME}/{value.lstrip('/')}"
+
+    return value
+
+
+app.jinja_env.globals["media_url"] = media_url
+
+# =========================================================
+# BASIC HELPERS
+# =========================================================
 
 def get_settings():
     conn = get_connection()
@@ -368,7 +451,7 @@ def find_waitlist_matches_for_slot(service_id, employee_id, booking_date, bookin
                   )
             ORDER BY created_at ASC, id ASC
             """,
-            (service_id, employee_id, booking_date, booking_date, booking_time, booking_time)
+            (service_id, employee_id, booking_date, booking_date, booking_time, booking_time),
         )
         return cursor.fetchall()
     finally:
@@ -417,7 +500,7 @@ def mark_first_waitlist_match_for_slot(service_id, employee_id, booking_date, bo
                 booking_date,
                 booking_time,
                 booking_time,
-            )
+            ),
         )
 
         match_row = cursor.fetchone()
@@ -438,7 +521,7 @@ def mark_first_waitlist_match_for_slot(service_id, employee_id, booking_date, bo
                 booking_date,
                 booking_time,
                 match_row["id"],
-            )
+            ),
         )
 
         conn.commit()
@@ -461,7 +544,7 @@ def clear_waitlist_match(waitlist_entry_id):
                 matched_booking_time = NULL
             WHERE id = ?
             """,
-            (waitlist_entry_id,)
+            (waitlist_entry_id,),
         )
         conn.commit()
     finally:
@@ -492,7 +575,7 @@ def ensure_unique_business_slug(base_slug: str) -> str:
                 WHERE slug = ?
                 LIMIT 1
                 """,
-                (slug,)
+                (slug,),
             )
             existing = cursor.fetchone()
 
@@ -536,7 +619,7 @@ def get_booking_notification_context(booking_row):
         "booking_time": safe_booking_value(booking_row.get("booking_time")),
         "company_name": safe_booking_value(
             booking_row.get("company_name") or booking_row.get("business_name"),
-            "Salon"
+            "Salon",
         ),
         "salon_email": booking_row.get("salon_email"),
     }
@@ -781,7 +864,7 @@ def send_day_before_booking_reminders():
               AND LOWER(COALESCE(b.status, '')) IN ('new', 'confirmed')
             ORDER BY b.booking_time ASC, b.id ASC
             """,
-            (tomorrow,)
+            (tomorrow,),
         )
 
         booking_rows = cursor.fetchall()
@@ -804,7 +887,7 @@ def send_day_before_booking_reminders():
                     SET reminder_sent_at = ?
                     WHERE id = ?
                     """,
-                    (sent_at, booking_id)
+                    (sent_at, booking_id),
                 )
 
                 sent_count += 1
@@ -834,107 +917,6 @@ def send_day_before_booking_reminders():
 
     finally:
         conn.close()
-
-
-def b2_is_configured() -> bool:
-    return all([B2_ENDPOINT, B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME])
-
-
-def get_b2_client():
-    if not b2_is_configured():
-        raise RuntimeError("Backblaze B2 nie jest poprawnie skonfigurowany.")
-
-    return boto3.client(
-        "s3",
-        endpoint_url=B2_ENDPOINT,
-        aws_access_key_id=B2_KEY_ID,
-        aws_secret_access_key=B2_APPLICATION_KEY,
-        config=Config(
-            signature_version="s3v4",
-            s3={"addressing_style": "path"}
-        )
-    )
-
-
-def upload_fileobj_to_b2(fileobj, object_key: str, content_type: str | None = None) -> str:
-    client = get_b2_client()
-
-    extra_args = {}
-    if content_type:
-        extra_args["ContentType"] = content_type
-
-    client.upload_fileobj(
-        Fileobj=fileobj,
-        Bucket=B2_BUCKET_NAME,
-        Key=object_key,
-        ExtraArgs=extra_args
-    )
-
-    return f"{B2_ENDPOINT.rstrip('/')}/{B2_BUCKET_NAME}/{object_key}"
-
-
-def upload_bytes_to_b2(file_bytes: bytes, object_key: str, content_type: str | None = None) -> str:
-    client = get_b2_client()
-
-    extra_args = {}
-    if content_type:
-        extra_args["ContentType"] = content_type
-
-    client.put_object(
-        Bucket=B2_BUCKET_NAME,
-        Key=object_key,
-        Body=file_bytes,
-        **extra_args
-    )
-
-    return f"{B2_ENDPOINT.rstrip('/')}/{B2_BUCKET_NAME}/{object_key}"
-
-
-def extract_b2_object_key(file_path_or_url: str | None) -> str | None:
-    value = (file_path_or_url or "").strip()
-    if not value:
-        return None
-
-    if value.startswith("http://") or value.startswith("https://"):
-        parsed = urlparse(value)
-        path = parsed.path.lstrip("/")
-
-        bucket_prefix = f"{B2_BUCKET_NAME}/"
-        if path.startswith(bucket_prefix):
-            return path[len(bucket_prefix):]
-
-        return path
-
-    return value
-
-
-def delete_b2_file(file_path_or_url: str | None) -> None:
-    object_key = extract_b2_object_key(file_path_or_url)
-    if not object_key:
-        return
-
-    try:
-        client = get_b2_client()
-        client.delete_object(Bucket=B2_BUCKET_NAME, Key=object_key)
-    except Exception as e:
-        print("Błąd delete_b2_file:", e)
-
-
-def media_url(file_path_or_url: str | None) -> str:
-    value = (file_path_or_url or "").strip()
-    if not value:
-        return ""
-
-    if value.startswith("http://") or value.startswith("https://"):
-        return value
-
-    if value.startswith("images/"):
-        return url_for("static", filename=value)
-
-    return f"{B2_ENDPOINT.rstrip('/')}/{B2_BUCKET_NAME}/{value}"
-
-
-app.jinja_env.globals["media_url"] = media_url
 
 
 # =========================================================
@@ -1039,7 +1021,7 @@ def send_pending_status_emails_after_client_verification(client_id: int):
               AND LOWER(COALESCE(b.status, '')) IN ('confirmed', 'cancelled')
             ORDER BY b.id ASC
             """,
-            (client_id,)
+            (client_id,),
         )
 
         bookings = cursor.fetchall()
@@ -1073,7 +1055,7 @@ def is_closed_day(date_str: str, business_id: int | None = None) -> bool:
                   AND business_id = ?
                 LIMIT 1
                 """,
-                (date_str, business_id)
+                (date_str, business_id),
             )
         else:
             cursor.execute(
@@ -1083,7 +1065,7 @@ def is_closed_day(date_str: str, business_id: int | None = None) -> bool:
                 WHERE closed_date = ?
                 LIMIT 1
                 """,
-                (date_str,)
+                (date_str,),
             )
 
         row = cursor.fetchone()
@@ -1147,7 +1129,7 @@ def build_employee_time_off_map(employee_ids):
             WHERE employee_id IN ({placeholders})
             ORDER BY date_from ASC, id ASC
             """,
-            employee_ids
+            employee_ids,
         )
         rows = cursor.fetchall()
     finally:
@@ -1193,7 +1175,7 @@ def build_employee_schedule_exceptions_map(employee_ids):
             WHERE employee_id IN ({placeholders})
             ORDER BY exception_date ASC, id ASC
             """,
-            employee_ids
+            employee_ids,
         )
         rows = cursor.fetchall()
     finally:
@@ -1230,7 +1212,7 @@ def get_employee_schedule_for_weekday(employee_id: int, day_key: str):
             WHERE employee_id = ? AND day_key = ?
             LIMIT 1
             """,
-            (employee_id, day_key)
+            (employee_id, day_key),
         )
         row = cursor.fetchone()
     finally:
@@ -1260,7 +1242,7 @@ def get_employee_schedule_exception_for_date(employee_id: int, date_str: str):
             WHERE employee_id = ? AND exception_date = ?
             LIMIT 1
             """,
-            (employee_id, date_str)
+            (employee_id, date_str),
         )
         row = cursor.fetchone()
     finally:
@@ -1293,7 +1275,7 @@ def employee_has_time_off_on_date(employee_id: int, date_str: str):
               AND date(?) BETWEEN date(date_from) AND date(date_to)
             ORDER BY id ASC
             """,
-            (employee_id, date_str)
+            (employee_id, date_str),
         )
         rows = cursor.fetchall()
     finally:
@@ -1343,7 +1325,7 @@ def get_client_by_phone_or_email(business_id, phone=None, email=None):
                 ORDER BY id ASC
                 LIMIT 1
                 """,
-                (business_id, normalized_phone)
+                (business_id, normalized_phone),
             )
             row = cursor.fetchone()
             if row:
@@ -1359,7 +1341,7 @@ def get_client_by_phone_or_email(business_id, phone=None, email=None):
                 ORDER BY id ASC
                 LIMIT 1
                 """,
-                (business_id, normalized_email)
+                (business_id, normalized_email),
             )
             row = cursor.fetchone()
             if row:
@@ -1379,7 +1361,7 @@ def get_or_create_client(
     privacy_consent=0,
     marketing_consent=0,
     consent_source=None,
-    consent_timestamp=None
+    consent_timestamp=None,
 ):
     full_name = (full_name or "").strip()
     phone = (phone or "").strip()
@@ -1393,7 +1375,7 @@ def get_or_create_client(
     existing_client = get_client_by_phone_or_email(
         business_id=business_id,
         phone=phone,
-        email=email
+        email=email,
     )
 
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1454,7 +1436,7 @@ def get_or_create_client(
                     now_str,
                     existing_client["id"],
                     business_id,
-                )
+                ),
             )
             conn.commit()
             return existing_client["id"]
@@ -1494,7 +1476,7 @@ def get_or_create_client(
                 consent_source,
                 now_str,
                 now_str,
-            )
+            ),
         )
 
         conn.commit()
@@ -1671,7 +1653,7 @@ def fetch_booking_notification_data(booking_id):
             WHERE b.id = ?
             LIMIT 1
             """,
-            (booking_id,)
+            (booking_id,),
         )
 
         row = cursor.fetchone()
@@ -1703,7 +1685,6 @@ def send_password_reset_email(user_email, reset_link, user_full_name=None):
     """).strip()
 
     send_email_smtp(user_email, subject, body)
-
 
 
 # =========================================================
@@ -3138,10 +3119,20 @@ def delete_employee(employee_id):
 
         photo_path = employee["photo_path"] if employee["photo_path"] else None
 
-        cursor.execute("DELETE FROM employees WHERE id = ?", (employee_id,))
+        cursor.execute(
+            """
+            DELETE FROM employees
+            WHERE id = ?
+            """,
+            (employee_id,)
+        )
         conn.commit()
 
-        delete_b2_file(photo_path)
+        if photo_path:
+            if photo_path.startswith("images/") or photo_path.startswith("uploads/"):
+                delete_static_file(photo_path)
+            else:
+                delete_r2_file(photo_path)
 
         flash("Pracownik został usunięty.", "success")
 
@@ -3172,9 +3163,6 @@ def update_employee_schedule():
 
     try:
         if time_off_action == "save_schedule":
-            import base64
-            import binascii
-            import uuid
 
             employee_name = (request.form.get("employee_name") or "").strip()
             employee_email = (request.form.get("employee_email") or "").strip()
@@ -3242,7 +3230,7 @@ def update_employee_schedule():
                     image_bytes = base64.b64decode(encoded)
                     file_key = f"employees/employee_{employee_id}_{uuid.uuid4().hex}{extension}"
 
-                    new_photo_path = upload_bytes_to_b2(
+                    new_photo_path = upload_bytes_to_r2(
                         file_bytes=image_bytes,
                         object_key=file_key,
                         content_type=content_type,
@@ -3258,7 +3246,7 @@ def update_employee_schedule():
                     )
 
                     if old_photo_path and old_photo_path != new_photo_path:
-                        delete_b2_file(old_photo_path)
+                        delete_r2_file(old_photo_path)
 
                 except (ValueError, binascii.Error) as e:
                     print("Błąd zapisu przyciętego zdjęcia:", e)
@@ -3281,7 +3269,7 @@ def update_employee_schedule():
                 )
 
                 if old_photo_path:
-                    delete_b2_file(old_photo_path)
+                    delete_r2_file(old_photo_path)
 
             elif photo_file and photo_file.filename:
                 original_filename = secure_filename(photo_file.filename)
@@ -3304,7 +3292,7 @@ def update_employee_schedule():
                 file_key = f"employees/employee_{employee_id}_{uuid.uuid4().hex}{extension}"
                 photo_bytes = photo_file.read()
 
-                new_photo_path = upload_bytes_to_b2(
+                new_photo_path = upload_bytes_to_r2(
                     file_bytes=photo_bytes,
                     object_key=file_key,
                     content_type=content_type,
@@ -3320,7 +3308,7 @@ def update_employee_schedule():
                 )
 
                 if old_photo_path and old_photo_path != new_photo_path:
-                    delete_b2_file(old_photo_path)
+                    delete_r2_file(old_photo_path)
 
             cursor.execute(
                 """
@@ -5067,8 +5055,6 @@ def delete_client(client_id):
     return redirect(url_for("admin_clients"))
 
 
-from flask import jsonify
-
 @app.route("/admin/clients/<int:client_id>/details")
 @admin_required
 def client_details(client_id):
@@ -5397,10 +5383,10 @@ def add_booking_side_image():
     conn = None
 
     try:
-        image_url = upload_fileobj_to_b2(
+        image_key = upload_fileobj_to_r2(
             fileobj=image,
             object_key=object_key,
-            content_type=image.mimetype or None
+            content_type=image.mimetype or None,
         )
 
         conn = get_connection()
@@ -5429,7 +5415,7 @@ def add_booking_side_image():
             )
             VALUES (?, ?, ?, ?, 1)
             """,
-            (business_id, side, image_url, next_order)
+            (business_id, side, image_key, next_order)
         )
 
         conn.commit()
@@ -5499,7 +5485,7 @@ def delete_booking_side_image(image_id):
 
         conn.commit()
 
-        delete_b2_file(image_path)
+        delete_r2_file(image_path)
         flash("Zdjęcie boczne zostało usunięte.", "success")
 
     except Exception as e:
