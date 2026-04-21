@@ -553,7 +553,7 @@
   font-weight: 400;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
   .employee-pills {
@@ -1801,20 +1801,25 @@ main.container:has(.services-page) {
   }
 }
 
- .service-group-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1px 5px;
-  border: 1px solid rgba(255, 112, 166, 0.30);
-  border-radius: var(--sv-r);
-  background: rgba(255, 112, 166, 0.10);
-  color: #ff9ac4;
-  font-size: 9.45px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  padding-top: 6px;
+.service-group-pill {
+  min-height: 24px !important;
+  padding: 2px 7px 2px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.service-group-pill-text {
+  display: inline-block !important;
+  line-height: 1 !important;
+  transform: translateY(1px) !important;
+}
+
+@media (max-width: 640px) {
+  .service-group-pill-text {
+    transform: translateY(0px) !important;
+  }
 }
 </style>
 <div class="services-page services-page-grid">
@@ -1976,7 +1981,9 @@ main.container:has(.services-page) {
 
                   <td class="cell-group">
                     {% if service.service_group %}
-                      <span class="service-group-pill">{{ service.service_group }}</span>
+                      <span class="service-group-pill">
+                      <span class="service-group-pill-text">{{ service.service_group }}</span>
+                      </span>
                     {% else %}
                       —
                     {% endif %}
