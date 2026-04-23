@@ -3209,17 +3209,32 @@ body {
 }
 
 /* =========================
-   WAITLIST TABLE — SZEROKOŚCI KOLUMN
+   WAITLIST TABLE — DOPRACOWANE SZEROKOŚCI KOLUMN
 ========================= */
 
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
+  width: 360px !important;
+  min-width: 360px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
+  width: 155px !important;
+  min-width: 155px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
+  width: 118px !important;
+  min-width: 118px !important;
+}
+
 .bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
-  width: 180px !important;
-  min-width: 180px !important;
+  width: 175px !important;
+  min-width: 175px !important;
 }
 
 .bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
-  width: 150px !important;
-  min-width: 150px !important;
+  width: 145px !important;
+  min-width: 145px !important;
 }
 
 .bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
@@ -3228,17 +3243,12 @@ body {
 }
 
 .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
-  width: 74px !important;
-  min-width: 74px !important;
+  width: 64px !important;
+  min-width: 64px !important;
 }
 
 .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-  min-width: 1110px !important;
-}
-
-/* trochę ciaśniej w akcjach waitlisty */
-.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions {
-  gap: 6px !important;
+  min-width: 1103px !important;
 }
 
 .bookings-section[data-bookings-block="waitlist"] .waitlist-table td.bookings-col-actions {
@@ -3246,15 +3256,34 @@ body {
   padding-right: 4px !important;
 }
 
+.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions {
+  gap: 6px !important;
+}
+
 @media (max-width: 767px) {
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
+    width: 540px !important;
+    min-width: 540px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
+    width: 240px !important;
+    min-width: 240px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
+    width: 165px !important;
+    min-width: 165px !important;
+  }
+
   .bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
-    width: 220px !important;
-    min-width: 220px !important;
+    width: 215px !important;
+    min-width: 215px !important;
   }
 
   .bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
-    width: 185px !important;
-    min-width: 185px !important;
+    width: 180px !important;
+    min-width: 180px !important;
   }
 
   .bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
@@ -3263,13 +3292,13 @@ body {
   }
 
   .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
-    width: 70px !important;
-    min-width: 70px !important;
+    width: 60px !important;
+    min-width: 60px !important;
   }
 
   .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-    width: 1360px !important;
-    min-width: 1360px !important;
+    width: 1492px !important;
+    min-width: 1492px !important;
   }
 }
 </style>
