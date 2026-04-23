@@ -3207,6 +3207,71 @@ body {
     font-size: 13px !important;
   }
 }
+
+/* =========================
+   WAITLIST TABLE — SZEROKOŚCI KOLUMN
+========================= */
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
+  width: 180px !important;
+  min-width: 180px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
+  width: 150px !important;
+  min-width: 150px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
+  width: 86px !important;
+  min-width: 86px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
+  width: 74px !important;
+  min-width: 74px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+  min-width: 1110px !important;
+}
+
+/* trochę ciaśniej w akcjach waitlisty */
+.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions {
+  gap: 6px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table td.bookings-col-actions {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+@media (max-width: 767px) {
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
+    width: 220px !important;
+    min-width: 220px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
+    width: 185px !important;
+    min-width: 185px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
+    width: 92px !important;
+    min-width: 92px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
+    width: 70px !important;
+    min-width: 70px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+    width: 1360px !important;
+    min-width: 1360px !important;
+  }
+}
 </style>
 
 <div class="bookings-page">
