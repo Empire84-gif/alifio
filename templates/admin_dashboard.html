@@ -49,12 +49,8 @@ body {
 .waitlist-edit-modal *,
 .manual-booking-modal,
 .manual-booking-modal * {
-  font-family: "RobotoLocal", Arial, sans-serif;
-}
-
-.bookings-page,
-.bookings-page * {
   box-sizing: border-box;
+  font-family: "RobotoLocal", Arial, sans-serif;
 }
 
 .bookings-page {
@@ -125,12 +121,12 @@ body {
   padding-bottom: 0;
 }
 
-.bookings-section:last-child {
-  padding-bottom: 0;
-}
-
 .bookings-section[data-bookings-block="active"] {
   margin-top: 2px !important;
+}
+
+.bookings-scroll-target {
+  scroll-margin-top: 92px;
 }
 
 .bookings-section-header {
@@ -163,10 +159,6 @@ body {
   color: var(--bk-text-4);
   font-size: 11.55px;
   line-height: 1.5;
-}
-
-.bookings-scroll-target {
-  scroll-margin-top: 92px;
 }
 
 /* =========================
@@ -306,12 +298,16 @@ body {
   cursor: pointer;
 }
 
-.bookings-date-native {
+.bookings-date-native,
+.bookings-report-date-native {
   position: absolute;
   inset: 0;
-  z-index: 1;
   opacity: 0;
   pointer-events: none;
+}
+
+.bookings-date-native {
+  z-index: 1;
 }
 
 .bookings-search-clear,
@@ -333,15 +329,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-50%);
-}
-
-.bookings-search-clear {
-  border-radius: var(--bk-r);
   transition: color var(--bk-t), background var(--bk-t), opacity var(--bk-t);
-}
-
-.bookings-report-date-clear {
-  transition: color var(--bk-t), opacity var(--bk-t);
 }
 
 .bookings-search-clear i,
@@ -411,12 +399,89 @@ body {
 }
 
 /* =========================
-   TABLES
+   SECTION HEADER INLINE
+========================= */
+
+.bookings-section-header-inline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+.bookings-section-header-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bookings-section-header-main .bookings-section-header {
+  margin-bottom: 0;
+}
+
+.bookings-section-filters-inline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bookings-section-filters-inline .bookings-search-box {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.bookings-section-filters-inline .bookings-search-input-wrap,
+.bookings-section-filters-inline .bookings-search-input-wrap-date,
+.bookings-section-filters-inline .bookings-search-input,
+.bookings-section-filters-inline .bookings-search-box,
+.bookings-search-input-wrap,
+.bookings-search-input-wrap-date,
+.bookings-search-input,
+.bookings-date-display {
+  min-width: 0;
+  width: 100%;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-section-filters-inline .bookings-search-box.search-text-box {
+  width: 360px;
+  max-width: 360px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-section-filters-inline .bookings-search-box.search-date-box {
+  width: 220px;
+  max-width: 220px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-section-filters-inline .bookings-search-box.search-text-box,
+#waitlist-section .bookings-section-filters-inline .bookings-search-box:first-child {
+  width: 420px;
+  max-width: 420px;
+}
+
+.bookings-section[data-bookings-block="archive"] .bookings-section-filters-inline .bookings-search-box.search-text-box {
+  width: 400px;
+  max-width: 400px;
+}
+
+.bookings-section[data-bookings-block="archive"] .bookings-section-filters-inline .bookings-search-box.search-date-box {
+  width: 275px;
+  max-width: 275px;
+}
+
+/* =========================
+   TABLES — CLEAN BASE
 ========================= */
 
 .bookings-table-wrap {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   margin-top: 16px;
   margin-left: 0;
   margin-right: 0;
@@ -431,7 +496,8 @@ body {
 .bookings-table,
 .waitlist-table {
   width: 100%;
-  min-width: 1030px;
+  min-width: 1110px;
+  max-width: none;
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -455,6 +521,12 @@ body {
 .waitlist-table th:first-child,
 .waitlist-table td:first-child {
   border-left: none;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-table,
+.bookings-section[data-bookings-block="archive"] .bookings-table,
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+  width: 100%;
 }
 
 .bookings-table th:last-child,
@@ -482,46 +554,27 @@ body {
   user-select: none;
 }
 
+.bookings-th-content,
+.bookings-sort-btn {
+  min-height: 34px;
+  height: 34px;
+  padding: 6px 10px;
+}
+
 .bookings-th-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 7px;
-  min-height: 36px;
-  padding: 8px 10px;
-}
-
-.bookings-table td,
-.waitlist-table td {
-  overflow: hidden;
-  padding: 9px 10px;
-  background: var(--bk-surface);
-  color: var(--bk-text-2);
-  font-size: 11.55px;
-  line-height: 1.35;
-  vertical-align: middle;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.bookings-table tbody tr:hover td,
-.waitlist-table tbody tr:hover td {
-  background: color-mix(in srgb, var(--primary-color) 8%, var(--bk-surface));
-}
-
-.bookings-data-row {
-  cursor: default;
 }
 
 .bookings-sort-btn {
   width: 100%;
   min-width: 0;
-  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 7px;
-  padding: 8px 10px;
   border: none;
   background: transparent;
   color: inherit;
@@ -579,61 +632,29 @@ body {
   color: var(--primary-color);
 }
 
-.bookings-col-id {
-  width: 51px;
-  min-width: 51px;
-  text-align: center;
+.bookings-table td,
+.waitlist-table td {
+  overflow: hidden;
+  padding: 7px 10px;
+  background: var(--bk-surface);
+  color: var(--bk-text-2);
+  font-size: 11.97px;
+  line-height: 1.18;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.bookings-col-id .bookings-th-content,
-.bookings-table td.bookings-col-id,
-.waitlist-table td.bookings-col-id {
-  justify-content: center;
-  text-align: center;
+.bookings-table tbody tr:hover td,
+.waitlist-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--bk-surface));
 }
 
-.bookings-col-service {
-  width: 340px;
-  min-width: 340px;
+.bookings-data-row {
+  cursor: default;
 }
 
-.bookings-col-client {
-  width: 140px;
-  min-width: 140px;
-}
-
-.bookings-col-phone {
-  width: 120px;
-  min-width: 120px;
-}
-
-.bookings-col-email {
-  width: 150px;
-  min-width: 150px;
-  max-width: 150px;
-}
-
-.bookings-col-date {
-  width: 88px;
-  min-width: 88px;
-}
-
-.bookings-col-time {
-  width: 68px;
-  min-width: 68px;
-}
-
-.bookings-col-status {
-  width: 96px;
-  min-width: 96px;
-}
-
-.bookings-col-actions {
-  width: 108px;
-  min-width: 108px;
-  text-align: center;
-}
-
+/* ukryte ID */
 .bookings-table th.bookings-col-id,
 .bookings-table td.bookings-col-id,
 .waitlist-table th.bookings-col-id,
@@ -641,29 +662,168 @@ body {
   display: none;
 }
 
-.bookings-table td.bookings-col-id,
-.bookings-table td.bookings-col-service,
-.bookings-table td.bookings-col-client,
-.bookings-table td.bookings-col-phone,
-.bookings-table td.bookings-col-email,
-.bookings-table td.bookings-col-date,
-.bookings-table td.bookings-col-time,
-.waitlist-table td.bookings-col-id,
-.waitlist-table td.bookings-col-service,
-.waitlist-table td.bookings-col-client,
-.waitlist-table td.bookings-col-phone,
-.waitlist-table td.bookings-col-date,
-.waitlist-table td.bookings-col-time {
-  font-size: 12.6px;
+/* aktywne + archiwum */
+.bookings-section[data-bookings-block="active"] .bookings-col-service,
+.bookings-section[data-bookings-block="archive"] .bookings-col-service {
+  width: 340px;
+  min-width: 340px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-client,
+.bookings-section[data-bookings-block="archive"] .bookings-col-client {
+  width: 140px;
+  min-width: 140px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-phone,
+.bookings-section[data-bookings-block="archive"] .bookings-col-phone {
+  width: 120px;
+  min-width: 120px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-email,
+.bookings-section[data-bookings-block="archive"] .bookings-col-email {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-date,
+.bookings-section[data-bookings-block="archive"] .bookings-col-date {
+  width: 88px;
+  min-width: 88px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-time,
+.bookings-section[data-bookings-block="archive"] .bookings-col-time {
+  width: 68px;
+  min-width: 68px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-status,
+.bookings-section[data-bookings-block="archive"] .bookings-col-status {
+  width: 96px;
+  min-width: 96px;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-col-actions {
+  width: 108px;
+  min-width: 108px;
+}
+
+.bookings-section[data-bookings-block="archive"] .bookings-col-actions {
+  width: 54px;
+  min-width: 54px;
+}
+
+/* waitlist */
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+  min-width: 1110px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
+  width: 360px;
+  min-width: 360px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
+  width: 215px;
+  min-width: 215px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
+  width: 118px;
+  min-width: 118px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
+  width: 152px;
+  min-width: 152px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
+  width: 115px;
+  min-width: 115px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
+  width: 86px;
+  min-width: 86px;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
+  width: 64px;
+  min-width: 64px;
+}
+
+.bookings-col-actions,
+.bookings-table td.bookings-col-actions,
+.waitlist-table td.bookings-col-actions {
+  text-align: center;
 }
 
 .bookings-table td.bookings-col-actions,
 .waitlist-table td.bookings-col-actions {
   padding-left: 6px;
   padding-right: 6px;
-  text-align: center;
   overflow: visible;
+  vertical-align: middle;
 }
+
+/* notatki */
+.bookings-notes-row td {
+  max-width: 1px;
+  padding: 7px 10px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--bk-text-3);
+  font-size: 9.98px;
+  line-height: 1.32;
+  font-style: italic;
+  white-space: normal !important;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.bookings-notes-label {
+  color: var(--bk-text);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.bookings-waitlist-subnote,
+.bookings-waitlist-match-note {
+  margin-top: 4px;
+  color: var(--bk-text-4);
+  font-size: 9.98px;
+  line-height: 1.35;
+}
+
+.bookings-client-link {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--bk-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--bk-t), opacity var(--bk-t);
+}
+
+.bookings-client-link:hover {
+  color: var(--primary-color);
+}
+
+.bookings-client-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 22%, transparent);
+  border-radius: var(--bk-r);
+}
+
+/* =========================
+   ACTION ICONS
+========================= */
 
 .bookings-actions,
 .bookings-archive-actions,
@@ -671,54 +831,109 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 100%;
-  white-space: nowrap;
-}
-
-.bookings-actions,
-.bookings-archive-actions,
-.bookings-waitlist-actions {
+  gap: 10px;
   flex-wrap: nowrap;
+  width: 100%;
+  min-height: 20px;
+  white-space: nowrap;
 }
 
 .bookings-actions form,
 .bookings-waitlist-actions form,
-.bookings-archive-actions form {
+.bookings-archive-actions form,
+.bookings-delete-form {
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.bookings-status-form {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: nowrap;
-}
-
-.bookings-delete-form {
-  display: flex;
+.bookings-icon-btn {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 17px;
+  min-width: 17px;
+  height: 17px;
+  min-height: 17px;
+  padding: 0;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--bk-text-3);
+  cursor: pointer;
+  transition:
+    color var(--bk-t),
+    transform var(--bk-t),
+    opacity var(--bk-t);
 }
 
-.bookings-status-form select {
-  width: 95px;
-  min-width: 95px;
-  flex: 0 0 95px;
-  height: 26px;
-  min-height: 26px;
-  padding: 2px 24px 0 8px;
-  border-radius: var(--bk-r);
-  font-size: 9.45px;
-  line-height: 1.1;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23c6cfdb' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
+.bookings-icon-btn:hover,
+.bookings-icon-btn:focus,
+.bookings-icon-btn:focus-visible,
+.bookings-icon-btn:active {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translateY(-1px);
+}
+
+.bookings-icon-btn i,
+.bookings-icon-btn svg {
+  display: block !important;
+  width: 13px;
+  height: 13px;
+  margin: 0 !important;
+  font-size: 13px;
+  line-height: 1 !important;
+}
+
+.bookings-icon-btn.is-confirm {
+  color: var(--bk-ok);
+}
+
+.bookings-icon-btn.is-archive {
+  color: #ffe19a;
+}
+
+.bookings-icon-btn.is-cancel,
+.bookings-icon-btn.is-delete {
+  color: #ffb6cc;
+}
+
+.bookings-icon-btn.is-confirm:hover,
+.bookings-icon-btn.is-confirm:focus,
+.bookings-icon-btn.is-reserve:hover,
+.bookings-icon-btn.is-reserve:focus {
+  color: #ffffff;
+}
+
+.bookings-icon-btn.is-archive:hover,
+.bookings-icon-btn.is-archive:focus {
+  color: #fff3c8;
+}
+
+.bookings-icon-btn.is-cancel:hover,
+.bookings-icon-btn.is-cancel:focus,
+.bookings-icon-btn.is-delete:hover,
+.bookings-icon-btn.is-delete:focus {
+  color: #ffd2df;
+}
+
+.bookings-icon-btn:disabled,
+.bookings-icon-btn.is-disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+  transform: none !important;
+  color: var(--bk-text-4) !important;
+}
+
+.bookings-icon-btn[data-tooltip]::after,
+.bookings-icon-btn[data-tooltip]::before {
+  display: none !important;
 }
 
 /* =========================
@@ -828,125 +1043,56 @@ body {
   line-height: 1 !important;
 }
 
-.bookings-notes-row td {
-  padding: 9px 10px 10px;
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--bk-text-3);
-  font-size: 10.5px;
-  line-height: 1.4;
-  font-style: italic;
-  white-space: normal;
-}
+/* =========================
+   STATUSY
+========================= */
 
-.bookings-notes-label {
-  color: var(--bk-text);
-  font-weight: 400;
-  font-style: normal;
-}
-
-.bookings-waitlist-subnote,
-.bookings-waitlist-match-note {
-  margin-top: 4px;
-  color: var(--bk-text-4);
-  font-size: 10.5px;
-  line-height: 1.35;
-}
-
-.bookings-client-link {
+.booking-status-badge {
+  display: inline-block;
+  min-height: 0;
+  height: auto;
   padding: 0;
   border: none;
+  border-radius: 0;
   background: transparent;
-  color: var(--bk-text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: color var(--bk-t), opacity var(--bk-t);
+  position: static;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: 10.2px;
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
 }
 
-.bookings-client-link:hover {
-  color: var(--primary-color);
+.booking-status-new {
+  color: #7cc6f8;
+  text-shadow:
+    0 0 3px rgba(169, 220, 255, 0.18),
+    0 0 8px rgba(169, 220, 255, 0.08);
 }
 
-.bookings-client-link:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 22%, transparent);
-  border-radius: var(--bk-r);
+.booking-status-confirmed {
+  color: var(--bk-ok);
+  text-shadow:
+    0 0 3px rgba(94, 234, 212, 0.16),
+    0 0 8px rgba(94, 234, 212, 0.07);
 }
 
-.bookings-section-header-inline {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  min-width: 0;
-  margin-bottom: 12px;
+.booking-status-cancelled {
+  color: var(--bk-err);
+  text-shadow:
+    0 0 3px rgba(255, 92, 147, 0.15),
+    0 0 8px rgba(255, 92, 147, 0.06);
 }
 
-.bookings-section-header-main {
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.bookings-section-header-main .bookings-section-header {
-  margin-bottom: 0;
-}
-
-.bookings-section-filters-inline {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 8px;
-  flex: 0 0 auto;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.bookings-section-filters-inline .bookings-search-box {
-  margin: 0;
-  flex: 0 0 auto;
-}
-
-.bookings-section-filters-inline .bookings-search-input-wrap,
-.bookings-section-filters-inline .bookings-search-input-wrap-date,
-.bookings-section-filters-inline .bookings-search-input,
-.bookings-section-filters-inline .bookings-search-box,
-.bookings-search-input-wrap,
-.bookings-search-input-wrap-date,
-.bookings-search-input,
-.bookings-date-display {
-  min-width: 0;
-  width: 100%;
-}
-
-.bookings-section[data-bookings-block="active"] .bookings-section-filters-inline .bookings-search-box.search-text-box {
-  width: 360px;
-  max-width: 360px;
-}
-
-.bookings-section[data-bookings-block="active"] .bookings-section-filters-inline .bookings-search-box.search-date-box {
-  width: 220px;
-  max-width: 220px;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-section-filters-inline .bookings-search-box.search-text-box {
-  width: 520px;
-  max-width: 520px;
-}
-
-.bookings-section[data-bookings-block="archive"] .bookings-section-filters-inline .bookings-search-box.search-text-box {
-  width: 400px;
-  max-width: 400px;
-}
-
-.bookings-section[data-bookings-block="archive"] .bookings-section-filters-inline .bookings-search-box.search-date-box {
-  width: 275px;
-  max-width: 275px;
-}
-
-#waitlist-section .bookings-section-filters-inline .bookings-search-box:first-child {
-  width: 420px;
-  max-width: 420px;
+.booking-status-completed,
+.booking-status-archived {
+  color: #9cc3df;
+  text-shadow:
+    0 0 3px rgba(156, 195, 223, 0.13),
+    0 0 8px rgba(156, 195, 223, 0.05);
 }
 
 /* =========================
@@ -1016,18 +1162,15 @@ body {
   margin: 14px auto;
 }
 
-.bookings-details-dialog {
+.bookings-details-dialog,
+#bookingEditModal .bookings-details-dialog,
+#waitlistEditModal .waitlist-edit-dialog {
   width: min(640px, calc(100vw - 28px));
   max-width: calc(100vw - 28px);
 }
 
 .bookings-report-dialog {
   width: min(620px, calc(100vw - 28px));
-  max-width: calc(100vw - 28px);
-}
-
-.waitlist-edit-dialog {
-  width: min(640px, calc(100vw - 28px));
   max-width: calc(100vw - 28px);
 }
 
@@ -1085,33 +1228,6 @@ body {
 .bookings-details-close,
 .bookings-report-close,
 .waitlist-edit-close,
-.manual-booking-modal-close,
-.bookings-details-close:hover,
-.bookings-report-close:hover,
-.waitlist-edit-close:hover,
-.manual-booking-modal-close:hover,
-.bookings-details-close:focus,
-.bookings-report-close:focus,
-.waitlist-edit-close:focus,
-.manual-booking-modal-close:focus,
-.bookings-details-close:focus-visible,
-.bookings-report-close:focus-visible,
-.waitlist-edit-close:focus-visible,
-.manual-booking-modal-close:focus-visible,
-.bookings-details-close:active,
-.bookings-report-close:active,
-.waitlist-edit-close:active,
-.manual-booking-modal-close:active {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-}
-
-.bookings-details-close,
-.bookings-report-close,
-.waitlist-edit-close,
 .manual-booking-modal-close {
   width: 30px;
   height: 30px;
@@ -1122,6 +1238,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
   color: var(--bk-text-3);
   cursor: pointer;
   transition:
@@ -1158,8 +1279,10 @@ body {
 
 .bookings-details-body,
 .bookings-report-body,
-.waitlist-edit-body {
-  padding: 16px;
+.waitlist-edit-body,
+#bookingEditModal .bookings-details-body,
+#waitlistEditModal .waitlist-edit-body {
+  padding: 16px 18px 18px;
   max-height: calc(100vh - 110px);
 }
 
@@ -1169,39 +1292,44 @@ body {
 }
 
 .bookings-details-grid,
-.waitlist-edit-static-grid {
+.waitlist-edit-static-grid,
+.booking-edit-grid,
+#bookingEditModal .waitlist-edit-form-grid,
+#waitlistEditModal .waitlist-edit-form-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
 .bookings-details-box,
-.waitlist-edit-static-box {
+.waitlist-edit-static-box,
+.booking-edit-static-box,
+#bookingEditModal .waitlist-edit-static-box,
+#waitlistEditModal .waitlist-edit-static-box {
   min-width: 0;
-  padding: 10px 11px;
   border: 1px solid var(--bk-border);
   border-radius: var(--bk-r);
   background: var(--bk-surface-2);
 }
 
+.bookings-details-box,
+.waitlist-edit-static-box {
+  padding: 10px 11px;
+}
+
 .bookings-details-box.is-full,
-.waitlist-edit-full {
+.waitlist-edit-full,
+.booking-edit-field-full,
+.bookings-report-full {
   grid-column: 1 / -1;
 }
 
-.bookings-details-label,
-.waitlist-edit-static-label {
-  margin-bottom: 4px;
-  color: var(--bk-text-4);
-  font-size: 7.35px;
-  line-height: 1;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .bookings-details-value,
-.waitlist-edit-static-value {
+.waitlist-edit-static-value,
+.booking-edit-static-value,
+#bookingEditModal .waitlist-edit-static-value,
+#waitlistEditModal .waitlist-edit-static-value {
   min-width: 0;
   color: var(--bk-text);
   font-size: 11.55px;
@@ -1215,7 +1343,6 @@ body {
 
 .bookings-details-value.is-notes {
   white-space: pre-wrap;
-  font-size: 13.125px;
 }
 
 .bookings-details-status-wrap {
@@ -1255,6 +1382,10 @@ body {
   color: var(--bk-text);
 }
 
+/* =========================
+   FORMS IN MODALS
+========================= */
+
 .bookings-report-form-grid,
 .waitlist-edit-form-grid,
 .manual-booking-form-grid {
@@ -1265,7 +1396,10 @@ body {
 
 .bookings-report-form-row,
 .waitlist-edit-form-row,
-.manual-booking-form-row {
+.manual-booking-form-row,
+.booking-edit-field,
+#bookingEditModal .waitlist-edit-form-row,
+#waitlistEditModal .waitlist-edit-form-row {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1275,7 +1409,10 @@ body {
 
 .bookings-report-form-row label,
 .waitlist-edit-form-row label,
-.manual-booking-form-row label {
+.manual-booking-form-row label,
+.booking-edit-label,
+#bookingEditModal .waitlist-edit-form-row label,
+#waitlistEditModal .waitlist-edit-form-row label {
   display: block;
   margin: 0;
   color: var(--bk-text-4);
@@ -1290,14 +1427,20 @@ body {
 .manual-booking-form-two-col,
 .manual-booking-actions,
 .waitlist-edit-actions,
-.bookings-report-actions {
+.bookings-report-actions,
+.booking-edit-actions,
+#bookingEditModal .waitlist-edit-actions,
+#waitlistEditModal .waitlist-edit-actions,
+#waitlistEditModal .waitlist-edit-form-inline-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px;
   min-width: 0;
 }
 
-.bookings-report-actions {
+.bookings-report-actions,
+.waitlist-edit-actions,
+.booking-edit-actions {
   margin-top: 14px;
 }
 
@@ -1306,7 +1449,9 @@ body {
 .waitlist-edit-save-btn,
 .waitlist-edit-cancel-btn,
 .manual-booking-submit-btn,
-.manual-booking-cancel-btn {
+.manual-booking-cancel-btn,
+.booking-edit-save-btn,
+.booking-edit-cancel-btn {
   width: 100%;
   min-width: 0;
   min-height: 38px;
@@ -1323,47 +1468,87 @@ body {
   min-width: 0;
 }
 
-.bookings-report-full {
-  grid-column: 1 / -1;
-}
-
 .bookings-report-input,
-.bookings-report-select {
+.bookings-report-select,
+.booking-edit-input,
+.booking-edit-textarea,
+.waitlist-edit-input,
+.waitlist-edit-textarea,
+#bookingEditModal .waitlist-edit-input,
+#bookingEditModal .waitlist-edit-textarea,
+#waitlistEditModal .waitlist-edit-input,
+#waitlistEditModal .waitlist-edit-textarea {
   width: 100%;
   min-width: 0;
-  height: 38px;
-  min-height: 38px;
-  padding: 0 34px 0 10px;
   border: 1px solid var(--bk-border-2);
   border-radius: var(--bk-r);
   background: var(--bk-surface-3);
   color: var(--bk-text);
   font-size: 11.55px;
-  line-height: 1.2;
   transition:
     border-color var(--bk-t),
     background var(--bk-t),
     box-shadow var(--bk-t);
 }
 
-.bookings-report-input::placeholder {
-  color: var(--bk-text-4);
-  opacity: 1;
+.bookings-report-input,
+.bookings-report-select {
+  height: 38px;
+  min-height: 38px;
+  padding: 0 34px 0 10px;
+  line-height: 1.2;
+}
+
+.booking-edit-input,
+#bookingEditModal .waitlist-edit-input,
+#waitlistEditModal .waitlist-edit-input {
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  line-height: 1;
+}
+
+.booking-edit-textarea,
+.waitlist-edit-textarea,
+#bookingEditModal .waitlist-edit-textarea,
+#waitlistEditModal .waitlist-edit-textarea {
+  min-height: 84px;
+  padding: 9px 10px;
+  line-height: 1.4;
+  resize: vertical;
 }
 
 .bookings-report-input:hover,
-.bookings-report-select:hover {
+.bookings-report-select:hover,
+.booking-edit-input:hover,
+.booking-edit-textarea:hover,
+.waitlist-edit-input:hover,
+.waitlist-edit-textarea:hover {
   border-color: var(--bk-border-3);
 }
 
 .bookings-report-input:focus,
-.bookings-report-select:focus {
+.bookings-report-select:focus,
+.booking-edit-input:focus,
+.booking-edit-textarea:focus,
+.waitlist-edit-input:focus,
+.waitlist-edit-textarea:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
 }
 
-.bookings-report-select {
+.bookings-report-input::placeholder,
+.booking-edit-input::placeholder,
+.booking-edit-textarea::placeholder,
+.waitlist-edit-input::placeholder,
+.waitlist-edit-textarea::placeholder {
+  color: var(--bk-text-4);
+  opacity: 1;
+}
+
+.bookings-report-select,
+#bookingEditStatus.booking-edit-input {
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23c6cfdb' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -1371,25 +1556,10 @@ body {
   background-position: right 9px center;
 }
 
-#bookingsReportModal .bookings-report-select {
-  height: 38px;
-  min-height: 38px;
-  padding-top: 0;
-  padding-bottom: 0;
-  line-height: 1.2;
-}
-
 .bookings-report-date-display {
   padding-left: 34px !important;
   padding-right: 34px !important;
   cursor: pointer;
-}
-
-.bookings-report-date-native {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
 }
 
 .bookings-report-date-icon,
@@ -1405,473 +1575,12 @@ body {
   pointer-events: none;
 }
 
-.booking-edit-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  min-width: 0;
-}
-
-.booking-edit-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.booking-edit-field-full {
-  grid-column: 1 / -1;
-}
-
-.booking-edit-label {
-  margin: 0;
-  color: var(--bk-text-4);
-  font-size: 8.4px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.booking-edit-input,
-.booking-edit-textarea,
-.booking-edit-static-box {
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  transition:
-    border-color var(--bk-t),
-    background var(--bk-t),
-    box-shadow var(--bk-t);
-}
-
-.booking-edit-input,
-.booking-edit-static-box {
-  min-height: 34px;
-  padding: 0 10px;
-  font-size: 11.55px;
-}
-
-.booking-edit-input {
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.booking-edit-textarea {
-  min-height: 84px;
-  padding: 9px 10px;
-  font-size: 11.55px;
-  line-height: 1.4;
-  resize: vertical;
-}
-
-.booking-edit-input::placeholder,
-.booking-edit-textarea::placeholder {
-  color: var(--bk-text-4);
-  opacity: 1;
-}
-
-.booking-edit-input:hover,
-.booking-edit-textarea:hover,
-.booking-edit-static-box:hover {
-  border-color: var(--bk-border-3);
-}
-
-.booking-edit-input:focus,
-.booking-edit-textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
-}
-
-.booking-edit-static-box {
-  display: flex;
-  align-items: center;
-}
-
-.booking-edit-static-value {
-  color: var(--bk-text);
-  font-size: 11.55px;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-#bookingEditStatus.booking-edit-input {
-  padding-right: 30px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23c6cfdb' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 9px center;
-}
-
-.booking-edit-actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.booking-edit-save-btn,
-.booking-edit-cancel-btn {
-  width: 100%;
-  min-width: 0;
-  min-height: 38px;
-  height: 38px;
-  padding: 0 16px;
-  font-size: 12.6px;
-  font-weight: 400;
-}
-
-#bookingEditModal .bookings-details-dialog {
-  width: min(640px, calc(100vw - 28px));
-  max-width: calc(100vw - 28px);
-  max-height: calc(100vh - 28px);
-  margin: 14px auto;
-}
-
-#bookingEditModal .bookings-details-body {
-  padding: 16px 18px 18px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: calc(100vh - 110px);
-}
-
-#bookingEditModal .waitlist-edit-form-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  min-width: 0;
-}
-
-#bookingEditModal .waitlist-edit-form-row {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 4px;
-  min-width: 0;
-}
-
-#bookingEditModal .waitlist-edit-form-row label {
-  display: block;
-  margin: 0;
-  color: var(--bk-text-4);
-  font-size: 8.4px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-#bookingEditModal .waitlist-edit-full {
-  grid-column: 1 / -1;
-}
-
-#bookingEditModal .waitlist-edit-input,
-#bookingEditModal .waitlist-edit-textarea,
-#bookingEditModal .waitlist-edit-static-box {
-  width: 100%;
-  min-width: 0;
-}
-
-#bookingEditModal .waitlist-edit-input {
-  height: 32px;
-  min-height: 32px;
-  padding: 0 10px;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  font-size: 11.55px;
-  transition:
-    border-color var(--bk-t),
-    background var(--bk-t),
-    box-shadow var(--bk-t);
-}
-
-#bookingEditModal .waitlist-edit-input:hover {
-  border-color: var(--bk-border-3);
-}
-
-#bookingEditModal .waitlist-edit-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
-}
-
-#bookingEditModal .waitlist-edit-textarea {
-  min-height: 84px;
-  padding: 9px 10px;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  font-size: 11.55px;
-  line-height: 1.4;
-  resize: vertical;
-  transition:
-    border-color var(--bk-t),
-    background var(--bk-t),
-    box-shadow var(--bk-t);
-}
-
-#bookingEditModal .waitlist-edit-textarea:hover {
-  border-color: var(--bk-border-3);
-}
-
-#bookingEditModal .waitlist-edit-textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
-}
-
-#bookingEditModal .waitlist-edit-static-box {
-  padding: 10px 11px;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-2);
-}
-
-#bookingEditModal .waitlist-edit-static-value {
-  color: var(--bk-text);
-  font-size: 11.55px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-#bookingEditModal .waitlist-edit-actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
-  margin-top: 14px;
-}
-
-#bookingEditModal .waitlist-edit-save-btn,
-#bookingEditModal .waitlist-edit-cancel-btn {
-  width: 100%;
-  min-width: 0;
-  min-height: 38px;
-  height: 38px;
-  padding: 0 16px;
-  font-size: 12.6px;
-}
-
-#waitlistEditModal .waitlist-edit-dialog {
-  width: min(640px, calc(100vw - 28px));
-  max-width: calc(100vw - 28px);
-  max-height: calc(100vh - 28px);
-  margin: 14px auto;
-}
-
-#waitlistEditModal .waitlist-edit-body {
-  padding: 16px 18px 18px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: calc(100vh - 110px);
-}
-
-#waitlistEditModal .waitlist-edit-form-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  min-width: 0;
-}
-
-#waitlistEditModal .waitlist-edit-form-row {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 4px;
-  min-width: 0;
-}
-
-#waitlistEditModal .waitlist-edit-form-row label {
-  display: block;
-  margin: 0;
-  color: var(--bk-text-4);
-  font-size: 8.4px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1.2;
-}
-
-#waitlistEditModal .waitlist-edit-full {
-  grid-column: 1 / -1;
-}
-
-#waitlistEditModal .waitlist-edit-input,
-#waitlistEditModal .waitlist-edit-textarea,
-#waitlistEditModal .waitlist-edit-static-box {
-  width: 100%;
-  min-width: 0;
-}
-
-#waitlistEditModal .waitlist-edit-input-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-#waitlistEditModal .waitlist-edit-input-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  color: #ffffff;
-  font-size: 11.55px;
-  line-height: 1;
-  pointer-events: none;
-}
-
-#waitlistEditModal .waitlist-edit-input {
-  height: 34px;
-  min-height: 34px;
-  padding: 0 10px;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  font-size: 11.55px;
-  line-height: 1;
-  transition:
-    border-color var(--bk-t),
-    background var(--bk-t),
-    box-shadow var(--bk-t);
-}
-
-#waitlistEditModal .waitlist-edit-input:hover {
-  border-color: var(--bk-border-3);
-}
-
-#waitlistEditModal .waitlist-edit-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
-}
-
-#waitlistEditModal .waitlist-edit-input::placeholder,
-#waitlistEditModal .waitlist-edit-textarea::placeholder {
-  color: var(--bk-text-4);
-  opacity: 1;
-}
-
-#waitlistEditModal .waitlist-edit-input-date,
-#waitlistEditModal .waitlist-edit-input-time,
-.waitlist-edit-input-date,
-.waitlist-edit-input-time {
-  padding-left: 31px;
-  padding-right: 8px;
-  max-width: 100%;
-}
-
-#waitlistEditModal .waitlist-edit-input-date::-webkit-calendar-picker-indicator,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-calendar-picker-indicator,
-.waitlist-edit-input-date::-webkit-calendar-picker-indicator,
-.waitlist-edit-input-time::-webkit-calendar-picker-indicator {
-  filter: brightness(0) invert(1);
-  opacity: 1;
-  cursor: pointer;
-}
-
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-datetime-edit,
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit-fields-wrapper,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-datetime-edit-fields-wrapper,
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit-text,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-datetime-edit-text,
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit-month-field,
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit-day-field,
-#waitlistEditModal .waitlist-edit-input-date::-webkit-datetime-edit-year-field,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-datetime-edit-hour-field,
-#waitlistEditModal .waitlist-edit-input-time::-webkit-datetime-edit-minute-field,
-.waitlist-edit-input-date::-webkit-datetime-edit,
-.waitlist-edit-input-time::-webkit-datetime-edit,
-.waitlist-edit-input-date::-webkit-datetime-edit-fields-wrapper,
-.waitlist-edit-input-time::-webkit-datetime-edit-fields-wrapper,
-.waitlist-edit-input-date::-webkit-datetime-edit-text,
-.waitlist-edit-input-time::-webkit-datetime-edit-text,
-.waitlist-edit-input-date::-webkit-datetime-edit-month-field,
-.waitlist-edit-input-date::-webkit-datetime-edit-day-field,
-.waitlist-edit-input-date::-webkit-datetime-edit-year-field,
-.waitlist-edit-input-time::-webkit-datetime-edit-hour-field,
-.waitlist-edit-input-time::-webkit-datetime-edit-minute-field {
-  color: var(--bk-text);
-}
-
-#waitlistEditModal .waitlist-edit-textarea,
-.waitlist-edit-textarea {
-  min-height: 84px;
-  padding: 9px 10px;
-  font-size: 11.55px;
-  line-height: 1.4;
-  resize: vertical;
-}
-
-#waitlistEditModal .waitlist-edit-textarea {
-  min-height: 86px;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  line-height: 1.42;
-  transition:
-    border-color var(--bk-t),
-    background var(--bk-t),
-    box-shadow var(--bk-t);
-}
-
-#waitlistEditModal .waitlist-edit-textarea:hover {
-  border-color: var(--bk-border-3);
-}
-
-#waitlistEditModal .waitlist-edit-textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
-}
-
+.booking-edit-static-box,
 #waitlistEditModal .waitlist-edit-static-box {
   display: flex;
   align-items: center;
   min-height: 34px;
   padding: 0 10px;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-2);
-}
-
-#waitlistEditModal .waitlist-edit-static-value {
-  color: var(--bk-text);
-  font-size: 11.55px;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-#waitlistEditModal .waitlist-edit-form-inline-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  min-width: 0;
-}
-
-#waitlistEditModal .waitlist-edit-actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
-  margin-top: 14px;
-}
-
-#waitlistEditModal .waitlist-edit-save-btn,
-#waitlistEditModal .waitlist-edit-cancel-btn {
-  width: 100%;
-  min-width: 0;
-  min-height: 38px;
-  height: 38px;
-  padding: 0 16px;
-  font-size: 12.6px;
 }
 
 /* =========================
@@ -2030,9 +1739,6 @@ body {
   display: grid;
   gap: 4px;
   min-width: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
 }
 
 .manual-booking-calendar-weekdays,
@@ -2149,7 +1855,6 @@ body {
   gap: 5px;
   width: 100%;
   min-width: 0;
-  justify-content: stretch;
 }
 
 .manual-booking-slots-list {
@@ -2299,35 +2004,6 @@ body {
   display: none !important;
 }
 
-#manualBookingCustomEmployeeRow {
-  min-width: 0;
-}
-
-#manualBookingCustomDuration {
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-#manualBookingCustomDuration::-webkit-outer-spin-button,
-#manualBookingCustomDuration::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-#manualBookingCustomTime::-webkit-calendar-picker-indicator {
-  filter: brightness(0) invert(1);
-  opacity: 1;
-  cursor: pointer;
-}
-
-#manualBookingCustomTime::-webkit-datetime-edit,
-#manualBookingCustomTime::-webkit-datetime-edit-fields-wrapper,
-#manualBookingCustomTime::-webkit-datetime-edit-text,
-#manualBookingCustomTime::-webkit-datetime-edit-hour-field,
-#manualBookingCustomTime::-webkit-datetime-edit-minute-field {
-  color: var(--bk-text);
-}
-
 .site-logo-image {
   margin-left: 3px !important;
 }
@@ -2346,303 +2022,7 @@ body {
 }
 
 /* =========================
-   STATUSY
-========================= */
-
-.booking-status-badge {
-  display: inline-block;
-  min-height: 0;
-  height: auto;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  position: static;
-  vertical-align: middle;
-  white-space: nowrap;
-  font-size: 10.2px;
-  font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-family: "LexendDecaLocal", Arial, sans-serif !important;
-}
-
-.booking-status-new {
-  color: #7cc6f8;
-  text-shadow:
-    0 0 3px rgba(169, 220, 255, 0.18),
-    0 0 8px rgba(169, 220, 255, 0.08);
-}
-
-.booking-status-confirmed {
-  color: var(--bk-ok);
-  text-shadow:
-    0 0 3px rgba(94, 234, 212, 0.16),
-    0 0 8px rgba(94, 234, 212, 0.07);
-}
-
-.booking-status-cancelled {
-  color: var(--bk-err);
-  text-shadow:
-    0 0 3px rgba(255, 92, 147, 0.15),
-    0 0 8px rgba(255, 92, 147, 0.06);
-}
-
-.booking-status-completed,
-.booking-status-archived {
-  color: #9cc3df;
-  text-shadow:
-    0 0 3px rgba(156, 195, 223, 0.13),
-    0 0 8px rgba(156, 195, 223, 0.05);
-}
-
-/* =========================
-   BUTTON FONTS
-========================= */
-
-.bookings-btn,
-.bookings-btn-secondary,
-.bookings-report-submit,
-.bookings-report-cancel,
-.waitlist-edit-save-btn,
-.waitlist-edit-cancel-btn,
-.manual-booking-submit-btn,
-.manual-booking-cancel-btn,
-.manual-booking-ghost-btn,
-.bookings-quick-filter,
-.bookings-sort-btn,
-.bookings-search-clear,
-.bookings-report-date-clear,
-.bookings-details-close,
-.bookings-report-close,
-.waitlist-edit-close,
-.manual-booking-modal-close,
-.bookings-details-footer-btn,
-.manual-booking-mode-btn,
-.manual-booking-slot-pick,
-.booking-edit-save-btn,
-.booking-edit-cancel-btn,
-.bookings-open-manual-booking,
-.bookings-open-report-modal,
-#openManualBookingModalBtn,
-#openBookingsReportModalBtn,
-.bookings-page-topbar-actions .bookings-btn,
-.bookings-page-topbar-actions .bookings-btn-secondary,
-.bookings-details-modal button,
-.bookings-report-modal button,
-.waitlist-edit-modal button,
-.manual-booking-modal button,
-#bookingEditModal button,
-#waitlistEditModal button,
-#bookingsReportModal button,
-#manualBookingModal button,
-.bookings-btn *,
-.bookings-btn-secondary *,
-.bookings-report-submit *,
-.bookings-report-cancel *,
-.waitlist-edit-save-btn *,
-.waitlist-edit-cancel-btn *,
-.manual-booking-submit-btn *,
-.manual-booking-cancel-btn *,
-.manual-booking-ghost-btn *,
-.bookings-quick-filter *,
-.bookings-sort-btn *,
-.bookings-search-clear *,
-.bookings-report-date-clear *,
-.bookings-details-close *,
-.bookings-report-close *,
-.waitlist-edit-close *,
-.manual-booking-modal-close *,
-.bookings-details-footer-btn *,
-.manual-booking-mode-btn *,
-.manual-booking-slot-pick *,
-.booking-edit-save-btn *,
-.booking-edit-cancel-btn *,
-.bookings-open-manual-booking *,
-.bookings-open-report-modal *,
-#openManualBookingModalBtn *,
-#openBookingsReportModalBtn *,
-.bookings-page-topbar-actions .bookings-btn *,
-.bookings-page-topbar-actions .bookings-btn-secondary *,
-.bookings-details-modal button *,
-.bookings-report-modal button *,
-.waitlist-edit-modal button *,
-.manual-booking-modal button *,
-#bookingEditModal button *,
-#waitlistEditModal button *,
-#bookingsReportModal button *,
-#manualBookingModal button * {
-  font-family: "LexendDecaLocal", Arial, sans-serif !important;
-}
-
-/* =========================
-   ICON ACTIONS
-========================= */
-
-.bookings-table td.bookings-col-actions {
-  padding-left: 6px;
-  padding-right: 6px;
-  text-align: center;
-  vertical-align: middle;
-  overflow: visible;
-}
-
-.bookings-actions,
-.bookings-waitlist-actions,
-.bookings-archive-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: nowrap;
-  width: 100%;
-  min-height: 100%;
-}
-
-.bookings-actions form,
-.bookings-waitlist-actions form,
-.bookings-archive-actions form {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bookings-icon-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  min-width: 18px;
-  height: 18px;
-  min-height: 18px;
-  padding: 0;
-  border: none !important;
-  outline: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: var(--bk-text-3);
-  cursor: pointer;
-  transition:
-    color var(--bk-t),
-    transform var(--bk-t),
-    opacity var(--bk-t);
-}
-
-.bookings-icon-btn:hover,
-.bookings-icon-btn:focus,
-.bookings-icon-btn:focus-visible,
-.bookings-icon-btn:active {
-  border: none !important;
-  outline: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  transform: translateY(-1px);
-}
-
-.bookings-icon-btn i,
-.bookings-icon-btn svg {
-  display: block !important;
-  width: 15px;
-  height: 15px;
-  margin: 0 !important;
-  font-size: 15px;
-  line-height: 1 !important;
-}
-
-.bookings-icon-btn.is-archive {
-  color: #ffe19a;
-}
-
-.bookings-icon-btn.is-cancel,
-.bookings-icon-btn.is-delete {
-  color: #ffb6cc;
-}
-
-.bookings-icon-btn.is-confirm {
-  color: var(--bk-ok);
-}
-
-.bookings-icon-btn.is-confirm:hover,
-.bookings-icon-btn.is-confirm:focus {
-  color: #8ff3e2;
-}
-
-.bookings-icon-btn.is-confirm:hover,
-.bookings-icon-btn.is-confirm:focus,
-.bookings-icon-btn.is-reserve:hover,
-.bookings-icon-btn.is-reserve:focus {
-  color: #ffffff;
-}
-
-.bookings-icon-btn.is-archive:hover,
-.bookings-icon-btn.is-archive:focus {
-  color: #fff3c8;
-}
-
-.bookings-icon-btn.is-cancel:hover,
-.bookings-icon-btn.is-cancel:focus,
-.bookings-icon-btn.is-delete:hover,
-.bookings-icon-btn.is-delete:focus {
-  color: #ffd2df;
-}
-
-.bookings-icon-btn:disabled,
-.bookings-icon-btn.is-disabled {
-  opacity: 0.32;
-  cursor: not-allowed;
-  transform: none !important;
-  color: var(--bk-text-4) !important;
-}
-
-.bookings-icon-btn[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 8px);
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
-  padding: 5px 8px;
-  border: 1px solid var(--bk-border-2);
-  border-radius: var(--bk-r);
-  background: var(--bk-surface-3);
-  color: var(--bk-text);
-  font-family: "LexendDecaLocal", Arial, sans-serif;
-  font-size: 9.4px;
-  line-height: 1;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.26);
-  transition: opacity var(--bk-t), transform var(--bk-t);
-  z-index: 30;
-}
-
-.bookings-icon-btn[data-tooltip]::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 3px);
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--bk-surface-3);
-  transition: opacity var(--bk-t), transform var(--bk-t);
-  z-index: 30;
-}
-
-.bookings-icon-btn[data-tooltip]:hover::after,
-.bookings-icon-btn[data-tooltip]:hover::before,
-.bookings-icon-btn[data-tooltip]:focus::after,
-.bookings-icon-btn[data-tooltip]:focus::before {
-  opacity: 1;
-}
-
-/* =========================
-   DASHBOARD NOTIFY POPUP
+   DASHBOARD NOTIFY
 ========================= */
 
 .dashboard-notify {
@@ -2750,6 +2130,75 @@ body {
 }
 
 /* =========================
+   BUTTON FONT
+========================= */
+
+.bookings-btn,
+.bookings-btn-secondary,
+.bookings-report-submit,
+.bookings-report-cancel,
+.waitlist-edit-save-btn,
+.waitlist-edit-cancel-btn,
+.manual-booking-submit-btn,
+.manual-booking-cancel-btn,
+.manual-booking-ghost-btn,
+.bookings-quick-filter,
+.bookings-sort-btn,
+.bookings-search-clear,
+.bookings-report-date-clear,
+.bookings-details-close,
+.bookings-report-close,
+.waitlist-edit-close,
+.manual-booking-modal-close,
+.bookings-details-footer-btn,
+.manual-booking-mode-btn,
+.manual-booking-slot-pick,
+.booking-edit-save-btn,
+.booking-edit-cancel-btn,
+.bookings-open-manual-booking,
+.bookings-open-report-modal,
+#openManualBookingModalBtn,
+#openBookingsReportModalBtn,
+.bookings-page-topbar-actions .bookings-btn,
+.bookings-page-topbar-actions .bookings-btn-secondary,
+.bookings-details-modal button,
+.bookings-report-modal button,
+.waitlist-edit-modal button,
+.manual-booking-modal button,
+#bookingEditModal button,
+#waitlistEditModal button,
+#bookingsReportModal button,
+#manualBookingModal button,
+.bookings-btn *,
+.bookings-btn-secondary *,
+.bookings-report-submit *,
+.bookings-report-cancel *,
+.waitlist-edit-save-btn *,
+.waitlist-edit-cancel-btn *,
+.manual-booking-submit-btn *,
+.manual-booking-cancel-btn *,
+.manual-booking-ghost-btn *,
+.bookings-quick-filter *,
+.bookings-sort-btn *,
+.bookings-search-clear *,
+.bookings-report-date-clear *,
+.bookings-details-close *,
+.bookings-report-close *,
+.waitlist-edit-close *,
+.manual-booking-modal-close *,
+.bookings-details-footer-btn *,
+.manual-booking-mode-btn *,
+.manual-booking-slot-pick *,
+.booking-edit-save-btn *,
+.booking-edit-cancel-btn *,
+.bookings-open-manual-booking *,
+.bookings-open-report-modal *,
+#openManualBookingModalBtn *,
+#openBookingsReportModalBtn * {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 
@@ -2802,6 +2251,12 @@ body {
 }
 
 @media (max-width: 767px) {
+  .bookings-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .bookings-page-topbar {
     padding-bottom: 14px;
   }
@@ -2817,7 +2272,7 @@ body {
   .bookings-open-manual-booking,
   .bookings-open-report-modal {
     width: 100%;
-    min-width: 0;
+    min-width: 0 !important;
     justify-content: center;
   }
 
@@ -2825,14 +2280,10 @@ body {
     flex-direction: column;
   }
 
-  .bookings-search-box {
-    max-width: 100%;
-  }
-
+  .bookings-search-box,
   .bookings-section-header-inline,
   .bookings-section-header-main,
   .bookings-section-filters-inline,
-  .bookings-search-box,
   .bookings-search-input-wrap,
   .bookings-search-input-wrap-date,
   .bookings-date-display {
@@ -2841,7 +2292,6 @@ body {
   }
 
   .bookings-section-header-inline {
-    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
@@ -2852,12 +2302,7 @@ body {
     width: 100%;
   }
 
-  .bookings-section-header-main .bookings-section-header {
-    margin-bottom: 0;
-  }
-
   .bookings-section-filters-inline {
-    display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
@@ -2866,13 +2311,7 @@ body {
   }
 
   .bookings-section-filters-inline .bookings-search-box,
-  .bookings-search-row .bookings-search-box {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    flex: 1 1 100%;
-  }
-
+  .bookings-search-row .bookings-search-box,
   .bookings-section-filters-inline .bookings-search-input-wrap,
   .bookings-section-filters-inline .bookings-search-input-wrap-date,
   .bookings-section-filters-inline .bookings-search-input,
@@ -2891,40 +2330,154 @@ body {
     font-size: 11.55px;
   }
 
-  .bookings-search-input {
+  .bookings-search-input,
+  .bookings-date-display {
     padding-left: 31px;
-    padding-right: 10px;
   }
 
   .bookings-date-display {
-    padding-left: 31px;
     padding-right: 34px;
   }
 
-  .bookings-search-icon {
-    left: 11px;
-  }
-
-  .bookings-search-clear {
-    right: 8px;
-  }
-
-  /* pełna szerokość tabel na smartphonach */
   .bookings-table-wrap {
     display: block;
-    width: 100vw !important;
-    max-width: 100vw !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     margin-top: 14px;
-    margin-left: calc(50% - 50vw) !important;
-    margin-right: calc(50% - 50vw) !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     overflow-x: auto;
     overflow-y: hidden;
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
-    box-sizing: border-box;
+    border-left: 1px solid var(--bk-border-2);
+    border-right: 1px solid var(--bk-border-2);
+    border-radius: var(--bk-r);
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-table {
+    width: 1450px;
+    min-width: 1450px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+    width: 1460px;
+    min-width: 1460px;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-table {
+  width: 1450px;
+  min-width: 1450px;
+}
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-service {
+    width: 430px;
+    min-width: 430px;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-service {
+  width: 430px;
+  min-width: 430px;
+}
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-client,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-client {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-phone,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-phone {
+    width: 145px;
+    min-width: 145px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-email,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-email {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-date,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-date {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-time,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-time {
+    width: 90px;
+    min-width: 90px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-status,
+  .bookings-section[data-bookings-block="archive"] .bookings-col-status {
+    width: 130px;
+    min-width: 130px;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-col-actions {
+    width: 110px;
+    min-width: 110px;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-actions {
+    width: 56px;
+    min-width: 56px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
+    width: 440px;
+    min-width: 440px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
+    width: 270px;
+    min-width: 270px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
+    width: 155px;
+    min-width: 155px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
+    width: 190px;
+    min-width: 190px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
+    width: 145px;
+    min-width: 145px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
+    width: 95px;
+    min-width: 95px;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
+    width: 110px;
+    min-width: 110px;
+  }
+
+  .bookings-table td,
+  .waitlist-table td {
+    font-size: 12px;
+  }
+
+  .bookings-icon-btn {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    min-height: 20px;
+  }
+
+  .bookings-icon-btn i,
+  .bookings-icon-btn svg {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
   }
 
   .bookings-details-dialog,
@@ -2948,9 +2501,7 @@ body {
   .bookings-details-header,
   .bookings-report-header,
   .waitlist-edit-header,
-  .manual-booking-modal-header,
-  #bookingEditModal .bookings-details-header,
-  #waitlistEditModal .waitlist-edit-header {
+  .manual-booking-modal-header {
     padding: 12px;
   }
 
@@ -3035,435 +2586,6 @@ body {
 
   .dashboard-notify-text {
     font-size: 11px;
-  }
-
-  .bookings-col-service {
-    width: 520px !important;
-    min-width: 520px !important;
-  }
-
-  .bookings-col-client {
-    width: 220px !important;
-    min-width: 220px !important;
-  }
-
-  .bookings-col-phone {
-    width: 165px !important;
-    min-width: 165px !important;
-  }
-
-  .bookings-col-email {
-    width: 240px !important;
-    min-width: 240px !important;
-    max-width: 240px !important;
-  }
-
-  .bookings-col-date {
-    width: 135px !important;
-    min-width: 135px !important;
-  }
-
-  .bookings-col-time {
-    width: 110px !important;
-    min-width: 110px !important;
-  }
-
-  .bookings-col-status {
-    width: 120px !important;
-    min-width: 120px !important;
-  }
-
-  .bookings-col-actions {
-    width: 140px !important;
-    min-width: 140px !important;
-  }
-
-  .bookings-section[data-bookings-block="active"] .bookings-col-actions {
-    width: 128px !important;
-    min-width: 128px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
-    width: 92px !important;
-    min-width: 92px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-actions {
-    width: 52px !important;
-    min-width: 52px !important;
-  }
-
-  .bookings-table,
-  .waitlist-table {
-    width: 1650px !important;
-    min-width: 1650px !important;
-    max-width: none !important;
-  }
-
-  .bookings-icon-btn {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    min-height: 20px;
-  }
-
-  .bookings-icon-btn i,
-  .bookings-icon-btn svg {
-    width: 15px;
-    height: 15px;
-    font-size: 15px;
-  }
-
-  .bookings-icon-btn[data-tooltip]::after,
-  .bookings-icon-btn[data-tooltip]::before {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .bookings-table td,
-  .waitlist-table td {
-    font-size: 10.97px;
-  }
-
-  .bookings-table td.bookings-col-id,
-  .bookings-table td.bookings-col-service,
-  .bookings-table td.bookings-col-client,
-  .bookings-table td.bookings-col-phone,
-  .bookings-table td.bookings-col-email,
-  .bookings-table td.bookings-col-date,
-  .bookings-table td.bookings-col-time,
-  .waitlist-table td.bookings-col-id,
-  .waitlist-table td.bookings-col-service,
-  .waitlist-table td.bookings-col-client,
-  .waitlist-table td.bookings-col-phone,
-  .waitlist-table td.bookings-col-date,
-  .waitlist-table td.bookings-col-time {
-    font-size: 11.97px;
-  }
-
-  .bookings-notes-row td {
-    font-size: 9.98px;
-  }
-
-  .bookings-waitlist-subnote,
-  .bookings-waitlist-match-note {
-    font-size: 9.98px;
-  }
-}
-
-/* ========================================
-   DASHBOARD TABLES — LEKKO WYŻSZE WIERSZE NA DESKTOPIE
-======================================== */
-
-@media (min-width: 768px) {
-  .bookings-table th,
-  .waitlist-table th {
-    padding: 0 !important;
-  }
-
-  .bookings-th-content,
-  .bookings-sort-btn {
-    min-height: 34px !important;
-    height: 34px !important;
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
-  }
-
-  .bookings-table td,
-  .waitlist-table td {
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
-    line-height: 1.18 !important;
-  }
-
-  .bookings-notes-row td {
-    padding-top: 7px !important;
-    padding-bottom: 8px !important;
-    line-height: 1.32 !important;
-  }
-
-  .booking-status-badge {
-    line-height: 1.04 !important;
-  }
-
-  .bookings-actions,
-  .bookings-archive-actions,
-  .bookings-waitlist-actions {
-    min-height: 20px !important;
-  }
-
-  .bookings-icon-btn {
-    width: 17px !important;
-    min-width: 17px !important;
-    height: 17px !important;
-    min-height: 17px !important;
-  }
-
-  .bookings-icon-btn i,
-  .bookings-icon-btn svg {
-    width: 13px !important;
-    height: 13px !important;
-    font-size: 13px !important;
-  }
-}
-
-/* =========================
-   WAITLIST TABLE — SZEROKOŚCI I AKCJE
-========================= */
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
-  width: 360px !important;
-  min-width: 360px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
-  width: 215px !important;
-  min-width: 215px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
-  width: 118px !important;
-  min-width: 118px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
-  width: 152px !important;
-  min-width: 152px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
-  width: 115px !important;
-  min-width: 115px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
-  width: 86px !important;
-  min-width: 86px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
-  width: 64px !important;
-  min-width: 64px !important;
-  text-align: center !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-  min-width: 1110px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .waitlist-table th.bookings-col-actions,
-.bookings-section[data-bookings-block="waitlist"] .waitlist-table td.bookings-col-actions {
-  text-align: center !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .waitlist-table td.bookings-col-actions {
-  padding-left: 4px !important;
-  padding-right: 4px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  flex-wrap: nowrap !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions form {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions .bookings-icon-btn {
-  margin: 0 !important;
-}
-
-/* =========================
-   WAITLIST TABLE — SMARTPHONE
-========================= */
-
-@media (max-width: 767px) {
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-service {
-    width: 540px !important;
-    min-width: 540px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-client {
-    width: 315px !important;
-    min-width: 315px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-phone {
-    width: 165px !important;
-    min-width: 165px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-date {
-    width: 200px !important;
-    min-width: 200px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-time {
-    width: 150px !important;
-    min-width: 150px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-status {
-    width: 92px !important;
-    min-width: 92px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-col-actions {
-    width: 110px !important;
-    min-width: 110px !important;
-    text-align: center !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .waitlist-table th.bookings-col-actions,
-  .bookings-section[data-bookings-block="waitlist"] .waitlist-table td.bookings-col-actions {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-    text-align: center !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions {
-    width: 100% !important;
-    justify-content: center !important;
-    gap: 8px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions .bookings-icon-btn {
-    width: 24px !important;
-    min-width: 24px !important;
-    height: 24px !important;
-    min-height: 24px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions .bookings-icon-btn i,
-  .bookings-section[data-bookings-block="waitlist"] .bookings-waitlist-actions .bookings-icon-btn svg {
-    width: 16px !important;
-    height: 16px !important;
-    font-size: 16px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-    width: 1560px !important;
-    min-width: 1560px !important;
-  }
-}
-
-/* =========================
-   FIX: NOTATKI NIE ROZWALAJĄ TABEL
-========================= */
-
-.bookings-notes-row td {
-  max-width: 0 !important;
-  white-space: normal !important;
-  overflow: hidden !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  word-wrap: break-word !important;
-}
-
-.bookings-notes-row {
-  max-width: 100%;
-}
-
-.bookings-notes-row td span,
-.bookings-notes-row td {
-  min-width: 0 !important;
-}
-
-
-/* =========================
-   FIX: SZEROKOŚCI TABEL PER SEKCJA
-========================= */
-
-.bookings-section[data-bookings-block="active"] .bookings-table {
-  width: 100% !important;
-  min-width: 1110px !important;
-}
-
-.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-  width: 100% !important;
-  min-width: 1110px !important;
-}
-
-.bookings-section[data-bookings-block="archive"] .bookings-table {
-  width: 100% !important;
-  min-width: 1110px !important;
-}
-
-
-/* =========================
-   FIX: ARCHIWUM NA SMARTPHONE
-   nie dostaje sztucznego 1650px
-========================= */
-
-@media (max-width: 767px) {
-  .bookings-table,
-  .waitlist-table {
-    max-width: none !important;
-  }
-
-  .bookings-section[data-bookings-block="active"] .bookings-table {
-    width: 1650px !important;
-    min-width: 1650px !important;
-  }
-
-  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-    width: 1560px !important;
-    min-width: 1560px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-table {
-    width: 1320px !important;
-    min-width: 1320px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-service {
-    width: 430px !important;
-    min-width: 430px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-client {
-    width: 190px !important;
-    min-width: 190px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-phone {
-    width: 145px !important;
-    min-width: 145px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-email {
-    width: 210px !important;
-    min-width: 210px !important;
-    max-width: 210px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-date {
-    width: 120px !important;
-    min-width: 120px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-time {
-    width: 90px !important;
-    min-width: 90px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-status {
-    width: 105px !important;
-    min-width: 105px !important;
-  }
-
-  .bookings-section[data-bookings-block="archive"] .bookings-col-actions {
-    width: 55px !important;
-    min-width: 55px !important;
   }
 }
 </style>
