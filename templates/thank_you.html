@@ -479,24 +479,25 @@
             </div>
           </div>
 
-          <div class="ty-summary-item">
-            <div class="ty-summary-label">Data</div>
-            <div class="ty-summary-value">
-              {% if booking_summary and booking_summary.booking_date %}
-                {{ booking_summary.booking_date[8:10] }}.{{ booking_summary.booking_date[5:7] }}.{{ booking_summary.booking_date[0:4] }}
-              {% else %}
-                —
-              {% endif %}
-            </div>
-          </div>
+          <div class="ty-summary-date-time">
+  <div class="ty-summary-item">
+    <div class="ty-summary-label">Data</div>
+    <div class="ty-summary-value">
+      {% if booking_summary and booking_summary.booking_date %}
+        {{ booking_summary.booking_date[8:10] }}.{{ booking_summary.booking_date[5:7] }}.{{ booking_summary.booking_date[0:4] }}
+      {% else %}
+        —
+      {% endif %}
+    </div>
+  </div>
 
-          <div class="ty-summary-item">
-            <div class="ty-summary-label">Godzina</div>
-            <div class="ty-summary-value">
-              {{ booking_summary.booking_time if booking_summary and booking_summary.booking_time else "—" }}
-            </div>
-          </div>
-        </div>
+  <div class="ty-summary-item">
+    <div class="ty-summary-label">Godzina</div>
+    <div class="ty-summary-value">
+      {{ booking_summary.booking_time if booking_summary and booking_summary.booking_time else "—" }}
+    </div>
+  </div>
+</div>
 
         <div class="ty-actions">
           <a href="{{ url_for('booking') }}" class="ty-btn ty-btn-primary">

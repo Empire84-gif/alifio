@@ -1438,11 +1438,12 @@
   right: 10px;
   width: 27px;
   height: 27px;
-  border: 1px solid var(--c-border2);
+  border: 0;
   border-radius: 0;
-  background: #fff;
+  background: transparent;
   color: var(--c-text3);
   cursor: pointer;
+  box-shadow: none;
 }
 
 .bp-modal-head {
@@ -2218,6 +2219,33 @@ body {
     height: 26px;
   }
 }
+
+.bp-modal-close:hover,
+.bp-modal-close:focus,
+.bp-modal-close:focus-visible {
+  border: 0;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--c-accent);
+}
+
+.bp-input[type="time"],
+.bp-input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 35px;
+  line-height: normal;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.bp-input[type="time"]::-webkit-date-and-time-value,
+.bp-input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 35px;
+  line-height: 35px;
+}
 </style>
 
 <div class="bp-layout">
@@ -2912,9 +2940,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.bookingTurnstileWidgetId !== null) return;
 
     state.bookingTurnstileWidgetId = window.turnstile.render(dom.bookingTurnstile, {
-      sitekey: TURNSTILE_SITE_KEY,
-      theme: "light"
-    });
+  sitekey: TURNSTILE_SITE_KEY,
+  theme: "light",
+  callback: function () {
+    showBookingSubmitLoading();
+    dom.bookingForm.submit();
+  }
+});
   }
 
   function renderWaitlistTurnstile() {
@@ -3466,22 +3498,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openWaitlistModal() {
-    if (!dom.serviceIdInput.value || !dom.employeeIdInput.value) return;
+  if (!dom.serviceIdInput.value || !dom.employeeIdInput.value) return;
 
-    fillWaitlistSummary();
+  fillWaitlistSummary();
 
-    dom.waitlistModal.classList.add("is-open");
-    dom.waitlistModal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("waitlist-modal-open");
+  dom.waitlistModal.classList.add("is-open");
+  dom.waitlistModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("waitlist-modal-open");
 
-    setTimeout(() => {
-      renderWaitlistTurnstile();
-    }, 200);
+  setTimeout(() => {
+    renderWaitlistTurnstile();
+  }, 150);
 
-    setTimeout(() => {
-      dom.waitlistClientNameInput?.focus({ preventScroll: true });
-    }, 100);
-  }
+  setTimeout(() => {
+    dom.waitlistClientNameInput?.focus({ preventScroll: true });
+  }, 250);
+}
 
   function closeWaitlistModal() {
     dom.waitlistModal.classList.remove("is-open");
@@ -3566,7 +3598,6 @@ if (!bookingTurnstileResponse || !bookingTurnstileResponse.value.trim()) {
     });
   }, 250);
 
-  alert("Potwierdź, że nie jesteś robotem.");
   return;
 }
 
@@ -3574,54 +3605,66 @@ showBookingSubmitLoading();
   }
 
   function validateWaitlistForm(event) {
-    if (!dom.waitlistServiceIdInput.value) {
-      event.preventDefault();
-      alert("Najpierw wybierz usługę.");
-      return;
-    }
-
-    if (!dom.waitlistEmployeeIdInput.value) {
-      event.preventDefault();
-      alert("Najpierw wybierz pracownika.");
-      return;
-    }
-
-    if (!dom.waitlistClientNameInput.value.trim()) {
-      event.preventDefault();
-      alert("Podaj imię i nazwisko.");
-      return;
-    }
-
-    if (dom.waitlistPrivacyConsentInput && !dom.waitlistPrivacyConsentInput.checked) {
-      event.preventDefault();
-      alert("Musisz zaakceptować Politykę prywatności.");
-      return;
-    }
-
-    const waitlistTurnstileResponse = dom.waitlistForm?.querySelector('[name="cf-turnstile-response"]');
-    if (!waitlistTurnstileResponse || !waitlistTurnstileResponse.value.trim()) {
-      event.preventDefault();
-      alert("Potwierdź, że nie jesteś robotem.");
-      return;
-    }
-
-    const dateFrom = dom.preferredDateFromInput.value;
-    const dateTo = dom.preferredDateToInput.value;
-
-    if (dateFrom && dateTo && dateFrom > dateTo) {
-      event.preventDefault();
-      alert("Zakres dat jest nieprawidłowy.");
-      return;
-    }
-
-    const timeFrom = dom.preferredTimeFromInput.value;
-    const timeTo = dom.preferredTimeToInput.value;
-
-    if (timeFrom && timeTo && timeFrom > timeTo) {
-      event.preventDefault();
-      alert("Zakres godzin jest nieprawidłowy.");
-    }
+  if (!dom.waitlistServiceIdInput.value) {
+    event.preventDefault();
+    alert("Najpierw wybierz usługę.");
+    return;
   }
+
+  if (!dom.waitlistEmployeeIdInput.value) {
+    event.preventDefault();
+    alert("Najpierw wybierz pracownika.");
+    return;
+  }
+
+  if (!dom.waitlistClientNameInput.value.trim()) {
+    event.preventDefault();
+    alert("Podaj imię i nazwisko.");
+    return;
+  }
+
+  if (dom.waitlistPrivacyConsentInput && !dom.waitlistPrivacyConsentInput.checked) {
+    event.preventDefault();
+    alert("Musisz zaakceptować Politykę prywatności.");
+    return;
+  }
+
+  const dateFrom = dom.preferredDateFromInput.value;
+  const dateTo = dom.preferredDateToInput.value;
+
+  if (dateFrom && dateTo && dateFrom > dateTo) {
+    event.preventDefault();
+    alert("Zakres dat jest nieprawidłowy.");
+    return;
+  }
+
+  const timeFrom = dom.preferredTimeFromInput.value;
+  const timeTo = dom.preferredTimeToInput.value;
+
+  if (timeFrom && timeTo && timeFrom > timeTo) {
+    event.preventDefault();
+    alert("Zakres godzin jest nieprawidłowy.");
+    return;
+  }
+
+  const waitlistTurnstileResponse = dom.waitlistForm?.querySelector('[name="cf-turnstile-response"]');
+
+  if (!waitlistTurnstileResponse || !waitlistTurnstileResponse.value.trim()) {
+    event.preventDefault();
+
+    renderWaitlistTurnstile();
+
+    setTimeout(() => {
+      dom.waitlistTurnstile?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }, 200);
+
+    alert("Potwierdź, że nie jesteś robotem.");
+    return;
+  }
+}
 
   function addServiceEntryHighlight() {
     dom.serviceDropdown?.classList.add("is-entry-highlight");
