@@ -3498,37 +3498,83 @@ body {
   }
 }
 
+/* =========================
+   WSZYSTKIE TABELE — USUŃ PUSTE POLE PO PRAWEJ
+========================= */
+
+@media (min-width: 768px) {
+  .bookings-table-wrap {
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .bookings-table,
+  .waitlist-table {
+    width: auto;
+    min-width: 0;
+  }
+}
+
 /* =========================================
-   TABLE FIX — USUWA PUSTE POLE PO PRAWEJ
+   TABLE WIDTH FIX — ROZCIĄGNIĘCIE TABEL
 ========================================= */
 
-/* wrapper */
+.bookings-section,
 .bookings-table-wrap {
   width: 100% !important;
   max-width: 100% !important;
-  overflow-x: auto !important;
 }
 
-/* KLUCZOWE: auto zamiast fixed */
 .bookings-table,
 .waitlist-table {
-  width: max-content !important;
+  width: 100% !important;
+}
+
+.bookings-section[data-bookings-block="active"] .bookings-table-wrap,
+.bookings-section[data-bookings-block="waitlist"] .bookings-table-wrap,
+.bookings-section[data-bookings-block="archive"] .bookings-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* aktywne rezerwacje */
+.bookings-section[data-bookings-block="active"] .bookings-table {
+  min-width: 1500px !important;
+}
+
+/* lista oczekujących */
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+  min-width: 1420px !important;
+}
+
+/* archiwum */
+.bookings-section[data-bookings-block="archive"] .bookings-table {
+  min-width: 1460px !important;
+}
+
+/* HARD FIX — blokuje overflow całej sekcji */
+
+.bookings-page-card {
+  overflow: hidden;
+}
+
+.bookings-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* KLUCZOWE — reset wszystkiego co rozwala szerokość */
+.bookings-table {
+  width: auto !important;
   min-width: 100% !important;
-  table-layout: auto !important;
+  max-width: 100% !important;
 }
 
-/* żeby tekst się nie rozjeżdżał */
-.bookings-table td,
-.waitlist-table td {
-  white-space: nowrap;
-}
-
-/* wyjątek: notatki mogą się łamać */
-.bookings-notes-row td,
-.waitlist-notes-row td {
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
+/* zabija sztuczne rozszerzanie */
+.bookings-table th,
+.bookings-table td {
+  max-width: 1px;
 }
 </style>
 
