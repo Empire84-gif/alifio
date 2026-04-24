@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <title>{{ email_title or "Powiadomienie" }}</title>
+
+  <style type="text/css">
+    body, table, td, a {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      outline: none;
+      text-decoration: none;
+      display: block;
+    }
+
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      background-color: #f6f7f9;
+    }
+
+    a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    u + #body a {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    @media only screen and (max-width: 620px) {
+      .email-wrapper {
+        padding: 12px 8px 14px !important;
+      }
+
+      .email-card {
+        width: 100% !important;
+      }
+
+      .header-cell {
+        padding: 18px 16px 12px !important;
+      }
+
+      .content-cell {
+        padding: 16px 16px 14px !important;
+        font-size: 13px !important;
+        line-height: 1.65 !important;
+      }
+
+      .footer-cell {
+        padding: 14px 16px 16px !important;
+      }
+
+      .brand-wordmark {
+        font-size: 19px !important;
+      }
+
+      .email-heading-text {
+        font-size: 14px !important;
+        line-height: 1.45 !important;
+      }
+
+      .meta-text,
+      .footer-meta,
+      .footer-note,
+      .footer-signoff {
+        font-size: 10.5px !important;
+        line-height: 1.6 !important;
+      }
+    }
+  </style>
+</head>
+
+<body id="body" style="margin:0; padding:0; background-color:#f6f7f9; font-family:Arial, Helvetica, sans-serif;">
+
+  <div style="display:none; max-height:0; max-width:0; overflow:hidden; opacity:0; mso-hide:all; font-size:1px; line-height:1px; color:#f6f7f9;">
+    {{ email_title or "Powiadomienie" }}
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; background-color:#f6f7f9;">
+    <tr>
+      <td align="center" class="email-wrapper" style="padding:18px 12px 20px;">
+
+        <table
+          role="presentation"
+          width="640"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          class="email-card"
+          style="width:100%; max-width:640px; background-color:#ffffff; border:1px solid #e5e7eb;"
+        >
+
+          <tr>
+            <td
+              class="header-cell"
+              align="center"
+              style="padding:22px 24px 14px; border-bottom:1px solid #e5e7eb; background-color:#ffffff; text-align:center;"
+            >
+
+              <p
+                class="meta-text"
+                style="margin:0 0 8px 0; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:1.4; letter-spacing:0.08em; text-transform:uppercase; color:#6b7280; text-align:center;"
+              >
+                Alifio · Powiadomienie
+              </p>
+
+              <p
+                class="brand-wordmark"
+                style="margin:0 0 6px 0; font-family:Arial, Helvetica, sans-serif; font-size:22px; line-height:1.2; font-weight:600; color:#111827; letter-spacing:0; text-align:center;"
+              >
+                {{ company_name or "Alifio" }}
+              </p>
+
+              {% if email_heading %}
+              <p
+                class="email-heading-text"
+                style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.5; font-weight:600; color:#374151; text-align:center;"
+              >
+                {{ email_heading }}
+              </p>
+              {% endif %}
+
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              class="content-cell"
+              align="center"
+              style="padding:18px 24px 16px; background-color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.7; color:#111827; text-align:center;"
+            >
+              {% block content %}{% endblock %}
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              class="footer-cell"
+              align="center"
+              style="padding:16px 24px 18px; border-top:1px solid #e5e7eb; background-color:#fafafa; text-align:center;"
+            >
+
+              <p
+                class="footer-signoff"
+                style="margin:0 0 10px 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.65; color:#374151; text-align:center;"
+              >
+                Pozdrawiamy,<br>
+                <strong style="color:#111827; font-weight:600;">{{ company_name or "Alifio" }}</strong>
+              </p>
+
+              {% if company_address or contact_phone or contact_email or website_url %}
+              <p
+                class="footer-meta"
+                style="margin:0 0 10px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#6b7280; text-align:center;"
+              >
+                {% if company_address %}
+                  {{ company_address }}<br>
+                {% endif %}
+                {% if contact_phone %}
+                  Tel.: {{ contact_phone }}<br>
+                {% endif %}
+                {% if contact_email %}
+                  E-mail: {{ contact_email }}<br>
+                {% endif %}
+                {% if website_url %}
+                  Strona:
+                  <a href="{{ website_url }}" style="color:#4b5563; text-decoration:none;">{{ website_url }}</a>
+                {% endif %}
+              </p>
+              {% endif %}
+
+              <p
+                class="footer-note"
+                style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:1.6; color:#9ca3af; text-align:center;"
+              >
+                Ta wiadomość została wygenerowana automatycznie przez platformę Alifio.
+              </p>
+
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
