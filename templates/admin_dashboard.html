@@ -3355,6 +3355,117 @@ body {
     min-width: 1560px !important;
   }
 }
+
+/* =========================
+   FIX: NOTATKI NIE ROZWALAJĄ TABEL
+========================= */
+
+.bookings-notes-row td {
+  max-width: 0 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+}
+
+.bookings-notes-row {
+  max-width: 100%;
+}
+
+.bookings-notes-row td span,
+.bookings-notes-row td {
+  min-width: 0 !important;
+}
+
+
+/* =========================
+   FIX: SZEROKOŚCI TABEL PER SEKCJA
+========================= */
+
+.bookings-section[data-bookings-block="active"] .bookings-table {
+  width: 100% !important;
+  min-width: 1110px !important;
+}
+
+.bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+  width: 100% !important;
+  min-width: 1110px !important;
+}
+
+.bookings-section[data-bookings-block="archive"] .bookings-table {
+  width: 100% !important;
+  min-width: 1110px !important;
+}
+
+
+/* =========================
+   FIX: ARCHIWUM NA SMARTPHONE
+   nie dostaje sztucznego 1650px
+========================= */
+
+@media (max-width: 767px) {
+  .bookings-table,
+  .waitlist-table {
+    max-width: none !important;
+  }
+
+  .bookings-section[data-bookings-block="active"] .bookings-table {
+    width: 1650px !important;
+    min-width: 1650px !important;
+  }
+
+  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
+    width: 1560px !important;
+    min-width: 1560px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-table {
+    width: 1320px !important;
+    min-width: 1320px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-service {
+    width: 430px !important;
+    min-width: 430px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-client {
+    width: 190px !important;
+    min-width: 190px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-phone {
+    width: 145px !important;
+    min-width: 145px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-email {
+    width: 210px !important;
+    min-width: 210px !important;
+    max-width: 210px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-date {
+    width: 120px !important;
+    min-width: 120px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-time {
+    width: 90px !important;
+    min-width: 90px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-status {
+    width: 105px !important;
+    min-width: 105px !important;
+  }
+
+  .bookings-section[data-bookings-block="archive"] .bookings-col-actions {
+    width: 55px !important;
+    min-width: 55px !important;
+  }
+}
 </style>
 
 <div class="bookings-page">
@@ -4179,7 +4290,7 @@ body {
                 </th>
 
                 <th class="bookings-col-actions">
-                  <div class="bookings-th-content"><span>Akcje</span></spa></span></div>
+                  <div class="bookings-th-content"><span>Akcje</span></span></div>
                 </th>
               </tr>
             </thead>
