@@ -3499,43 +3499,36 @@ body {
 }
 
 /* =========================================
-   TABLE WIDTH FIX — BEZ PUSTEGO POLA I BEZ SUWAKA STRONY
+   TABLE FIX — USUWA PUSTE POLE PO PRAWEJ
 ========================================= */
 
+/* wrapper */
 .bookings-table-wrap {
   width: 100% !important;
   max-width: 100% !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
   overflow-x: auto !important;
-  overflow-y: hidden !important;
 }
 
+/* KLUCZOWE: auto zamiast fixed */
 .bookings-table,
 .waitlist-table {
-  width: 100% !important;
-  max-width: none !important;
-  table-layout: fixed !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  table-layout: auto !important;
 }
 
-/* desktop */
-@media (min-width: 768px) {
-  .bookings-section[data-bookings-block="active"] .bookings-table,
-  .bookings-section[data-bookings-block="archive"] .bookings-table,
-  .bookings-section[data-bookings-block="waitlist"] .waitlist-table {
-    min-width: 100% !important;
-  }
+/* żeby tekst się nie rozjeżdżał */
+.bookings-table td,
+.waitlist-table td {
+  white-space: nowrap;
 }
 
-/* notatki nie mogą rozpychać tabeli */
+/* wyjątek: notatki mogą się łamać */
 .bookings-notes-row td,
 .waitlist-notes-row td {
   white-space: normal !important;
-  overflow: hidden !important;
   overflow-wrap: anywhere !important;
   word-break: break-word !important;
-  max-width: 100% !important;
-  padding-right: 10px !important;
 }
 </style>
 
