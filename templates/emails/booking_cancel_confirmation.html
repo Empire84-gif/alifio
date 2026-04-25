@@ -1,0 +1,58 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+  <p class="lead-text" style="margin:0 0 12px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.7; color:#374151; text-align:left;">
+    Rezerwacja została anulowana.
+  </p>
+
+  <p class="lead-text" style="margin:0 0 18px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.7; color:#374151; text-align:left;">
+    Potwierdzamy, że Twoja rezerwacja została skutecznie anulowana w systemie.
+  </p>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="details-box" style="width:100%; margin:18px 0 20px; border:1px solid #e5e7eb; background-color:#ffffff;">
+    <tr>
+      <td colspan="2" class="details-title" style="padding:13px 16px; border-bottom:1px solid #e5e7eb; background-color:#f9fafb; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.4; font-weight:700; color:#111827; text-align:left;">
+        Szczegóły anulowanej wizyty
+      </td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Klient</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_name or "—" }}</td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">E-mail klienta</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_email or "—" }}</td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Telefon klienta</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_phone or "—" }}</td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Usługa</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.service_name or "—" }}</td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Osoba wykonująca usługę</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.employee_name or "—" }}</td>
+    </tr>
+
+    <tr>
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Data wizyty</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.booking_date_pl or data.booking_date or "—" }}</td>
+    </tr>
+
+    <tr class="details-row-last">
+      <td class="details-label" style="width:38%; padding:12px 16px; border-bottom:none; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; font-weight:700; color:#6b7280; text-align:left; vertical-align:top;">Godzina wizyty</td>
+      <td class="details-value" style="width:62%; padding:12px 16px; border-bottom:none; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.45; color:#111827; text-align:right; vertical-align:top; word-break:break-word;">{{ data.booking_time or "—" }}</td>
+    </tr>
+  </table>
+
+  <p class="lead-text" style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.7; color:#374151; text-align:left;">
+    W celu umówienia nowego terminu możesz ponownie skorzystać z systemu rezerwacji online lub skontaktować się bezpośrednio z punktem usługowym.
+  </p>
+{% endblock %}
