@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <title>Potwierdzenie rezerwacji</title>
+
+  <style type="text/css">
+    body, table, td, a {
+      -webkit-text-size-adjust:100%;
+      -ms-text-size-adjust:100%;
+    }
+
+    table, td {
+      mso-table-lspace:0pt;
+      mso-table-rspace:0pt;
+      border-collapse:collapse;
+    }
+
+    body {
+      margin:0 !important;
+      padding:0 !important;
+      width:100% !important;
+      min-width:100% !important;
+      background-color:#f3f4f6;
+      font-family:Arial, Helvetica, sans-serif;
+      color:#111827;
+    }
+
+    a[x-apple-data-detectors] {
+      color:inherit !important;
+      text-decoration:none !important;
+    }
+
+    .email-wrapper {
+      padding:24px 12px;
+    }
+
+    .email-card {
+      width:100%;
+      max-width:660px;
+      background-color:#ffffff;
+      border:1px solid #e5e7eb;
+    }
+
+    .header-cell {
+      padding:26px 32px 18px;
+      background-color:#ffffff;
+      border-bottom:1px solid #eef0f3;
+      text-align:center;
+    }
+
+    .system-label {
+      margin:0 0 8px;
+      font-size:11px;
+      line-height:1.4;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      color:#6b7280;
+      text-align:center;
+    }
+
+    .mail-category {
+      margin:0 0 10px;
+      font-size:12px;
+      line-height:1.45;
+      color:#6b7280;
+      text-align:center;
+    }
+
+    .mail-title {
+      margin:0;
+      font-size:24px;
+      line-height:1.25;
+      font-weight:700;
+      color:#111827;
+      text-align:center;
+    }
+
+    .content-cell {
+      padding:24px 32px 26px;
+      background-color:#ffffff;
+      color:#111827;
+      text-align:left;
+    }
+
+    .lead-text {
+      margin:0 0 14px;
+      font-size:14px;
+      line-height:1.75;
+      color:#374151;
+      text-align:left;
+    }
+
+    .details-box {
+      width:100%;
+      margin:20px 0 20px;
+      border-top:1px solid #e5e7eb;
+      border-bottom:1px solid #e5e7eb;
+      background-color:#ffffff;
+    }
+
+    .details-title {
+      padding:13px 0;
+      border-bottom:1px solid #e5e7eb;
+      font-size:14px;
+      line-height:1.4;
+      font-weight:700;
+      color:#111827;
+      text-align:left;
+    }
+
+    .details-label {
+      width:40%;
+      padding:12px 0;
+      border-bottom:1px solid #eef0f3;
+      font-size:12px;
+      line-height:1.45;
+      font-weight:700;
+      color:#6b7280;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    .details-value {
+      width:60%;
+      padding:12px 0 12px 12px;
+      border-bottom:1px solid #eef0f3;
+      font-size:13px;
+      line-height:1.45;
+      color:#111827;
+      text-align:right;
+      vertical-align:top;
+      word-break:break-word;
+    }
+
+    .details-row-last .details-label,
+    .details-row-last .details-value {
+      border-bottom:none;
+    }
+
+    .info-text {
+      margin:0 0 18px;
+      padding:0;
+      font-size:13px;
+      line-height:1.7;
+      color:#374151;
+      text-align:left;
+    }
+
+    .actions-cell {
+      padding:4px 0 10px;
+      text-align:center;
+    }
+
+    .email-button {
+      display:inline-block;
+      min-width:240px;
+      padding:15px 24px;
+      border-radius:999px;
+      background-color:#1d4ed8;
+      border:1px solid #1d4ed8;
+      color:#ffffff !important;
+      font-size:14px;
+      line-height:1.2;
+      font-weight:700;
+      text-align:center;
+      text-decoration:none;
+    }
+
+    .email-button-secondary {
+      display:inline-block;
+      min-width:240px;
+      padding:14px 24px;
+      border-radius:999px;
+      background-color:#0f172a;
+      border:1px solid #0f172a;
+      color:#ffffff !important;
+      font-size:13px;
+      line-height:1.2;
+      font-weight:700;
+      text-align:center;
+      text-decoration:none;
+    }
+
+    .link-note {
+      margin:0 0 6px;
+      font-size:12px;
+      line-height:1.65;
+      color:#6b7280;
+      text-align:left;
+    }
+
+    .plain-link {
+      margin:0 0 20px;
+      font-size:12px;
+      line-height:1.65;
+      color:#374151;
+      text-align:left;
+      word-break:break-all;
+    }
+
+    .footer-cell {
+      padding:20px 32px 22px;
+      border-top:1px solid #e5e7eb;
+      background-color:#f9fafb;
+      text-align:center;
+    }
+
+    .footer-signoff {
+      margin:0 0 12px;
+      font-size:13px;
+      line-height:1.65;
+      color:#374151;
+      text-align:center;
+    }
+
+    .footer-signoff strong {
+      color:#111827;
+      font-weight:700;
+    }
+
+    .footer-contact {
+      margin:0 0 12px;
+      font-size:12px;
+      line-height:1.65;
+      color:#6b7280;
+      text-align:center;
+    }
+
+    .footer-contact a {
+      color:#4b5563;
+      text-decoration:none;
+    }
+
+    .footer-note {
+      margin:0;
+      font-size:11px;
+      line-height:1.6;
+      color:#9ca3af;
+      text-align:center;
+    }
+
+    @media only screen and (max-width:640px) {
+      .email-wrapper {
+        padding:0 !important;
+      }
+
+      .email-card {
+        width:100% !important;
+        max-width:100% !important;
+        border-left:none !important;
+        border-right:none !important;
+      }
+
+      .header-cell {
+        padding:22px 16px 16px !important;
+      }
+
+      .content-cell {
+        padding:20px 16px 22px !important;
+      }
+
+      .footer-cell {
+        padding:18px 16px 20px !important;
+      }
+
+      .system-label {
+        font-size:10.5px !important;
+      }
+
+      .mail-category {
+        font-size:11px !important;
+      }
+
+      .mail-title {
+        font-size:20px !important;
+        line-height:1.3 !important;
+      }
+
+      .lead-text {
+        font-size:13px !important;
+        line-height:1.7 !important;
+      }
+
+      .details-box {
+        margin:18px 0 18px !important;
+      }
+
+      .details-title {
+        padding:12px 0 !important;
+        font-size:13px !important;
+      }
+
+      .details-label {
+        width:40% !important;
+        padding:10px 0 !important;
+        font-size:11px !important;
+      }
+
+      .details-value {
+        width:60% !important;
+        padding:10px 0 10px 10px !important;
+        font-size:12px !important;
+      }
+
+      .info-text {
+        font-size:12px !important;
+        line-height:1.65 !important;
+      }
+
+      .email-button,
+      .email-button-secondary {
+        display:block !important;
+        width:auto !important;
+        min-width:0 !important;
+        padding:14px 18px !important;
+        border-radius:999px !important;
+        font-size:13px !important;
+      }
+
+      .link-note {
+        font-size:11px !important;
+      }
+
+      .plain-link {
+        font-size:10.8px !important;
+        line-height:1.55 !important;
+      }
+
+      .footer-signoff,
+      .footer-contact {
+        font-size:11.5px !important;
+      }
+
+      .footer-note {
+        font-size:10.5px !important;
+      }
+    }
+  </style>
+</head>
+
+<body id="body" style="margin:0; padding:0; background-color:#f3f4f6; font-family:Arial, Helvetica, sans-serif; color:#111827;">
+
+  <div style="display:none; max-height:0; max-width:0; overflow:hidden; opacity:0; mso-hide:all; font-size:1px; line-height:1px; color:#f3f4f6;">
+    Potwierdź adres e-mail, aby otrzymywać powiadomienia dotyczące rezerwacji.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; background-color:#f3f4f6;">
+    <tr>
+      <td align="center" class="email-wrapper" style="padding:24px 12px;">
+
+        <table role="presentation" width="660" cellpadding="0" cellspacing="0" border="0" class="email-card" style="width:100%; max-width:660px; background-color:#ffffff; border:1px solid #e5e7eb;">
+
+          <tr>
+            <td align="center" class="header-cell" style="padding:26px 32px 18px; background-color:#ffffff; border-bottom:1px solid #eef0f3; text-align:center;">
+              <p class="system-label" style="margin:0 0 8px; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:1.4; letter-spacing:0.08em; text-transform:uppercase; color:#6b7280; text-align:center;">
+                System rezerwacji Alifio
+              </p>
+
+              <p class="mail-category" style="margin:0 0 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.45; color:#6b7280; text-align:center;">
+                Potwierdzenie rezerwacji
+              </p>
+
+              <h1 class="mail-title" style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:24px; line-height:1.25; font-weight:700; color:#111827; text-align:center;">
+                Rezerwacja została zapisana
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="left" class="content-cell" style="padding:24px 32px 26px; background-color:#ffffff; font-family:Arial, Helvetica, sans-serif; color:#111827; text-align:left;">
+
+              <p class="lead-text" style="margin:0 0 14px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.75; color:#374151; text-align:left;">
+                Dziękujemy za dokonanie rezerwacji. Termin został poprawnie zapisany w systemie.
+              </p>
+
+              <p class="lead-text" style="margin:0 0 14px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.75; color:#374151; text-align:left;">
+                W celu otrzymywania kolejnych wiadomości dotyczących tej wizyty, w tym przypomnień, zmian statusu lub informacji o ewentualnym anulowaniu, potwierdź swój adres e-mail.
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="details-box" style="width:100%; margin:20px 0 20px; border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; background-color:#ffffff;">
+                <tr>
+                  <td colspan="2" class="details-title" style="padding:13px 0; border-bottom:1px solid #e5e7eb; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.4; font-weight:700; color:#111827; text-align:left;">
+                    Szczegóły wizyty
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Klient</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_name or "—" }}</td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">E-mail klienta</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_email or "—" }}</td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Telefon klienta</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.client_phone or "—" }}</td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Usługa</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.service_name or "—" }}</td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Osoba wykonująca usługę</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.employee_name or "—" }}</td>
+                </tr>
+
+                <tr>
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Data wizyty</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:1px solid #eef0f3; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.booking_date_pl or data.booking_date or "—" }}</td>
+                </tr>
+
+                <tr class="details-row-last">
+                  <td class="details-label" style="width:40%; padding:12px 0; border-bottom:none; font-family:Arial, Helvetica, sans-serif; color:#6b7280; font-size:12px; line-height:1.45; font-weight:700; text-align:left; vertical-align:top;">Godzina wizyty</td>
+                  <td class="details-value" style="width:60%; padding:12px 0 12px 12px; border-bottom:none; font-family:Arial, Helvetica, sans-serif; color:#111827; font-size:13px; line-height:1.45; text-align:right; vertical-align:top; word-break:break-word;">{{ data.booking_time or "—" }}</td>
+                </tr>
+              </table>
+
+              <p class="info-text" style="margin:0 0 18px; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.7; color:#374151; text-align:left;">
+                <strong style="color:#111827;">Ważne:</strong>
+                potwierdzenie adresu e-mail umożliwi wysyłanie kolejnych wiadomości dotyczących tej wizyty.
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" class="actions-cell" style="padding:4px 0 10px; text-align:center;">
+                    <a href="{{ verification_link }}" class="email-button" style="display:inline-block; min-width:240px; padding:15px 24px; border-radius:999px; background-color:#1d4ed8; border:1px solid #1d4ed8; color:#ffffff !important; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.2; font-weight:700; text-align:center; text-decoration:none;">
+                      Potwierdź adres e-mail
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p class="link-note" style="margin:0 0 6px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#6b7280; text-align:left;">
+                Jeżeli przycisk potwierdzenia nie działa, skopiuj i otwórz poniższy link w przeglądarce:
+              </p>
+
+              <p class="plain-link" style="margin:0 0 20px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#374151; text-align:left; word-break:break-all;">
+                {{ verification_link }}
+              </p>
+
+              {% if cancel_url %}
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td align="center" class="actions-cell" style="padding:2px 0 10px; text-align:center;">
+                      <a href="{{ cancel_url }}" class="email-button-secondary" style="display:inline-block; min-width:240px; padding:14px 24px; border-radius:999px; background-color:#0f172a; border:1px solid #0f172a; color:#ffffff !important; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.2; font-weight:700; text-align:center; text-decoration:none;">
+                        Anuluj rezerwację
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p class="link-note" style="margin:0 0 6px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#6b7280; text-align:left;">
+                  Jeżeli przycisk anulowania nie działa, skopiuj i otwórz poniższy link:
+                </p>
+
+                <p class="plain-link" style="margin:0 0 20px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#374151; text-align:left; word-break:break-all;">
+                  {{ cancel_url }}
+                </p>
+              {% endif %}
+
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" class="footer-cell" style="padding:20px 32px 22px; border-top:1px solid #e5e7eb; background-color:#f9fafb; text-align:center;">
+
+              <p class="footer-signoff" style="margin:0 0 12px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:1.65; color:#374151; text-align:center;">
+                Pozdrawiamy,<br>
+                <strong style="color:#111827; font-weight:700;">{{ company_name or data.company_name or "Alifio" }}</strong>
+              </p>
+
+              {% if company_address or data.company_address or contact_phone or data.contact_phone or contact_email or data.contact_email or website_url or data.website_url %}
+                <p class="footer-contact" style="margin:0 0 12px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.65; color:#6b7280; text-align:center;">
+                  {% if company_address or data.company_address %}
+                    {{ company_address or data.company_address }}<br>
+                  {% endif %}
+                  {% if contact_phone or data.contact_phone %}
+                    Tel.: {{ contact_phone or data.contact_phone }}<br>
+                  {% endif %}
+                  {% if contact_email or data.contact_email %}
+                    E-mail: {{ contact_email or data.contact_email }}<br>
+                  {% endif %}
+                  {% if website_url or data.website_url %}
+                    Strona:
+                    <a href="{{ website_url or data.website_url }}" style="color:#4b5563; text-decoration:none;">
+                      {{ website_url or data.website_url }}
+                    </a>
+                  {% endif %}
+                </p>
+              {% endif %}
+
+              <p class="footer-note" style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:1.6; color:#9ca3af; text-align:center;">
+                Ta wiadomość została wygenerowana automatycznie na podstawie dokonanej rezerwacji.
+              </p>
+
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
