@@ -1,0 +1,1521 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+:root {
+  --cal-bg: #101722;
+  --cal-surface: #1a2230;
+  --cal-surface-2: #212b3a;
+  --cal-surface-3: #2a3547;
+  --cal-border: rgba(255, 255, 255, 0.18);
+  --cal-border-2: rgba(255, 255, 255, 0.28);
+  --cal-text: #f4f7fb;
+  --cal-text-2: #dce2eb;
+  --cal-text-3: #cfd8e5;
+  --cal-text-4: #aeb8c8;
+  --cal-row-h: 75px;
+  --cal-time-col: 74px;
+  --cal-radius: 2px;
+  --cal-t: 0.16s ease;
+}
+
+body {
+  background: var(--cal-bg) !important;
+}
+
+.calendar-page,
+.calendar-page * {
+  box-sizing: border-box;
+  font-family: "LexendDecaLocal", Arial, sans-serif;
+}
+
+.calendar-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-top: 7px;
+  color: var(--cal-text);
+}
+
+.calendar-shell {
+  display: grid;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+}
+
+.calendar-topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 18px;
+  min-width: 0;
+}
+
+.calendar-title-wrap {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.calendar-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--cal-text);
+  font-size: 16.8px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.calendar-title i {
+  color: var(--primary-color);
+  font-size: 15px;
+}
+
+.calendar-subtitle {
+  margin: 0;
+  color: var(--cal-text-3);
+  font-size: 11.55px;
+  line-height: 1.45;
+}
+
+.calendar-week-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.calendar-week-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.calendar-nav-btn {
+  width: 28px;
+  min-width: 28px;
+  height: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cal-text-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--cal-t),
+    opacity var(--cal-t),
+    transform var(--cal-t);
+}
+
+.calendar-nav-btn:hover {
+  background: transparent;
+  color: var(--primary-color-bright);
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.calendar-week-range {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cal-text-2);
+  font-size: 11.55px;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.calendar-week-range i {
+  color: var(--primary-color);
+}
+
+.calendar-today-btn {
+  min-height: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--cal-radius);
+  background: var(--primary-color);
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 10.8px;
+  line-height: 1;
+  transition:
+    background var(--cal-t),
+    border-color var(--cal-t),
+    color var(--cal-t),
+    transform var(--cal-t);
+   padding: 0 18px;
+  min-width: 150px;
+}
+
+.calendar-today-btn:hover {
+  background: transparent;
+  border-color: var(--primary-color);
+  color: var(--cal-text);
+  transform: translateY(-1px);
+}
+
+.calendar-employees-panel {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface);
+}
+
+.calendar-employees-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--cal-text-3);
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calendar-employees-label i {
+  color: var(--primary-color);
+}
+
+.calendar-employee-pills {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  min-width: 0;
+  padding-top: 5px;
+}
+
+.calendar-employee-pill {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--cal-border-2);
+  border-radius: 999px;
+  background: var(--cal-surface-3);
+  color: var(--cal-text-3);
+  text-decoration: none;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background var(--cal-t),
+    border-color var(--cal-t),
+    color var(--cal-t),
+    transform var(--cal-t),
+    box-shadow var(--cal-t);
+}
+
+.calendar-employee-pill i {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.calendar-employee-pill:hover {
+  border-color: var(--primary-color);
+  background: transparent;
+  color: var(--cal-text);
+  transform: translateY(-1px);
+}
+
+.calendar-employee-pill.is-active {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 16%, transparent);
+}
+
+.calendar-info-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.calendar-selected-worker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--cal-text-2);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.calendar-selected-worker i {
+  color: var(--primary-color);
+}
+
+.calendar-meta-pills {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.calendar-meta-pill {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border: 1px solid var(--cal-border);
+  border-radius: 999px;
+  color: var(--cal-text-3);
+  font-size: 10.3px;
+  line-height: 1;
+}
+
+.calendar-meta-pill i {
+  color: var(--primary-color);
+}
+
+.calendar-board {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--cal-border-2);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface);
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: var(--cal-time-col) repeat(7, minmax(124px, 1fr));
+  min-width: 940px;
+  border-bottom: 1px solid var(--cal-border-2);
+  background: var(--cal-surface-2);
+}
+
+.calendar-corner {
+  min-height: 56px;
+  border-right: 1px solid var(--cal-border);
+}
+
+.calendar-day-head {
+  min-width: 0;
+  min-height: 64px;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 4px 12px 4px;
+  border-right: 1px solid var(--cal-border);
+}
+
+.calendar-day-head:last-child {
+  border-right: none;
+}
+
+.calendar-day-head.is-today {
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+}
+
+.calendar-day-name {
+  justify-self: start;
+  color: var(--cal-text);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.calendar-day-date {
+  justify-self: end;
+  margin-top: -21px;
+  color: var(--cal-text-2);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.calendar-day-hours {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--cal-text-4);
+  font-size: 9.5px;
+  line-height: 1;
+  text-align: center;
+}
+
+.calendar-day-hours i,
+.calendar-mobile-day-hours i {
+  color: var(--primary-color);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.calendar-day-hours.is-off {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.calendar-day-hours.is-off i {
+  color: #ffb4c8;
+}
+
+.calendar-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.calendar-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cal-time-col) repeat(7, minmax(124px, 1fr));
+  grid-template-rows: repeat({{ time_slots|length }}, var(--cal-row-h));
+  min-width: 940px;
+  background:
+    linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:
+    calc((100% - var(--cal-time-col)) / 7) var(--cal-row-h),
+    100% var(--cal-row-h);
+  background-position:
+    var(--cal-time-col) 0,
+    0 0;
+}
+
+.calendar-time-slot {
+  grid-column: 1;
+  min-width: 0;
+  padding: 7px 10px 0 0;
+  border-right: 1px solid var(--cal-border-2);
+  color: var(--cal-text-4);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.018em;
+  text-align: right;
+}
+
+.calendar-day-slot {
+  min-width: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.calendar-day-slot.is-today {
+  background: color-mix(in srgb, var(--primary-color) 3%, transparent);
+}
+
+.calendar-day-slot.is-off {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+}
+
+.calendar-empty-state {
+  grid-column: 2 / span 7;
+  grid-row: 1 / span {{ time_slots|length }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--cal-text-4);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.calendar-empty-state-inner {
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+  padding: 18px;
+}
+
+.calendar-empty-state i {
+  color: var(--primary-color);
+  font-size: 22px;
+  opacity: 0.82;
+}
+
+.calendar-event {
+  position: relative;
+  z-index: 5;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, auto) auto;
+  align-content: start;
+  gap: 4px;
+  margin: 4px 6px;
+  padding: 9px 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 52%, transparent);
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--primary-color) 92%, white 8%),
+      color-mix(in srgb, var(--primary-color) 76%, black 24%)
+    );
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.22),
+    0 0 18px color-mix(in srgb, var(--primary-color) 20%, transparent);
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    transform var(--cal-t),
+    box-shadow var(--cal-t),
+    filter var(--cal-t);
+}
+
+.calendar-event:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.28),
+    0 0 22px color-mix(in srgb, var(--primary-color) 28%, transparent);
+}
+
+.calendar-event-status {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.42);
+}
+
+.calendar-event.is-new .calendar-event-status {
+  background: #a9dcff;
+}
+
+.calendar-event.is-confirmed .calendar-event-status {
+  background: #5eead4;
+}
+
+.calendar-event-time,
+.calendar-event-client {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding-right: 14px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 10px;
+  line-height: 1.15;
+  white-space: nowrap;
+   overflow: visible;
+  text-overflow: clip;
+}
+
+.calendar-event-service {
+  min-width: 0;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.18;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-event-client {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 10.3px;
+}
+
+.calendar-event-client i,
+.calendar-event-time i {
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.calendar-mobile-list {
+  display: none;
+}
+
+.calendar-mobile-day {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface);
+}
+
+.calendar-mobile-day-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--cal-text);
+  font-size: 12px;
+}
+
+.calendar-mobile-day-title span {
+  color: var(--cal-text-4);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calendar-mobile-day-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cal-text-4);
+  font-size: 10.5px;
+}
+
+.calendar-mobile-event {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 42%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--primary-color) 15%, var(--cal-surface-2));
+}
+
+.calendar-mobile-event-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-color-bright);
+  font-size: 10.5px;
+}
+
+.calendar-mobile-event-service {
+  color: var(--cal-text);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.calendar-mobile-event-client {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cal-text-3);
+  font-size: 11px;
+}
+
+.calendar-empty-day {
+  color: var(--cal-text-4);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+@media (max-width: 1024px) {
+  .calendar-topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-week-center,
+  .calendar-week-actions {
+    justify-content: flex-start;
+  }
+
+  .calendar-info-row {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-meta-pills {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 1024px) {
+  .calendar-page {
+    padding-top: 0;
+  }
+
+  .calendar-shell {
+    gap: 12px;
+  }
+
+  .calendar-title {
+    font-size: 15.5px;
+  }
+
+  .calendar-subtitle {
+    font-size: 11px;
+  }
+
+  .calendar-week-center {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .calendar-week-range {
+    min-width: 0;
+    padding: 0 8px;
+    font-size: 10.5px;
+  }
+
+  .calendar-week-actions {
+    width: 100%;
+  }
+
+  .calendar-today-btn {
+    width: 100%;
+  }
+
+  .calendar-employees-panel {
+    padding: 10px;
+  }
+
+  .calendar-employee-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .calendar-employee-pill {
+    flex: 0 0 auto;
+  }
+
+  .calendar-board {
+    display: none;
+  }
+
+  .calendar-mobile-list {
+    display: grid;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .calendar-page {
+    padding-top: 0;
+    overflow-x: hidden;
+  }
+
+  .calendar-shell {
+    gap: 14px;
+  }
+
+  .calendar-topbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .calendar-title-wrap {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .calendar-title {
+    justify-content: center;
+    font-size: 15.5px;
+  }
+
+  .calendar-subtitle {
+    max-width: 500px;
+    font-size: 10.8px;
+    line-height: 1.45;
+  }
+
+  .calendar-week-center {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) 32px;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .calendar-nav-btn {
+    width: 32px;
+    min-width: 32px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .calendar-week-range {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 0 6px;
+    font-size: 10.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .calendar-week-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .calendar-today-btn {
+    width: auto;
+    min-width: 170px;
+    min-height: 34px;
+    height: 34px;
+    padding: 0 16px;
+    font-size: 10.5px;
+  }
+
+  .calendar-employee-pills {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 2px 2px 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .calendar-employee-pill {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 0 13px;
+    font-size: 10.8px;
+  }
+
+  .calendar-info-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .calendar-selected-worker {
+    justify-content: center;
+    text-align: center;
+    font-size: 11.2px;
+  }
+
+  .calendar-meta-pills {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .calendar-meta-pill {
+    min-height: 25px;
+    padding: 0 8px;
+    font-size: 9.8px;
+  }
+
+  .calendar-board {
+    display: none;
+  }
+
+  .calendar-mobile-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .calendar-mobile-day {
+    gap: 9px;
+    padding: 12px;
+    border-radius: 2px;
+  }
+
+  .calendar-mobile-day-title {
+    align-items: baseline;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--cal-border);
+  }
+
+  .calendar-mobile-day-title strong {
+    color: var(--cal-text);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .calendar-mobile-day-title span {
+    color: var(--cal-text-4);
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .calendar-mobile-day-hours {
+    justify-content: center;
+    min-height: 24px;
+    font-size: 10.4px;
+    text-align: center;
+  }
+
+  .calendar-mobile-event {
+    gap: 7px;
+    padding: 11px 12px;
+    border-radius: 8px;
+  }
+
+  .calendar-mobile-event-time {
+    font-size: 10.3px;
+    line-height: 1.2;
+  }
+
+  .calendar-mobile-event-service {
+    font-size: 12.2px;
+    line-height: 1.25;
+  }
+
+  .calendar-mobile-event-client {
+    font-size: 10.8px;
+    line-height: 1.25;
+  }
+
+  .calendar-empty-day {
+    padding: 8px 0 2px;
+    text-align: center;
+    font-size: 10.8px;
+  }
+}
+
+.calendar-print-btn {
+  margin-left: 8px;
+  height: 32px;
+  min-height: 32px;
+  min-width: 110px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--cal-border-2);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface-3);
+  color: var(--cal-text-2);
+  font-size: 10.8px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--cal-t);
+}
+
+.calendar-print-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: transparent;
+  transform: translateY(-1px);
+}
+
+.calendar-print-btn i {
+  font-size: 13px;
+}
+
+.calendar-print-header {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .calendar-week-actions {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .calendar-print-btn {
+    height: 34px;
+    min-height: 34px;
+  }
+}
+
+/* =========================================
+   DESKTOP CALENDAR — STATUS COLORS + NOTES
+========================================= */
+
+.calendar-event {
+  overflow: visible !important;
+}
+
+.calendar-event.is-new {
+  border-color: rgba(169, 220, 255, 0.72) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(78, 157, 255, 0.96),
+      rgba(42, 103, 190, 0.96)
+    ) !important;
+}
+
+.calendar-event.is-confirmed {
+  border-color: rgba(94, 234, 212, 0.72) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(34, 197, 164, 0.96),
+      rgba(18, 128, 111, 0.96)
+    ) !important;
+}
+
+.calendar-event-client {
+  overflow: visible !important;
+}
+
+.calendar-event-note-dot {
+  position: relative;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-left: 5px;
+  color: #fff3b0;
+  cursor: help;
+}
+
+.calendar-event-note-dot i {
+  display: inline-flex !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+}
+
+.calendar-event-note-dot::after {
+  content: attr(data-note);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 243, 176, 0.42);
+  border-radius: 6px;
+  background: #1a2230;
+  color: #ffffff;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.38);
+  z-index: 9999;
+  transition: opacity var(--cal-t), transform var(--cal-t);
+}
+
+.calendar-event-note-dot:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================
+   PRINT — WEEK CALENDAR ON ONE PORTRAIT PAGE
+========================================= */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .calendar-page,
+  .calendar-page *,
+  .calendar-board,
+  .calendar-board *,
+  .calendar-print-header,
+  .calendar-print-header * {
+    visibility: visible !important;
+  }
+
+  .site-header,
+  .nav-drawer,
+  .nav-overlay,
+  .calendar-topbar,
+  .calendar-employee-pills,
+  .calendar-info-row,
+  .calendar-mobile-list {
+    display: none !important;
+  }
+
+  .calendar-page {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+  }
+
+  .calendar-shell {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .calendar-print-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: end !important;
+    column-gap: 10mm !important;
+    row-gap: 1mm !important;
+    margin: 0 0 3mm 0 !important;
+    padding-bottom: 2mm !important;
+    border-bottom: 1px solid #cfd6df !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+  }
+
+  .calendar-print-company {
+    grid-column: 1 / -1 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.15 !important;
+  }
+
+  .calendar-print-title {
+    grid-column: 1 !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    color: #374151 !important;
+    white-space: nowrap !important;
+  }
+
+  .calendar-print-meta {
+    grid-column: 2 !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    color: #6b7280 !important;
+    white-space: nowrap !important;
+    text-align: right !important;
+  }
+
+  .calendar-board {
+    display: block !important;
+    width: 100% !important;
+    border: 1px solid #cfd6df !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  .calendar-days-header {
+    min-width: 0 !important;
+    grid-template-columns: 42px repeat(7, minmax(0, 1fr)) !important;
+    background: #f3f4f6 !important;
+  }
+
+  .calendar-corner {
+    min-height: 42px !important;
+    border-right: 1px solid #cfd6df !important;
+  }
+
+  .calendar-day-head {
+    min-height: 42px !important;
+    padding: 5px 5px !important;
+    border-right: 1px solid #cfd6df !important;
+    background: #f3f4f6 !important;
+  }
+
+  .calendar-day-name {
+    font-size: 9px !important;
+    color: #111827 !important;
+  }
+
+  .calendar-day-date {
+    margin-top: -12px !important;
+    font-size: 8px !important;
+    color: #374151 !important;
+  }
+
+  .calendar-day-hours {
+    font-size: 6.5px !important;
+    color: #6b7280 !important;
+  }
+
+  .calendar-scroll {
+    overflow: visible !important;
+  }
+
+  .calendar-grid {
+    min-width: 0 !important;
+    grid-template-columns: 42px repeat(7, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat({{ time_slots|length }}, 47px) !important;
+    background:
+      linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+      linear-gradient(to bottom, #e5e7eb 1px, transparent 1px) !important;
+    background-size:
+      calc((100% - 42px) / 7) 47px,
+      100% 47px !important;
+    background-position:
+      42px 0,
+      0 0 !important;
+  }
+
+  .calendar-time-slot {
+    padding: 6px 5px 0 0 !important;
+    border-right: 1px solid #cfd6df !important;
+    color: #4b5563 !important;
+    font-size: 7px !important;
+  }
+
+  .calendar-day-slot {
+    border-right: 1px solid #eef0f3 !important;
+  }
+
+  .calendar-event {
+    overflow: hidden !important;
+    margin: 2px !important;
+    padding: 2px 3px !important;
+    gap: 1px !important;
+    border: 1px solid #111827 !important;
+    border-radius: 2px !important;
+    background: transparent !important;
+    color: #111827 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    break-inside: avoid !important;
+  }
+
+  .calendar-event.is-new,
+  .calendar-event.is-confirmed {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .calendar-event-status,
+  .calendar-event-note-dot,
+  .calendar-event-note-dot::before,
+  .calendar-event-note-dot::after {
+    display: none !important;
+  }
+
+  .calendar-event-time,
+  .calendar-event-client {
+    display: block !important;
+    padding-right: 0 !important;
+    color: #374151 !important;
+    font-size: 5.8px !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .calendar-event-service {
+    display: block !important;
+    color: #111827 !important;
+    font-size: 6.4px !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .calendar-event i {
+    display: none !important;
+  }
+
+  .calendar-empty-state {
+    color: #6b7280 !important;
+    font-size: 9px !important;
+  }
+}
+</style>
+
+<div class="calendar-page">
+  <section class="calendar-shell">
+
+    <div class="calendar-topbar">
+      <div class="calendar-title-wrap">
+        <h1 class="calendar-title">Kalendarz</h1>
+        <p class="calendar-subtitle">
+          Tygodniowy widok rezerwacji dla wybranego pracownika.
+        </p>
+      </div>
+
+      <div class="calendar-week-center">
+        <a
+          href="{{ url_for('admin_calendar', start=prev_week_start.isoformat(), employee_id=selected_employee_id) }}"
+          class="calendar-nav-btn"
+          aria-label="Poprzedni tydzień"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        <div class="calendar-week-range">
+          <i class="bi bi-calendar3"></i>
+          {{ start_date.strftime("%d.%m.%Y") }} — {{ end_date.strftime("%d.%m.%Y") }}
+        </div>
+
+        <a
+          href="{{ url_for('admin_calendar', start=next_week_start.isoformat(), employee_id=selected_employee_id) }}"
+          class="calendar-nav-btn"
+          aria-label="Następny tydzień"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </div>
+
+      <div class="calendar-week-actions">
+        <a
+          href="{{ url_for('admin_calendar', employee_id=selected_employee_id) }}"
+          class="calendar-today-btn"
+        >
+          <i class="bi bi-crosshair"></i>
+          Bieżący tydzień
+        </a>
+
+        <button
+          type="button"
+          class="calendar-print-btn"
+          onclick="window.print()"
+          aria-label="Drukuj kalendarz"
+        >
+          <i class="bi bi-printer"></i>
+          <span>Drukuj</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="calendar-employee-pills">
+      {% for employee in employees %}
+        <a
+          href="{{ url_for('admin_calendar', start=start_date.isoformat(), employee_id=employee.id) }}"
+          class="calendar-employee-pill{% if employee.id == selected_employee_id %} is-active{% endif %}"
+        >
+          <i class="bi bi-person"></i>
+          {{ employee.full_name }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="calendar-info-row">
+      <div class="calendar-selected-worker">
+        <i class="bi bi-person-workspace"></i>
+        {% if selected_employee %}
+          Widok dla: {{ selected_employee.full_name }}
+        {% else %}
+          Brak aktywnego pracownika.
+        {% endif %}
+      </div>
+
+      <div class="calendar-meta-pills">
+        <div class="calendar-meta-pill">
+          <i class="bi bi-clock"></i>
+          Interwał: {{ slot_interval }} min
+        </div>
+
+        <div class="calendar-meta-pill">
+          <i class="bi bi-layout-three-columns"></i>
+          {{ calendar_start_label }}–{{ calendar_end_label }}
+        </div>
+
+        <div class="calendar-meta-pill">
+          <i class="bi bi-calendar-check"></i>
+          Rezerwacje: {{ calendar_bookings|length }}
+        </div>
+      </div>
+    </div>
+
+    {% if employees %}
+
+      <div class="calendar-print-header">
+        <div class="calendar-print-company">
+          {{ business_settings.company_name if business_settings and business_settings.company_name else "Alifio" }}
+        </div>
+
+        <div class="calendar-print-title">
+          Kalendarz rezerwacji — {{ selected_employee.full_name if selected_employee else "Pracownik" }}
+        </div>
+
+        <div class="calendar-print-meta">
+          Tydzień: {{ start_date.strftime("%d.%m.%Y") }} — {{ end_date.strftime("%d.%m.%Y") }}
+        </div>
+      </div>
+
+      <div class="calendar-board">
+        <div class="calendar-days-header">
+          <div class="calendar-corner"></div>
+
+          {% for day in week_days %}
+            <div class="calendar-day-head{% if day.is_today %} is-today{% endif %}">
+              <div class="calendar-day-name">{{ day.weekday }}</div>
+              <div class="calendar-day-date">{{ day.label }}</div>
+
+              <div class="calendar-day-hours{% if not day.is_working_day %} is-off{% endif %}">
+                <i class="bi {{ day.day_status_icon }}"></i>
+                {{ day.day_status_label }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="calendar-scroll">
+          <div class="calendar-grid">
+            {% for slot in time_slots %}
+              <div
+                class="calendar-time-slot"
+                style="grid-row: {{ slot.index + 1 }};"
+              >
+                {{ slot.label }}
+              </div>
+            {% endfor %}
+
+            {% for day in week_days %}
+              {% for slot in time_slots %}
+                <div
+                  class="calendar-day-slot{% if day.is_today %} is-today{% endif %}{% if not day.is_working_day %} is-off{% endif %}"
+                  style="grid-column: {{ day.index + 2 }}; grid-row: {{ slot.index + 1 }};"
+                ></div>
+              {% endfor %}
+            {% endfor %}
+
+            {% if calendar_bookings|length == 0 %}
+              <div class="calendar-empty-state">
+                <div class="calendar-empty-state-inner">
+                  <i class="bi bi-calendar-x"></i>
+                  <div>Brak rezerwacji dla tego pracownika w wybranym tygodniu.</div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% for booking in calendar_bookings %}
+              <div
+                class="calendar-event is-{{ booking.status }}"
+                style="
+                  grid-column: {{ booking.grid_column }};
+                  grid-row: {{ booking.grid_row_start }} / span {{ booking.grid_row_span }};
+                "
+                title="{{ booking.client_name }} · {{ booking.service_name }}"
+              >
+                <span class="calendar-event-status"></span>
+
+                <div class="calendar-event-time">
+                  <i class="bi bi-clock"></i>
+                  {{ booking.booking_time }}–{{ booking.booking_end_time }} · {{ booking.duration_minutes }} min
+                </div>
+
+                <div class="calendar-event-service">
+                  {{ booking.service_name }}
+                </div>
+
+                <div class="calendar-event-client">
+                  <i class="bi bi-person"></i>
+                  <span>{{ booking.client_name }}</span>
+
+                  {% if booking.notes %}
+                    <span
+                      class="calendar-event-note-dot"
+                      data-note="{{ booking.notes|e }}"
+                      aria-label="Pilna informacja"
+                    >
+                      <i class="bi bi-chat-left-text-fill"></i>
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-mobile-list">
+        {% for day in week_days %}
+          <div class="calendar-mobile-day">
+            <div class="calendar-mobile-day-title">
+              <strong>{{ day.label }}</strong>
+              <span>{{ day.weekday }}</span>
+            </div>
+
+            <div class="calendar-mobile-day-hours">
+              <i class="bi {{ day.day_status_icon }}"></i>
+              {% if day.is_working_day %}
+                Godziny pracy: {{ day.day_status_label }}
+              {% else %}
+                {{ day.day_status_label }}
+              {% endif %}
+            </div>
+
+            {% set found = namespace(value=false) %}
+
+            {% for booking in calendar_bookings %}
+              {% if booking.booking_date == day.iso %}
+                {% set found.value = true %}
+
+                <div class="calendar-mobile-event">
+                  <div class="calendar-mobile-event-time">
+                    <i class="bi bi-clock"></i>
+                    {{ booking.booking_time }}–{{ booking.booking_end_time }} · {{ booking.duration_minutes }} min
+                  </div>
+
+                  <div class="calendar-mobile-event-service">
+                    {{ booking.service_name }}
+                  </div>
+
+                  <div class="calendar-mobile-event-client">
+                    <i class="bi bi-person"></i>
+                    {{ booking.client_name }}
+
+                    {% if booking.notes %}
+                      <span
+                        class="calendar-event-note-dot"
+                        data-note="{{ booking.notes|e }}"
+                        aria-label="Pilna informacja"
+                      >
+                        <i class="bi bi-chat-left-text-fill"></i>
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            {% if not found.value %}
+              <div class="calendar-empty-day">
+                Brak rezerwacji w tym dniu.
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="calendar-employees-panel">
+        <div class="calendar-empty-day">
+          Brak aktywnych pracowników. Dodaj pracownika w ustawieniach, aby kalendarz mógł wyświetlić grafik.
+        </div>
+      </div>
+    {% endif %}
+
+  </section>
+</div>
+{% endblock %}
