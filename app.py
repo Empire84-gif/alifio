@@ -4281,6 +4281,7 @@ def create_manual_booking():
 
     created_custom_service = False
     final_service_id = service_id
+    new_booking_id = None
 
     try:
         if service_mode == "custom":
@@ -4314,6 +4315,7 @@ def create_manual_booking():
                     custom_price or None
                 )
             )
+
             final_service_id = cursor.lastrowid
 
             cursor.execute(
@@ -4383,7 +4385,20 @@ def create_manual_booking():
             )
         )
 
+        new_booking_id = cursor.lastrowid
+
         conn.commit()
+
+        try:
+            booking_data = fetch_booking_notification_data(new_booking_id)
+
+            if booking_data:
+                notification_ctx = get_booking_notification_context(booking_data)
+                send_booking_status_changed_emails(notification_ctx, "confirmed")
+
+        except Exception as mail_error:
+            print("Błąd wysyłki maili po ręcznej rezerwacji:", mail_error)
+
         flash("Ręczna rezerwacja została zapisana.", "success")
 
     except Exception as e:

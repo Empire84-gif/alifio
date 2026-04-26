@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anulowanie wpisu na listę oczekujących</title>
+</head>
+<body style="margin:0; padding:0; background:#f3f4f6; font-family:Arial, Helvetica, sans-serif; color:#111827;">
+  <main style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 14px;">
+    <section style="width:100%; max-width:560px; background:#ffffff; border:1px solid #e5e7eb; padding:28px 24px; text-align:center;">
+      <p style="margin:0 0 10px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#6b7280;">
+        System rezerwacji Alifio
+      </p>
+
+      <h1 style="margin:0 0 14px; font-size:24px; line-height:1.25;">
+        Anulowanie wpisu na listę oczekujących
+      </h1>
+
+      <p style="margin:0 0 18px; font-size:14px; line-height:1.65; color:#374151;">
+        Potwierdź, że chcesz anulować swoje zgłoszenie na listę oczekujących.
+      </p>
+
+      <div style="margin:20px 0; border:1px solid #e5e7eb; text-align:left;">
+        <div style="display:flex; justify-content:space-between; gap:16px; padding:12px 14px; border-bottom:1px solid #eef0f3; font-size:13px;">
+          <strong style="color:#6b7280;">Klient</strong>
+          <span style="text-align:right;">{{ entry.client_name or "—" }}</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:16px; padding:12px 14px; border-bottom:1px solid #eef0f3; font-size:13px;">
+          <strong style="color:#6b7280;">Usługa</strong>
+          <span style="text-align:right;">{{ entry.service_name or "—" }}</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:16px; padding:12px 14px; font-size:13px;">
+          <strong style="color:#6b7280;">Osoba wykonująca usługę</strong>
+          <span style="text-align:right;">{{ entry.employee_name or "—" }}</span>
+        </div>
+      </div>
+
+      <form method="POST" style="margin-top:22px;">
+        <button type="submit" style="min-width:220px; min-height:46px; padding:0 22px; border:1px solid #1d4ed8; border-radius:999px; background:#1d4ed8; color:#ffffff; font-size:14px; font-weight:700; cursor:pointer;">
+          Anuluj wpis
+        </button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
