@@ -1,0 +1,42 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<p class="lead-text">
+  Klient zaktualizował swoje zgody w centrum zgód.
+</p>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="details-box">
+  <tr>
+    <td colspan="2" class="details-title">Dane klienta</td>
+  </tr>
+
+  <tr>
+    <td class="details-label">Klient</td>
+    <td class="details-value">{{ client.full_name or "—" }}</td>
+  </tr>
+
+  <tr>
+    <td class="details-label">E-mail</td>
+    <td class="details-value">{{ client.email or "—" }}</td>
+  </tr>
+
+  <tr>
+    <td class="details-label">Telefon</td>
+    <td class="details-value">{{ client.phone or "—" }}</td>
+  </tr>
+
+  <tr>
+    <td class="details-label">RODO</td>
+    <td class="details-value">
+      {% if privacy == 1 %}Wyrażona{% else %}Brak zgody{% endif %}
+    </td>
+  </tr>
+
+  <tr class="details-row-last">
+    <td class="details-label">Marketing</td>
+    <td class="details-value">
+      {% if marketing == 1 %}Wyrażona{% else %}Brak zgody{% endif %}
+    </td>
+  </tr>
+</table>
+{% endblock %}
