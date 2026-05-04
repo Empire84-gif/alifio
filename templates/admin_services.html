@@ -1,0 +1,3502 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+:root {
+  --sv-bg: #101722;
+  --sv-surface: #1a2230;
+  --sv-surface-2: #212b3a;
+  --sv-surface-3: #2a3547;
+
+  --sv-border: rgba(255, 255, 255, 0.20);
+  --sv-border-2: rgba(255, 255, 255, 0.28);
+  --sv-border-3: rgba(255, 255, 255, 0.38);
+
+  --sv-text: #ffffff;
+  --sv-text-2: #ffffff;
+  --sv-text-3: #ffffff;
+  --sv-text-4: #ffffffc2;
+  --sv-icon: #ffffff;
+
+  --sv-ok: #5eead4;
+  --sv-warn: #ffd36a;
+  --sv-err: #ff5c93;
+
+  --sv-t: 0.16s ease;
+  --sv-r: 2px;
+}
+
+/* =========================================
+   BASE
+========================================= */
+
+body {
+  background: var(--sv-bg) !important;
+}
+
+.services-page,
+.services-page * {
+  box-sizing: border-box;
+  font-family: "LexendDecaLocal", "RobotoLocal", Arial, sans-serif;
+}
+
+.services-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 22px 22px;
+}
+
+.services-page-grid {
+  display: grid;
+  gap: 0;
+}
+
+.services-page h1,
+.services-page h2,
+.services-page h3,
+.services-page h4 {
+  font-family: "LexendDecaLocal", "RobotoLocal", Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.services-page-card.card {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.services-page-card + .services-page-card {
+  margin-top: 24px;
+}
+
+.services-page-card h2,
+.services-list-title {
+  margin: 0;
+  color: var(--sv-text);
+  font-size: 16.8px;
+  line-height: 1.14;
+}
+
+.services-page-card > h2 {
+  padding: 12px 0 0;
+}
+
+.services-page-card .section-note,
+.services-page-card > .section-note {
+  margin-top: 4px;
+  color: var(--sv-text-3);
+  font-size: 11.55px;
+  line-height: 1.46;
+}
+
+.services-list-block + .services-list-block {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sv-border);
+}
+
+.services-page + .flash-wrapper {
+  display: none;
+}
+
+.site-logo-image {
+  margin-left: 3px !important;
+}
+
+/* =========================================
+   FORMS
+========================================= */
+
+.services-page-card .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.services-page-card .form-row label {
+  color: var(--sv-text-4);
+  font-size: 8.4px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.services-page-card .form-row input,
+.services-page-card .form-row select,
+.services-page-card .form-row textarea,
+.services-page-card .services-search-input,
+.employee-picker-box,
+.service-editor-card .editor-employee-grid {
+  background: var(--sv-surface-3);
+  border: 1px solid var(--sv-border-2);
+  transition: border-color var(--sv-t), box-shadow var(--sv-t), background var(--sv-t);
+}
+
+.services-page-card .form-row input,
+.services-page-card .form-row select,
+.services-page-card .form-row textarea {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  color: var(--sv-text);
+  font-size: 11.55px;
+  border-radius: var(--sv-r);
+}
+
+.services-page-card .form-row textarea {
+  min-height: 84px;
+  height: auto;
+  padding: 9px 10px;
+  resize: vertical;
+}
+
+.services-page-card .form-row input[type="number"] {
+  -moz-appearance: textfield;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.services-page-card .form-row input[type="number"]::-webkit-outer-spin-button,
+.services-page-card .form-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.services-page-card .form-row input::placeholder,
+.services-page-card .form-row textarea::placeholder,
+.services-page-card .services-search-input::placeholder {
+  color: var(--sv-text-4);
+  opacity: 1;
+}
+
+.services-page-card .form-row input:hover,
+.services-page-card .form-row select:hover,
+.services-page-card .form-row textarea:hover,
+.services-page-card .services-search-input:hover,
+.employee-picker-box:hover {
+  border-color: var(--sv-border-3);
+}
+
+.services-page-card .form-row input:focus,
+.services-page-card .form-row select:focus,
+.services-page-card .form-row textarea:focus,
+.services-page-card .services-search-input:focus,
+.employee-picker-box:focus-within {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+}
+
+/* =========================================
+   ADD SERVICE
+========================================= */
+
+.service-form-modern {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sv-border);
+}
+
+.services-page > .services-page-card:first-child .service-form-modern {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 14px;
+}
+
+.service-top-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 110px 110px;
+  gap: 8px;
+}
+
+.service-bottom-row-modern {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 8px;
+  align-items: end;
+}
+
+.service-small-field,
+.employees-row-modern {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+
+.employees-row-modern {
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.employees-row-modern label:first-child {
+  align-self: flex-start;
+  margin-bottom: 0;
+}
+
+.service-submit-wrap-modern {
+  display: flex;
+  align-items: flex-end;
+  align-self: end;
+}
+
+/* =========================================
+   EMPLOYEE PICKER
+========================================= */
+
+.employee-picker-box {
+  min-height: 34px;
+  padding: 4px 8px;
+  border-radius: var(--sv-r);
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.employee-picker-grid {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  width: max-content;
+}
+
+.employee-check-card,
+.service-editor-card .editor-employee-card {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid rgba(169, 220, 255, 0.30);
+  border-radius: var(--sv-r);
+  background: rgba(169, 220, 255, 0.08);
+  cursor: pointer;
+  transition:
+    border-color var(--sv-t),
+    background var(--sv-t),
+    color var(--sv-t),
+    transform var(--sv-t),
+    box-shadow var(--sv-t);
+  flex: 0 0 auto;
+  width: auto;
+  min-width: fit-content;
+  max-width: max-content;
+}
+
+.employee-check-card:hover,
+.service-editor-card .editor-employee-card:hover {
+  border-color: rgba(169, 220, 255, 0.52);
+  background: rgba(169, 220, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.employee-check-card input[type="checkbox"],
+.service-editor-card .editor-employee-checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.employee-check-name,
+.service-editor-card .editor-employee-name {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: none;
+  overflow: visible;
+  color: #dff1ff;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+  font-size: 9px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  text-overflow: unset;
+  height: 100%;
+  margin: 0;
+  padding-top: 2px;
+}
+
+.employee-check-card:has(input[type="checkbox"]:checked),
+.service-editor-card .editor-employee-card:has(.editor-employee-checkbox:checked) {
+  background: #cfe9ff;
+  border-color: #cfe9ff;
+  box-shadow:
+    0 0 6px rgba(207, 233, 255, 0.18),
+    0 0 14px rgba(207, 233, 255, 0.08);
+}
+
+.employee-check-card:has(input[type="checkbox"]:checked) .employee-check-name,
+.service-editor-card .editor-employee-card:has(.editor-employee-checkbox:checked) .editor-employee-name {
+  color: #16202d;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.service-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--sv-r);
+  background: var(--primary-color);
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--sv-t),
+    color var(--sv-t),
+    border-color var(--sv-t),
+    transform var(--sv-t),
+    opacity var(--sv-t);
+}
+
+.service-btn:hover {
+  background: transparent;
+  border-color: var(--primary-color);
+  color: var(--sv-text);
+  transform: translateY(-1px);
+}
+
+.service-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.service-btn-submit {
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  justify-content: center;
+  font-size: 11.55px;
+}
+
+.service-btn,
+.service-btn-submit,
+.cell-actions .service-btn,
+.service-editor-card .service-submit-wrap .service-btn,
+.service-editor-header .service-btn,
+.side-image-actions .settings-btn-secondary,
+.services-details-close,
+.services-details-footer-btn,
+.exception-modal-close,
+.exception-modal-form-actions .settings-btn,
+.exception-modal-delete-btn,
+.employee-timeoff-delete-btn,
+button {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.services-search-wrap {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.services-search-box {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  width: 270px;
+  max-width: 270px;
+  flex: 0 0 auto;
+}
+
+.services-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.services-search-icon {
+  position: absolute;
+  left: 11px;
+  color: var(--sv-icon);
+  font-size: 11.55px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.services-page-card .services-search-input {
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px 0 31px;
+  border-radius: var(--sv-r);
+  color: var(--sv-text);
+  font-size: 11.55px;
+  line-height: 1;
+}
+
+.services-search-meta {
+  color: var(--sv-text-4);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+/* =========================================
+   LIST HEADER
+========================================= */
+
+.services-list-header-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: 18px;
+  row-gap: 10px;
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.services-list-header-main {
+  min-width: 0;
+  align-self: end;
+}
+
+.services-list-header-main .services-list-title {
+  margin: 0;
+}
+
+.services-list-header-main .section-note {
+  margin: 4px 0 0;
+}
+
+.services-list-filters-inline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  align-self: end;
+}
+
+.services-archive-jump-btn {
+  min-height: 34px;
+  height: 34px;
+  min-width: 170px;
+  padding: 0 18px;
+  gap: 7px;
+  font-size: 11.55px;
+  flex: 0 0 auto;
+}
+
+.services-archive-jump-btn,
+.services-archive-jump-btn * {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.services-archive-jump-btn i {
+  font-size: 12.6px;
+  line-height: 1;
+}
+
+#services-archive-block {
+  scroll-margin-top: 92px;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.services-page-card .table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--sv-border-2);
+  border-radius: 0;
+  background: var(--sv-surface-2);
+  -webkit-overflow-scrolling: touch;
+}
+
+.services-table {
+  width: 100%;
+  min-width: 760px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.services-table thead {
+  background: var(--sv-surface-3);
+  border-bottom: 1px solid var(--sv-border);
+}
+
+.services-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.services-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--sv-surface));
+}
+
+.services-table tbody tr.is-hidden-by-search {
+  display: none;
+}
+
+.service-data-row td {
+  transition: background var(--sv-t);
+}
+
+.services-table th,
+.services-table td {
+  vertical-align: middle;
+  border-right: 1px solid var(--sv-border-2);
+  border-bottom: 1px solid var(--sv-border);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.services-table th:last-child,
+.services-table td:last-child {
+  border-right: none;
+}
+
+/* =========================================
+   TABLE HEADERS
+========================================= */
+
+.services-table th {
+  padding: 0 !important;
+  color: var(--sv-text-4);
+  font-size: 8.8px !important;
+  font-weight: 400;
+  line-height: 1.1 !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: left !important;
+  vertical-align: middle !important;
+}
+
+.services-table th .sort-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 5px 8px !important;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left !important;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: background var(--sv-t), color var(--sv-t);
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.services-table th .sort-btn:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--sv-text-2);
+}
+
+.services-table th .sort-btn:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--primary-color);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.services-table th .sort-btn span:first-child {
+  display: inline-block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 8.8px !important;
+  line-height: 1.1 !important;
+  text-align: left !important;
+}
+
+.services-table th .sort-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 10px;
+  font-size: 7.8px !important;
+  line-height: 1 !important;
+}
+
+.services-table th:not(:has(.sort-btn)) {
+  padding: 5px 8px !important;
+}
+
+/* =========================================
+   TABLE BODY
+========================================= */
+
+.services-table td {
+  padding: 7px 8px;
+  background: var(--sv-surface);
+  color: var(--sv-text-2);
+  font-size: 11px;
+  line-height: 1.24;
+  white-space: normal;
+}
+
+.services-table th.head-id,
+.services-table td.cell-id {
+  display: none;
+}
+
+/* =========================================
+   DESKTOP WIDTHS
+========================================= */
+
+.services-table th:nth-child(2),
+.services-table td:nth-child(2) {
+  width: 30%;
+}
+
+.services-table th:nth-child(3),
+.services-table td:nth-child(3) {
+  width: 14%;
+  white-space: nowrap;
+}
+
+.services-table th:nth-child(4),
+.services-table td:nth-child(4) {
+  width: 9%;
+  white-space: nowrap;
+}
+
+.services-table th:nth-child(5),
+.services-table td:nth-child(5) {
+  width: 9%;
+  white-space: nowrap;
+}
+
+.services-table th:nth-child(6),
+.services-table td:nth-child(6) {
+  width: 22%;
+  white-space: normal;
+}
+
+.services-table th:nth-child(7),
+.services-table td:nth-child(7) {
+  width: 7%;
+  white-space: nowrap;
+}
+
+.services-table th:nth-child(8),
+.services-table td:nth-child(8) {
+  width: 9%;
+  white-space: nowrap;
+}
+
+/* =========================================
+   COLUMN ALIGNMENT
+========================================= */
+
+.head-name,
+.cell-name {
+  width: 180px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: left;
+}
+
+.head-group,
+.cell-group {
+  width: 80px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: left;
+}
+
+.head-duration,
+.cell-duration {
+  width: 20px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+}
+
+.head-price,
+.cell-price {
+  width: 45px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+}
+
+.head-employees,
+.cell-employees {
+  width: 150px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+}
+
+.head-status,
+.cell-status {
+  width: 40px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+}
+
+.head-actions,
+.cell-actions {
+  width: 45px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* =========================================
+   CELL TEXT
+========================================= */
+
+.cell-name-text {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: 11.55px;
+  line-height: 1.28;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+.services-table td.cell-duration,
+.services-table td.cell-price,
+.services-table td.cell-name .cell-name-text {
+  font-size: 12.6px;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 1024px) {
+  .services-table th {
+    font-size: 9.1px !important;
+  }
+
+  .services-table th .sort-btn {
+    min-height: 28px !important;
+    padding: 5px 10px !important;
+  }
+
+  .services-table th .sort-btn span:first-child {
+    font-size: 9.1px !important;
+  }
+
+  .services-table th .sort-indicator {
+    font-size: 8px !important;
+  }
+
+  .services-table th:not(:has(.sort-btn)) {
+    padding: 5px 10px !important;
+  }
+}
+
+/* =========================================
+   SORT
+========================================= */
+
+.sort-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: background var(--sv-t), color var(--sv-t);
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.sort-btn:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--sv-text-2);
+}
+
+.sort-btn:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--primary-color);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sort-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.sort-icons {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  flex: 0 0 auto;
+  width: 10px;
+}
+
+.sort-icons i {
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 7.35px;
+  line-height: 0.8;
+  transition: color var(--sv-t), transform var(--sv-t);
+}
+
+.sort-btn.is-active {
+  color: var(--sv-text);
+}
+
+.sort-btn.is-active .sort-icons .bi-caret-up-fill,
+.sort-btn[data-direction="asc"] .sort-icons .bi-caret-up-fill,
+.sort-btn.is-active .sort-icons .bi-caret-down-fill,
+.sort-btn[data-direction="desc"] .sort-icons .bi-caret-down-fill {
+  color: var(--primary-color);
+}
+
+
+
+.head-actions {
+  text-align: left !important;
+}
+
+.head-actions .services-th-content {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+/* =========================================
+   STATUS / PILLS
+========================================= */
+
+.service-group-pill,
+.service-status-badge,
+.service-details-status-badge,
+.employee-pill {
+  display: inline-block;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  line-height: 1.08;
+  vertical-align: middle;
+}
+
+.service-group-pill-text {
+  display: inline-block;
+  color: #ff9ac4;
+  font-size: 10.2px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.08;
+  text-transform: uppercase;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  text-shadow:
+    0 0 3px rgba(255, 154, 196, 0.16),
+    0 0 8px rgba(255, 154, 196, 0.07);
+}
+
+.service-status-badge,
+.service-details-status-badge {
+  font-size: 10.2px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.service-status-active,
+.service-details-status-active {
+  color: var(--sv-ok);
+  text-shadow:
+    0 0 3px rgba(94, 234, 212, 0.16),
+    0 0 8px rgba(94, 234, 212, 0.07);
+}
+
+.service-status-inactive,
+.service-details-status-inactive {
+  color: var(--sv-err);
+  text-shadow:
+    0 0 3px rgba(255, 92, 147, 0.15),
+    0 0 8px rgba(255, 92, 147, 0.06);
+}
+
+.employee-pills {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.employee-pill {
+  color: #ffe19a;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  text-shadow:
+    0 0 3px rgba(255, 225, 154, 0.15),
+    0 0 8px rgba(255, 225, 154, 0.06);
+  transform: translateY(1px);
+}
+
+/* =========================================
+   ACTION ICONS
+========================================= */
+
+.service-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  flex-wrap: nowrap;
+  width: 100% !important;
+  min-height: 100% !important;
+}
+
+.service-icon-btn {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  min-height: 16px;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+.service-icon-btn:hover,
+.service-icon-btn:focus,
+.service-icon-btn:focus-visible,
+.service-icon-btn:active {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translateY(-1px);
+}
+
+.service-icon-btn i,
+.service-icon-btn svg {
+  display: block !important;
+  width: 12px;
+  height: 12px;
+  margin: 0 !important;
+  font-size: 12px;
+  line-height: 1 !important;
+  stroke-width: 1.8;
+}
+
+.service-icon-btn-edit {
+  color: #dff1ff;
+}
+
+.service-icon-btn-toggle {
+  color: #ffe19a;
+}
+
+.service-icon-btn-delete {
+  color: #ffb6cc;
+}
+
+.service-icon-btn-edit:hover,
+.service-icon-btn-edit:focus {
+  color: #ffffff;
+}
+
+.service-icon-btn-toggle:hover,
+.service-icon-btn-toggle:focus {
+  color: #fff3c8;
+}
+
+.service-icon-btn-delete:hover,
+.service-icon-btn-delete:focus {
+  color: #ffd2df;
+}
+
+.service-icon-btn[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 5px 8px;
+  border: 1px solid var(--sv-border-2);
+  border-radius: var(--sv-r);
+  background: var(--sv-surface-3);
+  color: var(--sv-text);
+  font-size: 9.4px;
+  line-height: 1;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.26);
+  transition: opacity var(--sv-t), transform var(--sv-t);
+  z-index: 30;
+}
+
+.service-icon-btn[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 3px);
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--sv-surface-3);
+  transition: opacity var(--sv-t), transform var(--sv-t);
+  z-index: 30;
+}
+
+.service-icon-btn[data-tooltip]:hover::after,
+.service-icon-btn[data-tooltip]:hover::before,
+.service-icon-btn[data-tooltip]:focus::after,
+.service-icon-btn[data-tooltip]:focus::before {
+  opacity: 1;
+}
+
+/* =========================================
+   EDITOR
+========================================= */
+
+.service-editor-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--sv-border);
+}
+
+.service-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.service-editor-card .service-form-compact {
+  display: grid;
+  gap: 8px;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.service-editor-card .service-top-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 110px 110px;
+  gap: 8px;
+}
+
+.service-editor-card .service-bottom-row,
+.service-editor-card .service-bottom-row-modern {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 136px;
+  gap: 8px;
+  align-items: end;
+}
+
+.service-editor-card .employees-row {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.service-editor-card .employees-row label {
+  margin-bottom: 0;
+}
+
+.service-editor-card .service-submit-wrap {
+  display: flex;
+  align-items: flex-end;
+  align-self: end;
+}
+
+.service-editor-card .service-submit-wrap .service-btn {
+  width: 100%;
+  min-height: 34px;
+  height: 34px;
+  padding: 0 12px;
+  justify-content: center;
+}
+
+.service-editor-card .editor-employee-grid {
+  min-height: 34px;
+  height: 34px;
+  padding: 4px 8px;
+  border-radius: var(--sv-r);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+}
+
+/* =========================================
+   EMPTY / DETAILS
+========================================= */
+
+.services-empty-state {
+  width: 100%;
+  max-width: 100%;
+  padding: 14px 0 2px;
+  color: var(--sv-text-4);
+  font-size: 11.55px;
+  line-height: 1.45;
+}
+
+.services-details-status-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.services-details-modal,
+.services-details-modal * {
+  font-family: "LexendDecaLocal", "RobotoLocal", Arial, sans-serif;
+  font-weight: 400;
+}
+
+.services-details-modal button,
+.services-details-modal .service-btn,
+.services-details-modal .services-details-close,
+.services-details-modal .services-details-footer-btn,
+.exception-modal button,
+.exception-modal .settings-btn,
+.exception-modal .exception-modal-close,
+.exception-modal .exception-modal-delete-btn {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+/* =========================================
+   DESKTOP TOP SPACING
+========================================= */
+
+.services-page {
+  padding-top: 10px;
+}
+
+.services-page > .services-page-card:first-child {
+  margin-top: 50px;
+}
+
+.services-page > .services-page-card:first-child > h2 {
+  padding-top: 0;
+}
+
+@media (min-width: 1025px) {
+  main.container:has(.services-page) {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 23px !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .services-page {
+    margin-top: 23px !important;
+    padding-top: 0 !important;
+  }
+
+  .services-page.services-page-grid {
+    margin-top: 16px !important;
+  }
+
+  .services-page > .services-page-card:first-child {
+    margin-top: 8px;
+  }
+
+  .services-page > section.services-page-card.card:first-child {
+    padding-top: 0;
+  }
+
+  .services-table td.cell-actions {
+    text-align: center !important;
+    vertical-align: middle !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+  .services-page {
+    width: 100%;
+    max-width: 100%;
+    margin: 8px 0 0 !important;
+    padding: 0 16px 18px;
+    overflow-x: visible;
+  }
+
+  .services-page-grid {
+    gap: 18px;
+  }
+
+  .services-page-card h2,
+  .services-list-title {
+    font-size: 15.75px;
+  }
+
+  .services-page-card .section-note {
+    font-size: 11.03px;
+  }
+
+  .services-list-header-inline {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    row-gap: 8px;
+  }
+
+  .services-list-header-main,
+  .services-list-filters-inline {
+    align-self: stretch;
+  }
+
+  .services-list-filters-inline {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .services-list-filters-inline .services-search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .services-archive-jump-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .service-top-row,
+  .service-editor-card .service-top-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .service-bottom-row-modern,
+  .service-editor-card .service-bottom-row,
+  .service-editor-card .service-bottom-row-modern {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .employees-row-modern,
+  .service-submit-wrap-modern,
+  .service-editor-card .employees-row,
+  .service-editor-card .service-submit-wrap {
+    grid-column: 1 / -1;
+  }
+
+  .employee-picker-box,
+  .service-editor-card .editor-employee-grid {
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .employee-picker-grid,
+  .service-editor-card .editor-employee-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .employee-check-card,
+  .service-editor-card .editor-employee-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 28px;
+    height: auto;
+    justify-content: flex-start;
+    padding: 6px 10px;
+  }
+
+  .employee-check-name,
+  .service-editor-card .editor-employee-name {
+    width: 100%;
+    display: block;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+    font-size: 10px;
+    line-height: 1.2;
+    height: auto;
+  }
+
+  #services-archive-block {
+    scroll-margin-top: 84px;
+  }
+
+  .site-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 3000 !important;
+    transform: none !important;
+  }
+
+  .site-header.is-scrolled {
+    position: fixed !important;
+    top: 0 !important;
+    transform: none !important;
+  }
+
+  body {
+    padding-top: 78px !important;
+  }
+
+  .nav-overlay {
+    z-index: 4998 !important;
+  }
+
+  .nav-drawer {
+    z-index: 4999 !important;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 1024px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+
+  main.container:has(.services-page) {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  .services-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 12px 16px !important;
+    overflow-x: hidden !important;
+  }
+
+  .services-page > .services-page-card:first-child {
+    margin-top: 0 !important;
+  }
+
+  .services-page > .services-page-card:first-child > h2 {
+    padding-top: 0 !important;
+  }
+
+  .services-page-card + .services-page-card {
+    margin-top: 18px;
+  }
+
+  .services-page-card.card {
+    padding: 0;
+  }
+
+  .services-page-card > h2,
+  .services-page-card > .section-note,
+  .service-form-modern,
+  .services-list-header-inline,
+  .service-editor-card,
+  .services-empty-state {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
+  }
+
+  .services-page-card > h2,
+  .services-list-title {
+    font-size: 14.7px;
+  }
+
+  .services-page-card > .section-note,
+  .services-list-header-main .section-note {
+    font-size: 10.5px;
+    line-height: 1.42;
+  }
+
+  .service-form-modern {
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+
+  .services-list-block + .services-list-block {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+
+  .service-top-row,
+  .service-bottom-row-modern,
+  .service-editor-card .service-top-row,
+  .service-editor-card .service-bottom-row,
+  .service-editor-card .service-bottom-row-modern {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .employees-row-modern,
+  .service-submit-wrap-modern,
+  .service-editor-card .employees-row,
+  .service-editor-card .service-submit-wrap {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .services-page-card .form-row,
+  .service-small-field,
+  .employees-row-modern,
+  .service-submit-wrap-modern,
+  .employee-picker-box,
+  .services-search-box,
+  .services-search-input-wrap,
+  .services-search-input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .services-page-card .form-row input,
+  .services-page-card .form-row select,
+  .services-page-card .form-row textarea,
+  .services-page-card .services-search-input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .employee-picker-grid,
+  .service-editor-card .editor-employee-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-submit-wrap-modern .service-btn,
+  .service-btn-submit,
+  .service-editor-card .service-submit-wrap .service-btn,
+  .service-editor-header .service-btn {
+    width: 100%;
+    min-width: 0;
+    margin-top: 4px;
+  }
+
+  .service-editor-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .services-list-header-inline {
+    row-gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .services-page-card .table-wrapper {
+    display: block !important;
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 0;
+    margin-top: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+
+  .services-table {
+    width: 1850px !important;
+    min-width: 1850px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+
+  .head-name,
+  .cell-name {
+    width: 300px;
+    min-width: 300px;
+  }
+
+  .head-group,
+  .cell-group {
+    width: 150px;
+    min-width: 150px;
+  }
+
+  .head-duration,
+  .cell-duration {
+    width: 60px;
+    min-width: 60px;
+  }
+
+  .head-price,
+  .cell-price {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .head-employees,
+  .cell-employees {
+    width: 280px;
+    min-width: 280px;
+  }
+
+  .head-status,
+  .cell-status {
+    width: 110px !important;
+    min-width: 110px !important;
+  }
+
+  .head-actions,
+  .cell-actions {
+    width: 140px;
+    min-width: 140px;
+  }
+
+  .services-table th {
+    font-size: 9.1px;
+  }
+
+  .services-th-content,
+  .sort-btn {
+    min-height: 30px;
+    padding: 6px 8px;
+  }
+
+  .sort-label {
+    font-size: 9.1px;
+  }
+
+  .sort-icons i {
+    font-size: 8px;
+  }
+
+  .service-actions {
+    gap: 12px !important;
+  }
+
+  .service-icon-btn {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    min-height: 20px;
+  }
+
+  .service-icon-btn i,
+  .service-icon-btn svg {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+  }
+
+  .service-icon-btn[data-tooltip]::after,
+  .service-icon-btn[data-tooltip]::before {
+    display: none;
+  }
+
+  .services-details-dialog {
+    width: calc(100vw - 12px) !important;
+    max-width: calc(100vw - 12px) !important;
+    max-height: calc(100vh - 12px) !important;
+    margin: 6px auto !important;
+  }
+
+  .services-details-header,
+  .services-details-body {
+    padding: 12px !important;
+  }
+
+  .services-details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .services-details-item-full,
+  .services-details-box.is-full {
+    grid-column: auto !important;
+  }
+
+  .services-details-footer-btn {
+    width: 100% !important;
+  }
+}
+
+/* =========================================
+   DESKTOP TYPE TUNING
+========================================= */
+
+@media (min-width: 1025px) {
+  .services-table td {
+    font-size: 10.97px;
+  }
+
+  .services-table td.cell-duration,
+  .services-table td.cell-price,
+  .services-table td.cell-name .cell-name-text {
+    font-size: 11.97px;
+  }
+
+  .employee-check-name,
+  .service-editor-card .editor-employee-name {
+    font-size: 8.55px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .services-table th {
+    font-size: 9.1px !important;
+    text-align: left !important;
+  }
+
+  .services-table th .sort-btn {
+    min-height: 28px !important;
+    padding: 5px 8px 5px 7px !important;
+    gap: 8px !important;
+    text-align: left !important;
+  }
+
+  .services-table th .sort-btn span:first-child {
+    font-size: 9.1px !important;
+    text-align: left !important;
+  }
+
+  .services-table th .sort-indicator {
+    font-size: 8px !important;
+  }
+
+  .services-table th:not(:has(.sort-btn)) {
+    padding: 5px 8px 5px 7px !important;
+    text-align: left !important;
+  }
+
+  .head-name .sort-btn,
+  .head-group .sort-btn,
+  .head-duration,
+  .head-price .sort-btn,
+  .head-employees,
+  .head-status,
+  .head-actions {
+    padding-left: 7px !important;
+  }
+}
+
+.services-section-divider {
+  width: 100%;
+  height: 2px;
+  margin: 31px 0 24px;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.service-icon-btn i.bi,
+.service-icon-btn i.bi::before,
+.services-page i.bi,
+.services-page i.bi::before {
+  font-family: "bootstrap-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+}
+
+/* =========================================
+   OVERRIDE: pille pracowników tylko w formularzu i edycji
+   Nie rusza pracowników w tabeli usług
+========================================= */
+
+.services-page .employee-picker-box,
+.services-page .service-editor-card .editor-employee-grid {
+  min-height: 34px !important;
+  height: auto !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.services-page .employee-picker-grid,
+.services-page .service-editor-card .editor-employee-grid {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+}
+
+.services-page .employee-check-card {
+ min-height: 28px !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 12px 1px 12px !important;
+  border: 1px solid var(--sv-border-2) !important;
+  border-radius: 999px !important;
+  background: var(--sv-surface-3) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+
+.services-page .service-editor-card .editor-employee-card {
+  min-height: 28px !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 12px 2.3px 12px !important;
+  border: 1px solid var(--sv-border-2) !important;
+  border-radius: 999px !important;
+  background: var(--sv-surface-3) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.services-page .employee-check-card:hover,
+.services-page .service-editor-card .editor-employee-card:hover {
+  border-color: var(--primary-color) !important;
+  background: transparent !important;
+  transform: translateY(0px) !important;
+}
+
+.services-page .employee-check-name,
+.services-page .service-editor-card .editor-employee-name {
+  color: var(--sv-text-3) !important;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+  font-size: 9.8px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  padding: 3px 0 0 !important;
+  margin: 0 !important;
+  transform: translateY(-1px) !important;
+}
+
+.services-page .employee-check-card:has(input[type="checkbox"]:checked),
+.services-page .service-editor-card .editor-employee-card:has(.editor-employee-checkbox:checked) {
+  border-color: var(--primary-color) !important;
+  background: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 16%, transparent) !important;
+}
+
+.services-page .employee-check-card:has(input[type="checkbox"]:checked) .employee-check-name,
+.services-page .service-editor-card .editor-employee-card:has(.editor-employee-checkbox:checked) .editor-employee-name {
+  color: #ffffff !important;
+}
+
+.services-page .service-btn,
+.services-page .service-btn span {
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+.services-page .service-btn i.bi,
+.services-page .service-btn i.bi::before {
+  font-family: "bootstrap-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+}
+
+.services-page .service-btn {
+  gap: 7px;
+}
+
+.services-page .service-btn i.bi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.services-page .employees-row-modern > label,
+.services-page .service-editor-card .employees-row > label {
+  transform: translateY(3px);
+}
+
+/* Usługi — mniejszy letter-spacing w nagłówkach tabeli i labelkach */
+.services-table th,
+.services-details-table th {
+  letter-spacing: 0.09em !important;
+}
+
+.services-page label,
+.services-form-label,
+.service-editor-label,
+.services-details-label,
+.services-section-note,
+.service-editor-card label {
+  letter-spacing: 0.08em !important;
+}
+
+
+.services-page .service-editor-card label.editor-employee-card > span.editor-employee-name {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  padding: 2px 0 0 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  position: static !important;
+}
+
+/* MOBILE — górne pille w sekcji Dodaj usługę */
+@media (max-width: 1024px) {
+  .services-page .employee-check-card {
+    display: flex !important;
+    align-items: center !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 12px 0px 12px !important;
+  }
+
+  .services-page .employee-check-name {
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    line-height: 1 !important;
+  }
+}
+
+/* MOBILE — dolne pille w edycji usług */
+@media (max-width: 1024px) {
+  .services-page .service-editor-card .editor-employee-card {
+    display: flex !important;
+    align-items: center !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 12px 2.1px 12px !important;
+  }
+
+  .services-page .service-editor-card .editor-employee-name {
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .services-page .employee-picker-box,
+  .services-page .service-editor-card .editor-employee-grid {
+    margin-top: 4px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .services-table th.head-duration,
+  .services-table th.head-employees,
+  .services-table th.head-status,
+  .services-table th.head-actions {
+    padding-left: 0.8px !important;
+    text-align: left !important;
+  }
+}
+
+/* =========================================
+   SERVICES — MOBILE WIDTH FIX JAK BASE
+   Samsung / iPhone
+========================================= */
+
+@media (max-width: 1024px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  main.container:has(.services-page) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    overflow-x: hidden !important;
+  }
+
+  .services-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  .services-page-grid,
+  .services-page-card,
+  .services-page-card.card,
+  .services-list-block,
+  .services-list-header-inline,
+  .services-list-header-main,
+  .services-list-filters-inline,
+  .services-search-box,
+  .services-search-input-wrap,
+  .service-form-modern,
+  .service-top-row,
+  .service-bottom-row-modern,
+  .service-editor-card,
+  .service-editor-card .service-top-row,
+  .service-editor-card .service-bottom-row,
+  .service-editor-card .service-bottom-row-modern,
+  .employee-picker-box,
+  .employee-picker-grid,
+  .service-editor-card .editor-employee-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .services-page-card .table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .services-table {
+    width: 1850px !important;
+    min-width: 1850px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .head-name .sort-label {
+    transform: translateX(1.5px);
+  }
+
+  .head-group .sort-label {
+    transform: translateX(1.5px);
+  }
+
+  .head-duration .services-th-content {
+    transform: translateX(-2px);
+  }
+
+  .head-price .sort-label {
+    transform: translateX(1.5px);
+  }
+
+  .head-employees .services-th-content {
+    transform: translateX(1px);
+  }
+
+  .head-status .services-th-content {
+    transform: translateX(-1px);
+  }
+
+  .head-actions .services-th-content {
+    transform: translateX(-2px);
+  }
+}
+
+/* =========================================
+   SERVICES TABLES — TABLET LANDSCAPE 1024–1180
+========================================= */
+
+@media (min-width: 1024px) and (max-width: 1180px) {
+  .services-page-card .table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  #servicesTable,
+  #servicesArchiveTable {
+    width: 1950px !important;
+    min-width: 1750px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+
+  #servicesTable .head-name,
+  #servicesTable .cell-name,
+  #servicesArchiveTable .head-name,
+  #servicesArchiveTable .cell-name {
+    width: 420px !important;
+    min-width: 420px !important;
+  }
+
+  #servicesTable .head-group,
+  #servicesTable .cell-group,
+  #servicesArchiveTable .head-group,
+  #servicesArchiveTable .cell-group {
+    width: 250px !important;
+    min-width: 250px !important;
+  }
+
+  #servicesTable .head-duration,
+  #servicesTable .cell-duration,
+  #servicesArchiveTable .head-duration,
+  #servicesArchiveTable .cell-duration {
+    width: 110px !important;
+    min-width: 110px !important;
+  }
+
+  #servicesTable .head-price,
+  #servicesTable .cell-price,
+  #servicesArchiveTable .head-price,
+  #servicesArchiveTable .cell-price {
+    width: 170px !important;
+    min-width: 170px !important;
+  }
+
+  #servicesTable .head-employees,
+  #servicesTable .cell-employees,
+  #servicesArchiveTable .head-employees,
+  #servicesArchiveTable .cell-employees {
+    width: 470px !important;
+    min-width: 470px !important;
+  }
+
+  #servicesTable .head-status,
+  #servicesTable .cell-status,
+  #servicesArchiveTable .head-status,
+  #servicesArchiveTable .cell-status {
+    width: 150px !important;
+    min-width: 150px !important;
+  }
+
+  #servicesTable .head-actions,
+  #servicesTable .cell-actions,
+  #servicesArchiveTable .head-actions,
+  #servicesArchiveTable .cell-actions {
+    width: 170px !important;
+    min-width: 170px !important;
+  }
+}
+
+/* =========================
+   SERVICES — TEXT WRAP FIX
+========================= */
+
+.services-table td {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* konkretne kolumny (ważne) */
+
+.services-table .cell-name,
+.services-table .cell-group,
+.services-table .cell-employees,
+.services-table .cell-price {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* jeśli chcesz, żeby godzina / czas NIE łamał się → zostaw */
+
+.services-table .cell-duration {
+  white-space: nowrap !important;
+}
+
+/* =========================================
+   USŁUGI — MOBILE NAZWA USŁUGI FONT FIX
+========================================= */
+
+@media (max-width: 1024px) {
+  #name {
+    font-size: 11.55px !important;
+    line-height: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  #editor_name {
+    font-size: 11.55px !important;
+    line-height: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  .services-table td.cell-name,
+  .services-table td.cell-name .cell-name-text {
+    font-size: 11.55px !important;
+    line-height: 1.28 !important;
+  }
+}
+</style>
+
+<div class="services-page services-page-grid">
+
+  <section class="card services-page-card">
+    <h2>Dodaj usługę</h2>
+
+    <form action="{{ url_for('add_service') }}" method="POST" class="service-form-compact service-form-modern">
+      <div class="service-top-row">
+        <div class="form-row">
+          <label for="name">Nazwa usługi</label>
+          <input type="text" name="name" id="name" required>
+        </div>
+
+        <div class="form-row">
+          <label for="service_group">Rodzaj usługi</label>
+          <input
+            type="text"
+            name="service_group"
+            id="service_group"
+            placeholder="Np. masaże, zabiegi laserowe"
+          >
+        </div>
+
+        <div class="form-row service-small-field">
+          <label for="duration_minutes">Czas (min)</label>
+          <input type="number" name="duration_minutes" id="duration_minutes" min="5" required>
+        </div>
+
+        <div class="form-row service-small-field">
+          <label for="price">Cena</label>
+          <input type="text" name="price" id="price" placeholder="Np. 180 PLN">
+        </div>
+      </div>
+
+      <div class="service-bottom-row-modern">
+        <div class="form-row employees-row-modern">
+          <label>Pracownicy przypisani do usługi</label>
+
+          <div class="employee-picker-box">
+            <div class="employee-picker-grid">
+              {% for employee in employees %}
+                <label class="employee-check-card">
+                  <input type="checkbox" name="employee_ids[]" value="{{ employee.id }}">
+                  <span class="employee-check-name">{{ employee.full_name }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="service-submit-wrap service-submit-wrap-modern">
+          <button type="submit" class="service-btn service-btn-submit">
+  <i class="bi bi-plus-circle"></i>
+  <span>Dodaj usługę</span>
+</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="card services-page-card">
+    <div class="services-list-block">
+  <div class="services-list-header-inline">
+    <div class="services-list-header-main">
+      <h2 class="services-list-title">Lista usług</h2>
+      <p class="section-note">
+        Poniżej znajduje się aktualna lista aktywnych usług dostępnych w systemie.
+      </p>
+    </div>
+
+    <div class="services-list-filters-inline">
+  <a href="#services-archive-block" class="service-btn services-archive-jump-btn">
+    <i class="bi bi-archive"></i>
+    <span>Archiwum usług</span>
+  </a>
+
+  <div class="services-search-box">
+    <div class="services-search-input-wrap">
+      <i class="bi bi-search services-search-icon"></i>
+      <input
+        type="text"
+        id="servicesSearchInput"
+        class="services-search-input"
+        placeholder="Szukaj"
+        autocomplete="off"
+      >
+    </div>
+  </div>
+</div>
+  </div>
+
+ <div class="table-wrapper">
+  <table class="services-table" id="servicesTable">
+    <thead>
+      <tr>
+        <th class="head-id">
+          <button type="button" class="sort-btn" data-sort-target="active" data-sort-key="id">
+            <span class="sort-label">ID</span>
+            <span class="sort-icons">
+              <i class="bi bi-caret-up-fill"></i>
+              <i class="bi bi-caret-down-fill"></i>
+            </span>
+          </button>
+        </th>
+
+        <th class="head-name">
+          <button type="button" class="sort-btn" data-sort-target="active" data-sort-key="name">
+            <span class="sort-label">Nazwa</span>
+            <span class="sort-icons">
+              <i class="bi bi-caret-up-fill"></i>
+              <i class="bi bi-caret-down-fill"></i>
+            </span>
+          </button>
+        </th>
+
+        <th class="head-group">
+          <button type="button" class="sort-btn" data-sort-target="active" data-sort-key="group">
+            <span class="sort-label">Rodzaj</span>
+            <span class="sort-icons">
+              <i class="bi bi-caret-up-fill"></i>
+              <i class="bi bi-caret-down-fill"></i>
+            </span>
+          </button>
+        </th>
+
+        <th class="head-duration">
+          <span class="services-th-content">Czas</span>
+        </th>
+
+        <th class="head-price">
+          <button type="button" class="sort-btn" data-sort-target="active" data-sort-key="price">
+            <span class="sort-label">Cena</span>
+            <span class="sort-icons">
+              <i class="bi bi-caret-up-fill"></i>
+              <i class="bi bi-caret-down-fill"></i>
+            </span>
+          </button>
+        </th>
+
+        <th class="head-employees">
+          <span class="services-th-content">Pracownicy</span>
+        </th>
+
+        <th class="head-status">
+          <span class="services-th-content">Status</span>
+        </th>
+
+        <th class="head-actions">
+          <span class="services-th-content">Akcje</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody id="servicesTableBody">
+      {% set active_services_count = namespace(value=0) %}
+      {% for service in services %}
+        {% if service.active == 1 %}
+          {% set active_services_count.value = active_services_count.value + 1 %}
+          <tr
+            id="service-row-{{ service.id }}"
+            class="service-data-row"
+            tabindex="0"
+            data-id="{{ service.id }}"
+            data-name="{{ service.name|lower }}"
+            data-group="{{ (service.service_group or '')|lower }}"
+            data-employees="{{ (service.employee_names|join(' ') if service.employee_names else '')|lower }}"
+            data-search="{{ ((service.name or '') ~ ' ' ~ (service.service_group or '') ~ ' ' ~ ((service.employee_names|join(' ')) if service.employee_names else ''))|lower }}"
+            data-price-value="{{ ((service.price or '')|replace('PLN', '')|replace('pln', '')|replace('zł', '')|replace(',', '.')|trim) }}"
+            data-active="1"
+            data-modal-id="{{ service.id }}"
+            data-modal-name="{{ service.name or '' }}"
+            data-modal-group="{{ service.service_group or '' }}"
+            data-modal-duration="{{ service.duration_minutes or '' }}"
+            data-modal-price="{{ service.price or '' }}"
+            data-modal-employees="{{ service.employee_names|join(', ') if service.employee_names else '' }}"
+            data-modal-status="Aktywna"
+          >
+            <td class="cell-id">{{ service.id }}</td>
+
+            <td class="cell-name">
+              <span class="cell-name-text">{{ service.name }}</span>
+            </td>
+
+            <td class="cell-group">
+              {% if service.service_group %}
+                <span class="service-group-pill">
+                  <span class="service-group-pill-text">{{ service.service_group }}</span>
+                </span>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
+            <td class="cell-duration">{{ service.duration_minutes }} min</td>
+
+            <td class="cell-price">{{ service.price or "—" }}</td>
+
+            <td class="cell-employees">
+              {% if service.employee_names %}
+                <div class="employee-pills">
+                  {% for employee_name in service.employee_names %}
+                    <span class="employee-pill">{{ employee_name }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
+            <td class="cell-status">
+              <span
+                class="service-status-badge service-status-active"
+                id="service-status-{{ service.id }}"
+              >
+                Aktywna
+              </span>
+            </td>
+
+            <td class="cell-actions">
+              <div class="service-actions">
+                <button
+                  type="button"
+                  class="service-icon-btn service-icon-btn-edit service-edit-btn"
+                  data-service-id="{{ service.id }}"
+                  data-service-name="{{ service.name }}"
+                  data-service-group="{{ service.service_group or '' }}"
+                  data-duration-minutes="{{ service.duration_minutes or '' }}"
+                  data-price="{{ service.price or '' }}"
+                  data-active="{{ service.active }}"
+                  data-employee-ids="{{ service.employee_ids_csv or '' }}"
+                  data-tooltip="Edytuj usługę"
+                  aria-label="Edytuj usługę"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="service-icon-btn service-icon-btn-toggle service-toggle-btn"
+                  data-service-id="{{ service.id }}"
+                  data-url="{{ url_for('toggle_service', service_id=service.id) }}"
+                  data-tooltip="Wyłącz usługę"
+                  aria-label="Wyłącz usługę"
+                >
+                  <i class="bi bi-eye-slash"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="service-icon-btn service-icon-btn-delete service-delete-btn"
+                  data-service-id="{{ service.id }}"
+                  data-url="{{ url_for('delete_service', service_id=service.id) }}"
+                  data-service-name="{{ service.name }}"
+                  data-tooltip="Usuń usługę"
+                  aria-label="Usuń usługę"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="activeServicesEmptyState" class="services-empty-state" {% if active_services_count.value > 0 %}style="display: none;"{% endif %}>
+  Brak aktywnych usług.
+</div>
+
+<div class="service-editor-card" id="serviceEditorCard" style="display: none;">
+  <div class="service-editor-header">
+    <h3 class="services-list-title" id="serviceEditorTitle">Edycja usługi</h3>
+    <button type="button" class="service-btn" id="closeServiceEditorBtn">
+  <i class="bi bi-x-lg"></i>
+  <span>Zamknij</span>
+</button>
+  </div>
+
+  <form action="{{ url_for('update_service') }}" method="POST" class="service-form-compact" id="serviceEditorForm">
+    <input type="hidden" name="service_id" id="editor_service_id">
+
+    <div class="service-top-row">
+      <div class="form-row">
+        <label for="editor_name">Nazwa usługi</label>
+        <input type="text" name="name" id="editor_name" required>
+      </div>
+
+      <div class="form-row">
+        <label for="editor_service_group">Rodzaj usługi</label>
+        <input
+          type="text"
+          name="service_group"
+          id="editor_service_group"
+          placeholder="Np. masaże, lasery, zabiegi twarzy"
+        >
+      </div>
+
+      <div class="form-row">
+        <label for="editor_duration_minutes">Czas (min)</label>
+        <input type="number" name="duration_minutes" id="editor_duration_minutes" min="5" required>
+      </div>
+
+      <div class="form-row">
+        <label for="editor_price">Cena</label>
+        <input type="text" name="price" id="editor_price" placeholder="Np. 180 PLN">
+      </div>
+    </div>
+
+    <div class="service-bottom-row">
+      <div class="form-row employees-row">
+        <label>Pracownicy przypisani do usługi</label>
+
+        <div class="editor-employee-grid" id="editorEmployeeGrid">
+          {% for employee in employees %}
+            <label class="editor-employee-card">
+              <input
+                type="checkbox"
+                name="employee_ids[]"
+                value="{{ employee.id }}"
+                class="editor-employee-checkbox"
+              >
+              <span class="editor-employee-name">{{ employee.full_name }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="service-submit-wrap">
+        <button type="submit" class="service-btn">
+  <i class="bi bi-check2"></i>
+  <span>Zapisz zmiany</span>
+</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="services-section-divider" aria-hidden="true"></div>
+<div class="services-list-block" id="services-archive-block">
+  <div class="services-list-header-inline">
+    <div class="services-list-header-main">
+      <h2 class="services-list-title">Archiwum usług</h2>
+      <p class="section-note">
+        Tutaj trafiają usługi wyłączone. Z tego miejsca możesz je ponownie włączyć albo usunąć.
+      </p>
+    </div>
+
+    <div class="services-list-filters-inline">
+      <div class="services-search-box">
+        <div class="services-search-input-wrap">
+          <i class="bi bi-search services-search-icon"></i>
+          <input
+            type="text"
+            id="servicesArchiveSearchInput"
+            class="services-search-input"
+            placeholder="Szukaj"
+            autocomplete="off"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="services-table" id="servicesArchiveTable">
+      <thead>
+        <tr>
+          <th class="head-id">
+            <button type="button" class="sort-btn" data-sort-target="archive" data-sort-key="id">
+              <span class="sort-label">ID</span>
+              <span class="sort-icons">
+                <i class="bi bi-caret-up-fill"></i>
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+            </button>
+          </th>
+
+          <th class="head-name">
+            <button type="button" class="sort-btn" data-sort-target="archive" data-sort-key="name">
+              <span class="sort-label">Nazwa</span>
+              <span class="sort-icons">
+                <i class="bi bi-caret-up-fill"></i>
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+            </button>
+          </th>
+
+          <th class="head-group">
+            <button type="button" class="sort-btn" data-sort-target="archive" data-sort-key="group">
+              <span class="sort-label">Rodzaj</span>
+              <span class="sort-icons">
+                <i class="bi bi-caret-up-fill"></i>
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+            </button>
+          </th>
+
+          <th class="head-duration">
+            <span class="services-th-content">Czas</span>
+          </th>
+
+          <th class="head-price">
+            <button type="button" class="sort-btn" data-sort-target="archive" data-sort-key="price">
+              <span class="sort-label">Cena</span>
+              <span class="sort-icons">
+                <i class="bi bi-caret-up-fill"></i>
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+            </button>
+          </th>
+
+          <th class="head-employees">
+            <span class="services-th-content">Pracownicy</span>
+          </th>
+
+          <th class="head-status">
+            <span class="services-th-content">Status</span>
+          </th>
+
+          <th class="head-actions">
+            <span class="services-th-content">Akcje</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody id="servicesArchiveTableBody">
+        {% set archived_services_count = namespace(value=0) %}
+        {% for service in services %}
+          {% if service.active != 1 %}
+            {% set archived_services_count.value = archived_services_count.value + 1 %}
+            <tr
+              id="service-row-{{ service.id }}"
+              class="service-data-row is-clickable"
+              tabindex="0"
+              data-id="{{ service.id }}"
+              data-name="{{ service.name|lower }}"
+              data-group="{{ (service.service_group or '')|lower }}"
+              data-employees="{{ (service.employee_names|join(' ') if service.employee_names else '')|lower }}"
+              data-search="{{ ((service.name or '') ~ ' ' ~ (service.service_group or '') ~ ' ' ~ ((service.employee_names|join(' ')) if service.employee_names else ''))|lower }}"
+              data-price-value="{{ ((service.price or '')|replace('PLN', '')|replace('pln', '')|replace('zł', '')|replace(',', '.')|trim) }}"
+              data-active="0"
+              data-modal-id="{{ service.id }}"
+              data-modal-name="{{ service.name or '' }}"
+              data-modal-group="{{ service.service_group or '' }}"
+              data-modal-duration="{{ service.duration_minutes or '' }}"
+              data-modal-price="{{ service.price or '' }}"
+              data-modal-employees="{{ service.employee_names|join(', ') if service.employee_names else '' }}"
+              data-modal-status="Nieaktywna"
+            >
+              <td class="cell-id">{{ service.id }}</td>
+
+              <td class="cell-name">
+                <span class="cell-name-text">{{ service.name }}</span>
+              </td>
+
+              <td class="cell-group">
+                {% if service.service_group %}
+                  <span class="service-group-pill">
+                    <span class="service-group-pill-text">{{ service.service_group }}</span>
+                  </span>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+
+              <td class="cell-duration">{{ service.duration_minutes }} min</td>
+
+              <td class="cell-price">{{ service.price or "—" }}</td>
+
+              <td class="cell-employees">
+                {% if service.employee_names %}
+                  <div class="employee-pills">
+                    {% for employee_name in service.employee_names %}
+                      <span class="employee-pill">{{ employee_name }}</span>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+
+              <td class="cell-status">
+                <span
+                  class="service-status-badge service-status-inactive"
+                  id="service-status-{{ service.id }}"
+                >
+                  Nieaktywna
+                </span>
+              </td>
+
+              <td class="cell-actions">
+                <div class="service-actions">
+                  <button
+  type="button"
+  class="service-icon-btn service-icon-btn-toggle service-toggle-btn"
+  data-service-id="{{ service.id }}"
+  data-url="{{ url_for('toggle_service', service_id=service.id) }}"
+  data-tooltip="Włącz usługę"
+  aria-label="Włącz usługę"
+>
+  <i class="bi bi-eye"></i>
+</button>
+
+                  <button
+  type="button"
+  class="service-icon-btn service-icon-btn-delete service-delete-btn"
+  data-service-id="{{ service.id }}"
+  data-url="{{ url_for('delete_service', service_id=service.id) }}"
+  data-service-name="{{ service.name }}"
+  data-tooltip="Usuń usługę"
+  aria-label="Usuń usługę"
+>
+  <i class="bi bi-trash3"></i>
+</button>
+                </div>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="archiveServicesEmptyState" class="services-empty-state" {% if archived_services_count.value > 0 %}style="display: none;"{% endif %}>
+    Brak usług w archiwum.
+  </div>
+</div>
+</section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const dom = {
+    activeTableBody: document.getElementById("servicesTableBody"),
+    archiveTableBody: document.getElementById("servicesArchiveTableBody"),
+
+    servicesSearchInput: document.getElementById("servicesSearchInput"),
+    servicesArchiveSearchInput: document.getElementById("servicesArchiveSearchInput"),
+
+    activeServicesEmptyState: document.getElementById("activeServicesEmptyState"),
+    archiveServicesEmptyState: document.getElementById("archiveServicesEmptyState"),
+
+    sortButtons: Array.from(document.querySelectorAll(".sort-btn")),
+
+    serviceEditorCard: document.getElementById("serviceEditorCard"),
+    closeServiceEditorBtn: document.getElementById("closeServiceEditorBtn"),
+    serviceEditorTitle: document.getElementById("serviceEditorTitle"),
+    addServiceForm: document.querySelector('form[action*="/admin/services/add"]'),
+    serviceEditorForm: document.getElementById("serviceEditorForm"),
+
+    editorServiceId: document.getElementById("editor_service_id"),
+    editorName: document.getElementById("editor_name"),
+    editorServiceGroup: document.getElementById("editor_service_group"),
+    editorDurationMinutes: document.getElementById("editor_duration_minutes"),
+    editorPrice: document.getElementById("editor_price"),
+
+    servicesDetailsModal: document.getElementById("servicesDetailsModal"),
+    servicesDetailsCloseBtn: document.getElementById("servicesDetailsCloseBtn"),
+    servicesDetailsFooterCloseBtn: document.getElementById("servicesDetailsFooterCloseBtn"),
+    servicesDetailsCloseTriggers: Array.from(document.querySelectorAll("[data-service-details-close]")),
+
+    serviceDetailsId: document.getElementById("serviceDetailsId"),
+    serviceDetailsStatusWrap: document.getElementById("serviceDetailsStatusWrap"),
+    serviceDetailsName: document.getElementById("serviceDetailsName"),
+    serviceDetailsGroup: document.getElementById("serviceDetailsGroup"),
+    serviceDetailsDuration: document.getElementById("serviceDetailsDuration"),
+    serviceDetailsPrice: document.getElementById("serviceDetailsPrice"),
+    serviceDetailsEmployees: document.getElementById("serviceDetailsEmployees")
+  };
+
+  const sortState = {
+    active: { key: null, direction: "asc" },
+    archive: { key: null, direction: "asc" }
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function getEditorEmployeeCheckboxes() {
+    return Array.from(document.querySelectorAll(".editor-employee-checkbox"));
+  }
+
+  function buildEmployeesHtml(employeeNames) {
+    if (!Array.isArray(employeeNames) || employeeNames.length === 0) {
+      return "—";
+    }
+
+    return `
+      <div class="employee-pills">
+        ${employeeNames.map((name) => `<span class="employee-pill">${escapeHtml(name)}</span>`).join("")}
+      </div>
+    `;
+  }
+
+  function buildGroupHtml(groupName) {
+    if (!groupName) return "—";
+
+    return `
+      <span class="service-group-pill">
+        <span class="service-group-pill-text">${escapeHtml(groupName)}</span>
+      </span>
+    `;
+  }
+
+  function buildToggleUrl(serviceId) {
+    return `{{ url_for('toggle_service', service_id=0) }}`.replace("/0", `/${serviceId}`);
+  }
+
+  function buildDeleteUrl(serviceId) {
+    return `{{ url_for('delete_service', service_id=0) }}`.replace("/0", `/${serviceId}`);
+  }
+
+  function parsePriceValue(rawValue) {
+    if (!rawValue) return Number.POSITIVE_INFINITY;
+
+    const cleaned = String(rawValue)
+      .replace(/\s+/g, "")
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "");
+
+    const parsedNumber = parseFloat(cleaned);
+    return Number.isNaN(parsedNumber) ? Number.POSITIVE_INFINITY : parsedNumber;
+  }
+
+  function getTableBodyByTarget(target) {
+    return target === "archive" ? dom.archiveTableBody : dom.activeTableBody;
+  }
+
+  function updateSortButtonsUi() {
+    dom.sortButtons.forEach((button) => {
+      const target = button.dataset.sortTarget || "active";
+      const key = button.dataset.sortKey || "";
+      const state = sortState[target];
+
+      const isActive = state && state.key === key;
+      button.classList.toggle("is-active", !!isActive);
+      button.dataset.direction = isActive ? state.direction : "";
+    });
+  }
+
+  function sortRows(target, sortKey) {
+    const tableBody = getTableBodyByTarget(target);
+    if (!tableBody) return;
+
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+    const state = sortState[target];
+
+    if (state.key === sortKey) {
+      state.direction = state.direction === "asc" ? "desc" : "asc";
+    } else {
+      state.key = sortKey;
+      state.direction = "asc";
+    }
+
+    rows.sort((rowA, rowB) => {
+      let valueA = "";
+      let valueB = "";
+
+      if (sortKey === "id") {
+        valueA = parseInt(rowA.dataset.id || "0", 10);
+        valueB = parseInt(rowB.dataset.id || "0", 10);
+      } else if (sortKey === "name") {
+        valueA = rowA.dataset.name || "";
+        valueB = rowB.dataset.name || "";
+      } else if (sortKey === "group") {
+        valueA = rowA.dataset.group || "";
+        valueB = rowB.dataset.group || "";
+      } else if (sortKey === "price") {
+        valueA = parsePriceValue(rowA.dataset.priceValue || "");
+        valueB = parsePriceValue(rowB.dataset.priceValue || "");
+      }
+
+      if (valueA < valueB) return state.direction === "asc" ? -1 : 1;
+      if (valueA > valueB) return state.direction === "asc" ? 1 : -1;
+
+      return String(rowA.dataset.name || "").localeCompare(String(rowB.dataset.name || ""), "pl", {
+        sensitivity: "base",
+        numeric: true
+      });
+    });
+
+    rows.forEach((row) => tableBody.appendChild(row));
+
+    updateSortButtonsUi();
+    filterServiceRows();
+    filterArchiveRows();
+    updateEmptyStates();
+  }
+
+  function filterRowsByInput(tableBody, inputElement) {
+    if (!tableBody || !inputElement) return;
+
+    const query = inputElement.value.trim().toLowerCase();
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+
+    rows.forEach((row) => {
+      const searchText = row.dataset.search || "";
+      row.style.display = query === "" || searchText.includes(query) ? "" : "none";
+    });
+  }
+
+  function filterServiceRows() {
+    filterRowsByInput(dom.activeTableBody, dom.servicesSearchInput);
+  }
+
+  function filterArchiveRows() {
+    filterRowsByInput(dom.archiveTableBody, dom.servicesArchiveSearchInput);
+  }
+
+  function updateEmptyStates() {
+    if (dom.activeServicesEmptyState && dom.activeTableBody) {
+      const visibleRows = Array.from(dom.activeTableBody.querySelectorAll("tr"))
+        .filter((row) => row.style.display !== "none");
+
+      dom.activeServicesEmptyState.style.display = visibleRows.length === 0 ? "block" : "none";
+    }
+
+    if (dom.archiveServicesEmptyState && dom.archiveTableBody) {
+      const visibleRows = Array.from(dom.archiveTableBody.querySelectorAll("tr"))
+        .filter((row) => row.style.display !== "none");
+
+      dom.archiveServicesEmptyState.style.display = visibleRows.length === 0 ? "block" : "none";
+    }
+  }
+
+  function createActiveServiceRow(service) {
+    const row = document.createElement("tr");
+    const employeeNames = Array.isArray(service.employee_names) ? service.employee_names : [];
+    const employeeIdsCsv = service.employee_ids_csv || "";
+
+    row.id = `service-row-${service.id}`;
+    row.className = "service-data-row";
+    row.tabIndex = 0;
+
+    row.dataset.id = String(service.id);
+    row.dataset.name = (service.name || "").toLowerCase();
+    row.dataset.group = (service.service_group || "").toLowerCase();
+    row.dataset.employees = employeeNames.join(" ").toLowerCase();
+    row.dataset.search = `${service.name || ""} ${service.service_group || ""} ${employeeNames.join(" ")}`.toLowerCase();
+    row.dataset.priceValue = String(service.price || "")
+      .replace("PLN", "")
+      .replace("pln", "")
+      .replace("zł", "")
+      .replace(",", ".")
+      .trim();
+    row.dataset.active = "1";
+    row.dataset.modalId = String(service.id);
+    row.dataset.modalName = service.name || "";
+    row.dataset.modalGroup = service.service_group || "";
+    row.dataset.modalDuration = String(service.duration_minutes || "");
+    row.dataset.modalPrice = service.price || "";
+    row.dataset.modalEmployees = employeeNames.join(", ");
+    row.dataset.modalStatus = "Aktywna";
+
+    row.innerHTML = `
+      <td class="cell-id">${escapeHtml(service.id)}</td>
+
+      <td class="cell-name">
+        <span class="cell-name-text">${escapeHtml(service.name || "")}</span>
+      </td>
+
+      <td class="cell-group">
+        ${buildGroupHtml(service.service_group || "")}
+      </td>
+
+      <td class="cell-duration">${escapeHtml(service.duration_minutes)} min</td>
+
+      <td class="cell-price">${escapeHtml(service.price || "—")}</td>
+
+      <td class="cell-employees">
+        ${buildEmployeesHtml(employeeNames)}
+      </td>
+
+      <td class="cell-status">
+        <span class="service-status-badge service-status-active" id="service-status-${escapeHtml(service.id)}">
+          Aktywna
+        </span>
+      </td>
+
+      <td class="cell-actions">
+        <div class="service-actions">
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-edit service-edit-btn"
+            data-service-id="${escapeHtml(service.id)}"
+            data-service-name="${escapeHtml(service.name || "")}"
+            data-service-group="${escapeHtml(service.service_group || "")}"
+            data-duration-minutes="${escapeHtml(service.duration_minutes || "")}"
+            data-price="${escapeHtml(service.price || "")}"
+            data-active="1"
+            data-employee-ids="${escapeHtml(employeeIdsCsv)}"
+            data-tooltip="Edytuj usługę"
+            aria-label="Edytuj usługę"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-toggle service-toggle-btn"
+            data-service-id="${escapeHtml(service.id)}"
+            data-url="${escapeHtml(buildToggleUrl(service.id))}"
+            data-tooltip="Wyłącz usługę"
+            aria-label="Wyłącz usługę"
+          >
+            <i class="bi bi-eye-slash"></i>
+          </button>
+
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-delete service-delete-btn"
+            data-service-id="${escapeHtml(service.id)}"
+            data-url="${escapeHtml(buildDeleteUrl(service.id))}"
+            data-service-name="${escapeHtml(service.name || "")}"
+            data-tooltip="Usuń usługę"
+            aria-label="Usuń usługę"
+          >
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+      </td>
+    `;
+
+    bindActionButtonsInsideRow(row);
+    return row;
+  }
+
+  async function submitServiceFormAjax(form, { mode }) {
+    if (!form) return;
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+
+    try {
+      const formData = new FormData(form);
+
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Nie udało się zapisać usługi.");
+      }
+
+      if (mode === "add" && data.service) {
+        const newRow = createActiveServiceRow(data.service);
+        dom.activeTableBody?.prepend(newRow);
+        form.reset();
+      }
+
+      if (mode === "edit" && data.service) {
+        const existingRow = document.getElementById(`service-row-${data.service.id}`);
+        if (existingRow) {
+          existingRow.replaceWith(createActiveServiceRow(data.service));
+        }
+
+        closeServiceEditor();
+      }
+
+      filterServiceRows();
+      filterArchiveRows();
+      updateEmptyStates();
+    } catch (error) {
+      alert(error.message || "Wystąpił błąd.");
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
+  }
+
+  function bindAjaxForms() {
+    if (dom.addServiceForm) {
+      dom.addServiceForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        submitServiceFormAjax(dom.addServiceForm, { mode: "add" });
+      });
+    }
+
+    if (dom.serviceEditorForm) {
+      dom.serviceEditorForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        submitServiceFormAjax(dom.serviceEditorForm, { mode: "edit" });
+      });
+    }
+  }
+
+  function fillServiceEditor(button) {
+    if (!dom.serviceEditorCard || !button) return;
+
+    const serviceId = button.dataset.serviceId || "";
+    const serviceName = button.dataset.serviceName || "";
+    const serviceGroup = button.dataset.serviceGroup || "";
+    const durationMinutes = button.dataset.durationMinutes || "";
+    const price = button.dataset.price || "";
+    const employeeIdsCsv = button.dataset.employeeIds || "";
+
+    if (dom.editorServiceId) dom.editorServiceId.value = serviceId;
+    if (dom.editorName) dom.editorName.value = serviceName;
+    if (dom.editorServiceGroup) dom.editorServiceGroup.value = serviceGroup;
+    if (dom.editorDurationMinutes) dom.editorDurationMinutes.value = durationMinutes;
+    if (dom.editorPrice) dom.editorPrice.value = price;
+
+    if (dom.serviceEditorTitle) {
+      dom.serviceEditorTitle.textContent = `Edycja usługi: ${serviceName}`;
+    }
+
+    const selectedIds = employeeIdsCsv
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
+
+    getEditorEmployeeCheckboxes().forEach((checkbox) => {
+      checkbox.checked = selectedIds.includes(String(checkbox.value));
+    });
+  }
+
+  function openServiceEditor(button) {
+    fillServiceEditor(button);
+
+    if (!dom.serviceEditorCard) return;
+
+    dom.serviceEditorCard.style.display = "grid";
+    dom.serviceEditorCard.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function closeServiceEditor() {
+    if (!dom.serviceEditorCard) return;
+    dom.serviceEditorCard.style.display = "none";
+  }
+
+  function renderServiceDetailsStatus(statusText) {
+    if (!dom.serviceDetailsStatusWrap) return;
+
+    const normalized = String(statusText || "").toLowerCase().trim();
+    const isInactive = normalized.includes("nieaktyw");
+    const safeText = statusText || "—";
+
+    dom.serviceDetailsStatusWrap.innerHTML = `
+      <span class="service-details-status-badge ${isInactive ? "service-details-status-inactive" : "service-details-status-active"}">
+        ${escapeHtml(safeText)}
+      </span>
+    `;
+  }
+
+  function openServiceDetailsModalFromRow(row) {
+    if (!row || !dom.servicesDetailsModal) return;
+
+    const id = row.dataset.modalId || "—";
+    const name = row.dataset.modalName || "—";
+    const group = row.dataset.modalGroup || "—";
+    const duration = row.dataset.modalDuration ? `${row.dataset.modalDuration} min` : "—";
+    const price = row.dataset.modalPrice || "—";
+    const employees = row.dataset.modalEmployees || "—";
+    const status = row.dataset.modalStatus || "—";
+
+    if (dom.serviceDetailsId) dom.serviceDetailsId.textContent = id;
+    if (dom.serviceDetailsName) dom.serviceDetailsName.textContent = name || "—";
+    if (dom.serviceDetailsGroup) dom.serviceDetailsGroup.textContent = group || "—";
+    if (dom.serviceDetailsDuration) dom.serviceDetailsDuration.textContent = duration || "—";
+    if (dom.serviceDetailsPrice) dom.serviceDetailsPrice.textContent = price || "—";
+    if (dom.serviceDetailsEmployees) dom.serviceDetailsEmployees.textContent = employees || "—";
+
+    renderServiceDetailsStatus(status);
+
+    dom.servicesDetailsModal.classList.add("is-open");
+    dom.servicesDetailsModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeServiceDetailsModal() {
+    if (!dom.servicesDetailsModal) return;
+
+    dom.servicesDetailsModal.classList.remove("is-open");
+    dom.servicesDetailsModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function rebuildRowActions(row, isActive) {
+    const actionsCell = row.querySelector(".cell-actions");
+    if (!actionsCell) return;
+
+    const serviceId = row.dataset.id || "";
+    const serviceName = row.querySelector(".cell-name-text")?.textContent?.trim() || "";
+    const toggleUrl = buildToggleUrl(serviceId);
+    const deleteUrl = buildDeleteUrl(serviceId);
+    const existingEditButton = row.querySelector(".service-edit-btn");
+
+    if (isActive) {
+      const serviceGroup = existingEditButton?.dataset.serviceGroup || row.dataset.modalGroup || "";
+      const durationMinutes = existingEditButton?.dataset.durationMinutes || row.dataset.modalDuration || "";
+      const price = existingEditButton?.dataset.price || row.dataset.modalPrice || "";
+      const employeeIds = existingEditButton?.dataset.employeeIds || "";
+
+      actionsCell.innerHTML = `
+        <div class="service-actions">
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-edit service-edit-btn"
+            data-service-id="${escapeHtml(serviceId)}"
+            data-service-name="${escapeHtml(serviceName)}"
+            data-service-group="${escapeHtml(serviceGroup)}"
+            data-duration-minutes="${escapeHtml(durationMinutes)}"
+            data-price="${escapeHtml(price)}"
+            data-active="1"
+            data-employee-ids="${escapeHtml(employeeIds)}"
+            data-tooltip="Edytuj usługę"
+            aria-label="Edytuj usługę"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-toggle service-toggle-btn"
+            data-service-id="${escapeHtml(serviceId)}"
+            data-url="${escapeHtml(toggleUrl)}"
+            data-tooltip="Wyłącz usługę"
+            aria-label="Wyłącz usługę"
+          >
+            <i class="bi bi-eye-slash"></i>
+          </button>
+
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-delete service-delete-btn"
+            data-service-id="${escapeHtml(serviceId)}"
+            data-url="${escapeHtml(deleteUrl)}"
+            data-service-name="${escapeHtml(serviceName)}"
+            data-tooltip="Usuń usługę"
+            aria-label="Usuń usługę"
+          >
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+      `;
+    } else {
+      actionsCell.innerHTML = `
+        <div class="service-actions">
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-toggle service-toggle-btn"
+            data-service-id="${escapeHtml(serviceId)}"
+            data-url="${escapeHtml(toggleUrl)}"
+            data-tooltip="Włącz usługę"
+            aria-label="Włącz usługę"
+          >
+            <i class="bi bi-eye-fill"></i>
+          </button>
+
+          <button
+            type="button"
+            class="service-icon-btn service-icon-btn-delete service-delete-btn"
+            data-service-id="${escapeHtml(serviceId)}"
+            data-url="${escapeHtml(deleteUrl)}"
+            data-service-name="${escapeHtml(serviceName)}"
+            data-tooltip="Usuń usługę"
+            aria-label="Usuń usługę"
+          >
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+      `;
+    }
+
+    bindActionButtonsInsideRow(row);
+  }
+
+  function moveRowToTable(row, shouldBeActive) {
+    if (!row) return;
+
+    const statusBadge = row.querySelector(".service-status-badge");
+
+    row.dataset.active = shouldBeActive ? "1" : "0";
+    row.dataset.modalStatus = shouldBeActive ? "Aktywna" : "Nieaktywna";
+
+    if (statusBadge) {
+      statusBadge.classList.remove("service-status-active", "service-status-inactive");
+      statusBadge.textContent = shouldBeActive ? "Aktywna" : "Nieaktywna";
+      statusBadge.classList.add(shouldBeActive ? "service-status-active" : "service-status-inactive");
+    }
+
+    rebuildRowActions(row, shouldBeActive);
+
+    if (shouldBeActive) {
+      dom.activeTableBody?.appendChild(row);
+    } else {
+      dom.archiveTableBody?.appendChild(row);
+    }
+
+    filterServiceRows();
+    filterArchiveRows();
+    updateEmptyStates();
+  }
+
+  async function handleToggleService(button) {
+    const serviceId = button.dataset.serviceId;
+    const url = button.dataset.url;
+    const row = document.getElementById(`service-row-${serviceId}`);
+
+    if (!url || !row) return;
+
+    button.disabled = true;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Nie udało się zmienić statusu usługi.");
+      }
+
+      moveRowToTable(row, Number(data.active) === 1);
+    } catch (error) {
+      alert(error.message || "Wystąpił błąd.");
+      button.disabled = false;
+    }
+  }
+
+  async function handleDeleteService(button) {
+    const serviceId = button.dataset.serviceId;
+    const url = button.dataset.url;
+    const serviceName = button.dataset.serviceName || "";
+    const row = document.getElementById(`service-row-${serviceId}`);
+
+    if (!url) return;
+
+    const confirmed = confirm(`Czy na pewno chcesz usunąć usługę "${serviceName}"?`);
+    if (!confirmed) return;
+
+    button.disabled = true;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Nie udało się usunąć usługi.");
+      }
+
+      if (row) row.remove();
+
+      filterServiceRows();
+      filterArchiveRows();
+      updateEmptyStates();
+    } catch (error) {
+      alert(error.message || "Wystąpił błąd.");
+      button.disabled = false;
+    }
+  }
+
+  function bindActionButtonsInsideRow(row) {
+    const editButton = row.querySelector(".service-edit-btn");
+    const toggleButton = row.querySelector(".service-toggle-btn");
+    const deleteButton = row.querySelector(".service-delete-btn");
+
+    if (editButton) {
+      editButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openServiceEditor(editButton);
+      });
+    }
+
+    if (toggleButton) {
+      toggleButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        handleToggleService(toggleButton);
+      });
+    }
+
+    if (deleteButton) {
+      deleteButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        handleDeleteService(deleteButton);
+      });
+    }
+  }
+
+  function bindInitialButtons() {
+    document.querySelectorAll("#servicesTableBody tr, #servicesArchiveTableBody tr").forEach((row) => {
+      bindActionButtonsInsideRow(row);
+    });
+  }
+
+  function bindServiceDetailsModal() {
+    if (dom.servicesDetailsCloseBtn) {
+      dom.servicesDetailsCloseBtn.addEventListener("click", closeServiceDetailsModal);
+    }
+
+    if (dom.servicesDetailsFooterCloseBtn) {
+      dom.servicesDetailsFooterCloseBtn.addEventListener("click", closeServiceDetailsModal);
+    }
+
+    dom.servicesDetailsCloseTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", closeServiceDetailsModal);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && dom.servicesDetailsModal?.classList.contains("is-open")) {
+        closeServiceDetailsModal();
+      }
+    });
+  }
+
+  function bindSorting() {
+    dom.sortButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const sortKey = button.dataset.sortKey;
+        const sortTarget = button.dataset.sortTarget || "active";
+        if (!sortKey) return;
+        sortRows(sortTarget, sortKey);
+      });
+    });
+  }
+
+  function bindSearch() {
+    if (dom.servicesSearchInput) {
+      dom.servicesSearchInput.addEventListener("input", () => {
+        filterServiceRows();
+        updateEmptyStates();
+      });
+    }
+
+    if (dom.servicesArchiveSearchInput) {
+      dom.servicesArchiveSearchInput.addEventListener("input", () => {
+        filterArchiveRows();
+        updateEmptyStates();
+      });
+    }
+  }
+
+  function bindEditorClose() {
+    if (dom.closeServiceEditorBtn) {
+      dom.closeServiceEditorBtn.addEventListener("click", closeServiceEditor);
+    }
+  }
+
+  bindInitialButtons();
+  bindAjaxForms();
+  bindServiceDetailsModal();
+  bindSorting();
+  bindSearch();
+  bindEditorClose();
+
+  updateSortButtonsUi();
+  filterServiceRows();
+  filterArchiveRows();
+  updateEmptyStates();
+});
+</script>
+{% endblock %}
