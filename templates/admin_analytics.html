@@ -1,0 +1,3224 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --an-bg: #101722;
+  --an-surface: #1a2230;
+  --an-surface-2: #212b3a;
+  --an-surface-3: #2a3547;
+  --an-border: rgba(255, 255, 255, 0.20);
+  --an-border-2: rgba(255, 255, 255, 0.28);
+  --an-border-3: rgba(255, 255, 255, 0.38);
+  --an-text: #f4f7fb;
+  --an-text-2: #dce2eb;
+  --an-text-3: #cfd8e5;
+  --an-text-4: #aeb8c8;
+  --an-icon: #cbd4e0;
+  --an-ok: #5eead4;
+  --an-warn: #ffd166;
+  --an-err: #ff5c93;
+  --an-t: 0.16s ease;
+  --an-r: 2px;
+  --an-accent: var(--accent-color, var(--primary-color));
+}
+
+html,
+body,
+.page-wrap {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--an-bg) !important;
+}
+
+.analytics-page,
+.analytics-page * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.analytics-page,
+.analytics-page input,
+.analytics-page select,
+.analytics-page option,
+.analytics-page button,
+.analytics-page p,
+.analytics-page div,
+.analytics-page span,
+.analytics-page h1,
+.analytics-page h2,
+.analytics-page h3,
+.analytics-page h4,
+.analytics-page h5,
+.analytics-page h6 {
+  font-family: "LexendDecaLocal", Arial, sans-serif;
+}
+
+.analytics-page {
+  width: 100%;
+  max-width: 1455px;
+  margin: 0 auto;
+  color: var(--an-text);
+  overflow-x: hidden;
+}
+
+.analytics-page i.bi {
+  color: var(--an-icon);
+  line-height: 1;
+}
+
+.analytics-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  width: 100%;
+  align-items: start;
+}
+
+.analytics-sidebar,
+.analytics-main,
+.analytics-topbar,
+.analytics-view {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.analytics-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  padding: 0 !important;
+  overflow: visible !important;
+  background: var(--an-bg) !important;
+}
+
+.analytics-tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 0 !important;
+}
+
+.analytics-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+  min-height: 40px;
+  padding: 2px 14px 0;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface-3);
+  color: var(--an-text-3);
+  font-size: 11.55px;
+  line-height: 1;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background var(--an-t), border-color var(--an-t), color var(--an-t);
+}
+
+.analytics-tab i {
+  font-size: 12.6px;
+  color: var(--an-icon);
+  transform: translateY(0.5px);
+}
+
+.analytics-tab:hover,
+.analytics-tab.is-active,
+.analytics-tab.is-active:hover {
+  border-color: var(--an-accent) !important;
+  background: var(--an-accent) !important;
+  color: #ffffff !important;
+}
+
+.analytics-tab:hover i,
+.analytics-tab.is-active i,
+.analytics-tab.is-active:hover i {
+  color: #ffffff !important;
+}
+
+.analytics-main {
+  display: block !important;
+  width: 100%;
+}
+
+.analytics-topbar {
+  margin-top: 2px !important;
+  padding: 0 0 2px !important;
+  border-bottom: none !important;
+}
+
+.analytics-topbar-title {
+  margin: 0;
+  color: var(--an-text);
+  font-size: 16.8px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+.analytics-topbar-note {
+  margin: 4px 0 0;
+  color: var(--an-text-3);
+  font-size: 11.55px;
+  line-height: 1.45;
+}
+
+.analytics-content {
+  padding-top: 20px !important;
+}
+
+.analytics-view {
+  display: none;
+  width: 100%;
+}
+
+.analytics-view.is-active {
+  display: block;
+}
+
+.analytics-section-title {
+  margin: 0;
+  color: var(--an-text);
+  font-size: 15.75px;
+  font-weight: 400;
+  line-height: 1.15;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+.analytics-section-note,
+.analytics-empty-note {
+  margin: 4px 0 0;
+  color: var(--an-text-3);
+  font-size: 11.55px;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.analytics-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.analytics-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.analytics-two-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.analytics-one-grid {
+  grid-template-columns: 1fr;
+}
+
+.analytics-three-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.analytics-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface-2);
+}
+
+.analytics-kpi-card {
+  min-height: 112px;
+  align-content: space-between;
+}
+
+.analytics-card-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--an-text-4);
+  font-size: 8.4px;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.analytics-card-value {
+  color: var(--an-text);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.05;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+.analytics-card-subtext {
+  color: var(--an-text-3);
+  font-size: 11.55px;
+  line-height: 1.4;
+}
+
+.analytics-placeholder-box {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 18px;
+  border: 1px dashed var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface);
+  color: var(--an-text-4);
+  font-size: 11.55px;
+  text-align: center;
+}
+
+.analytics-list {
+  display: grid;
+  gap: 8px;
+}
+
+.analytics-list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 38px;
+  padding: 9px 10px;
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: var(--an-surface);
+}
+
+.analytics-list-main {
+  display: grid;
+  gap: 2px;
+}
+
+.analytics-list-title {
+  color: var(--an-text);
+  font-size: 11.55px;
+  line-height: 1.3;
+}
+
+.analytics-list-note {
+  color: var(--an-text-4);
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+
+.analytics-list-value {
+  color: var(--an-text-2);
+  font-size: 11.55px;
+  white-space: nowrap;
+}
+
+.analytics-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface-2);
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.analytics-table th,
+.analytics-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--an-border);
+  text-align: left;
+  font-size: 11.55px;
+  line-height: 1.35;
+}
+
+.analytics-table th {
+  color: var(--an-text-4);
+  font-size: 8.4px;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.analytics-table td {
+  color: var(--an-text-2);
+}
+
+.analytics-table tr:last-child td {
+  border-bottom: none;
+}
+
+.analytics-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+
+.analytics-filter-row select {
+  width: 190px;
+  max-width: 100%;
+  height: 34px;
+  min-height: 34px;
+  padding: 2px 30px 0 10px;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background-color: var(--an-surface-3);
+  color: var(--an-text);
+  font-size: 11.55px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23c6cfdb' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+
+.analytics-filter-row select:focus {
+  outline: none;
+  border-color: var(--an-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--an-accent) 18%, transparent);
+}
+
+.analytics-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.analytics-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface-3);
+  color: var(--an-text-3);
+  font-size: 9.45px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.analytics-pill.is-ok {
+  color: var(--an-ok);
+  border-color: rgba(94, 234, 212, 0.24);
+  background: rgba(94, 234, 212, 0.10);
+}
+
+.analytics-pill.is-warn {
+  color: var(--an-warn);
+  border-color: rgba(255, 209, 102, 0.24);
+  background: rgba(255, 209, 102, 0.10);
+}
+
+.analytics-pill.is-err {
+  color: var(--an-err);
+  border-color: rgba(255, 92, 147, 0.24);
+  background: rgba(255, 92, 147, 0.10);
+}
+
+@media (max-width: 1024px) {
+  .analytics-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+  }
+
+  .analytics-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .analytics-tab {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .analytics-topbar {
+    margin-top: 12px !important;
+  }
+
+  .analytics-kpi-grid,
+  .analytics-two-grid,
+  .analytics-one-grid,
+  .analytics-three-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-filter-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .analytics-filter-row select {
+    width: 100%;
+  }
+
+  .analytics-card {
+    padding: 14px;
+  }
+}
+
+.analytics-kpi-grid-compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.analytics-card-value-text {
+  font-size: 17.85px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1024px) {
+  .analytics-kpi-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .analytics-kpi-card {
+    min-height: 104px;
+    padding: 12px !important;
+  }
+
+  .analytics-card-label {
+    font-size: 7.8px;
+    gap: 6px;
+  }
+
+  .analytics-card-label i {
+    font-size: 10.5px;
+  }
+
+  .analytics-card-value {
+    font-size: 20px;
+  }
+
+  .analytics-card-value-text {
+    font-size: 13.65px;
+  }
+
+  .analytics-card-subtext {
+    font-size: 9.8px;
+    line-height: 1.3;
+  }
+}
+
+/* =========================
+   INSIGHTS GRID
+========================= */
+
+.analytics-insights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.analytics-insight-card {
+  padding: 14px;
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r);
+  background: var(--an-surface);
+  display: grid;
+  gap: 4px;
+}
+
+.analytics-insight-label {
+  font-size: 8.4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--an-text-4);
+}
+
+.analytics-insight-value {
+  font-size: 15.75px;
+  color: var(--an-text);
+  font-family: "MonomakhLocal", serif;
+}
+
+.analytics-insight-sub {
+  font-size: 10.5px;
+  color: var(--an-text-3);
+}
+
+/* 📱 MOBILE: 2 w rzędzie */
+@media (max-width: 1024px) {
+  .analytics-insights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.analytics-chart-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+}
+
+.analytics-chart-card::before {
+  content: "";
+  position: absolute;
+  inset: -80px -120px auto auto;
+  width: 260px;
+  height: 260px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.06),
+    transparent 70%
+  );
+
+  opacity: 1;
+  pointer-events: none;
+}
+
+.analytics-chart-head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.analytics-chart-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 8px;
+
+  border: 1px solid var(--an-border-2);
+  background: var(--an-surface-3);
+
+  color: var(--an-text-3);
+
+  font-size: 8.4px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  /* 🔥 lekki cień OK */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+  /* ❌ usuwamy glow */
+  filter: none;
+}
+
+.analytics-chart-box {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 280px;
+  margin-top: 8px;
+}
+
+.analytics-chart-box canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .analytics-chart-card {
+    min-height: 320px;
+  }
+
+  .analytics-chart-box {
+    height: 240px;
+  }
+
+  .analytics-chart-head {
+    gap: 10px;
+  }
+}
+
+/* =========================
+   PRZYCHODY / REVENUE VIEW
+========================= */
+
+/* tytuły tylko bez rozwalania kart */
+#view-przychody .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+#view-przychody .analytics-section-note {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+#view-przychody .analytics-chart-head {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  align-items: flex-start !important;
+}
+
+
+
+/* GŁÓWNY GRID */
+.revenue-dashboard-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.revenue-panel {
+  min-height: 310px;
+  align-content: start;
+}
+
+/* NAJLEPSZE USŁUGI */
+.revenue-rank-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 0;
+}
+
+.revenue-services-panel .revenue-rank-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.revenue-services-panel .revenue-rank-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+}
+
+.revenue-services-panel .revenue-rank-row:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.revenue-services-panel .revenue-rank-number {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: rgba(255,255,255,0.07);
+  color: var(--an-text);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.revenue-services-panel .revenue-rank-row:first-child .revenue-rank-number {
+  background: var(--an-accent);
+  color: #ffffff;
+}
+
+.revenue-rank-main {
+  display: grid;
+  gap: 3px;
+}
+
+.revenue-rank-title {
+  color: var(--an-text);
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.revenue-rank-note {
+  color: var(--an-text-4);
+  font-size: 10.5px;
+  line-height: 1.25;
+}
+
+.revenue-rank-value {
+  justify-self: end;
+  text-align: right;
+  color: var(--an-text);
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 400;
+  white-space: nowrap;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+/* PRACOWNICY */
+#view-przychody .revenue-employees-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+#view-przychody .revenue-employees-panel .revenue-rank-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+}
+
+#view-przychody .revenue-employees-panel .revenue-rank-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.08);
+  font-size: 11px;
+}
+
+#view-przychody .revenue-employees-panel .revenue-rank-title {
+  font-size: 13px;
+}
+
+#view-przychody .revenue-employees-panel .revenue-rank-note {
+  font-size: 11px;
+}
+
+#view-przychody .revenue-employees-panel .revenue-rank-value {
+  font-size: 16px;
+}
+
+/* GODZINY PRZYCHODU — COMPACT */
+#view-przychody .revenue-hours-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-number {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.08);
+  color: var(--an-text);
+  font-size: 10px;
+  line-height: 1;
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-title {
+  font-size: 13px;
+  color: var(--an-text);
+  font-family: "MonomakhLocal", serif !important;
+  white-space: nowrap;
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-note {
+  font-size: 10.5px;
+  color: var(--an-text-4);
+  white-space: nowrap;
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-note::before {
+  content: "·";
+  margin-right: 6px;
+  color: var(--an-text-4);
+}
+
+#view-przychody .revenue-hours-panel .revenue-rank-value {
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--an-text);
+  font-family: "MonomakhLocal", serif !important;
+}
+
+/* UTRACONY PRZYCHÓD */
+#view-przychody .revenue-loss-panel {
+  margin-top: 12px;
+  border-color: rgba(255, 92, 147, 0.28);
+  background:
+    linear-gradient(135deg, rgba(255, 92, 147, 0.065), transparent 48%),
+    var(--an-surface-2);
+}
+
+#view-przychody .revenue-loss-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 0;
+}
+
+#view-przychody .revenue-loss-box {
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid var(--an-border);
+  background: rgba(16, 23, 34, 0.58);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#view-przychody .revenue-loss-label {
+  color: var(--an-text-4);
+  font-size: 8.4px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#view-przychody .revenue-loss-value {
+  color: var(--an-text);
+  font-size: 22px;
+  line-height: 1.05;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+#view-przychody .revenue-loss-note {
+  color: var(--an-text-3);
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+
+#view-przychody .revenue-loss-total {
+  border-color: rgba(255, 92, 147, 0.38);
+  background: rgba(255, 92, 147, 0.09);
+}
+
+/* =========================
+   JEDNOLITE TYTUŁY + OPISY
+   tak jak w wykresach
+========================= */
+
+#view-przychody .analytics-card {
+  gap: 0 !important;
+}
+
+#view-przychody .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+#view-przychody .analytics-section-note {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+#view-przychody .analytics-chart-head {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+}
+
+#view-przychody .analytics-chart-head .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+}
+
+#view-przychody .analytics-chart-head .analytics-section-note {
+  margin: 0 !important;
+}
+
+/* content od razu po opisie */
+#view-przychody .revenue-rank-list,
+#view-przychody .revenue-loss-grid,
+#view-przychody .analytics-chart-box {
+  margin-top: 0 !important;
+}
+
+.analytics-insights-card {
+  gap: 0 !important;
+}
+
+.analytics-insights-card .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+.analytics-insights-card .analytics-section-note {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+.analytics-insights-card .analytics-insights-grid {
+  margin-top: 0 !important;
+}
+
+/* =========================
+   NAJLEPSZE USŁUGI — KAFELKI
+========================= */
+
+.revenue-services-panel .revenue-rank-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* pojedynczy kafelek */
+.revenue-services-panel .revenue-rank-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 14px;
+  min-height: 64px;
+
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+}
+
+/* hover */
+.revenue-services-panel .revenue-rank-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+/* numer */
+.revenue-services-panel .revenue-rank-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background: rgba(255,255,255,0.08);
+  color: var(--an-text);
+  font-size: 11px;
+}
+
+/* TOP 1 */
+.revenue-services-panel .revenue-rank-row:first-child .revenue-rank-number {
+  background: var(--an-accent);
+  color: #fff;
+}
+
+/* środek */
+.revenue-services-panel .revenue-rank-main {
+  display: grid;
+  gap: 2px;
+}
+
+.revenue-services-panel .revenue-rank-title {
+  font-size: 13px;
+  color: var(--an-text);
+}
+
+.revenue-services-panel .revenue-rank-note {
+  font-size: 11px;
+  color: var(--an-text-4);
+}
+
+/* kwota */
+.revenue-services-panel .revenue-rank-value {
+  font-family: "MonomakhLocal", serif !important;
+  font-size: 16px;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--an-text);
+}
+
+/* =========================
+   RESPONSIVE (BREAKPOINT 1024px)
+========================= */
+
+@media (max-width: 1024px) {
+
+  /* GRID */
+  .revenue-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .revenue-panel {
+    min-height: auto;
+  }
+
+  /* HERO */
+  .revenue-hero-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .revenue-hero-card-main {
+    grid-column: 1 / -1;
+  }
+
+  .revenue-hero-card {
+    min-height: 100px;
+    padding: 12px !important;
+  }
+
+  .revenue-hero-value {
+    font-size: 15px;
+  }
+
+  .revenue-hero-sub {
+    font-size: 11px;
+  }
+
+  /* NAJLEPSZE USŁUGI */
+  .revenue-services-panel .revenue-rank-row {
+    grid-template-columns: 30px 1fr auto;
+    gap: 8px;
+    padding: 10px 12px;
+    min-height: 58px;
+  }
+
+  .revenue-services-panel .revenue-rank-number {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .revenue-services-panel .revenue-rank-title {
+    font-size: 12px;
+  }
+
+  .revenue-services-panel .revenue-rank-note {
+    font-size: 10px;
+  }
+
+  .revenue-services-panel .revenue-rank-value {
+    font-size: 14px;
+  }
+
+  /* PRACOWNICY */
+  #view-przychody .revenue-employees-panel .revenue-rank-row {
+    grid-template-columns: 32px 1fr auto;
+  }
+
+  #view-przychody .revenue-employees-panel .revenue-rank-value {
+    font-size: 14px;
+  }
+
+  /* GODZINY */
+  #view-przychody .revenue-hours-list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  #view-przychody .revenue-hours-panel .revenue-rank-row {
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+
+  #view-przychody .revenue-hours-panel .revenue-rank-title {
+    font-size: 12px;
+  }
+
+  #view-przychody .revenue-hours-panel .revenue-rank-note {
+    font-size: 10px;
+  }
+
+  #view-przychody .revenue-hours-panel .revenue-rank-value {
+    font-size: 12px;
+  }
+
+  /* UTRACONY PRZYCHÓD */
+  #view-przychody .revenue-loss-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  #view-przychody .revenue-loss-total {
+    grid-column: 1 / -1;
+  }
+
+  #view-przychody .revenue-loss-box {
+    min-height: 88px;
+    padding: 12px;
+  }
+
+  #view-przychody .revenue-loss-value {
+    font-size: 18px;
+  }
+}
+
+/* =========================
+   NUMERY — KOLORY SYSTEMOWE
+========================= */
+
+/* base */
+.revenue-rank-number {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* różne kolory (rotacja) */
+.revenue-rank-row:nth-child(1) .revenue-rank-number {
+  background: var(--an-accent);
+}
+
+.revenue-rank-row:nth-child(2) .revenue-rank-number {
+  background: #3b82f6; /* blue */
+}
+
+.revenue-rank-row:nth-child(3) .revenue-rank-number {
+  background: #10b981; /* green */
+}
+
+.revenue-rank-row:nth-child(4) .revenue-rank-number {
+  background: #f59e0b; /* amber */
+}
+
+.revenue-rank-row:nth-child(5) .revenue-rank-number {
+  background: #8b5cf6; /* violet */
+}
+
+.revenue-rank-row:nth-child(6) .revenue-rank-number {
+  background: #ef4444; /* red */
+}
+
+.revenue-rank-row:nth-child(7) .revenue-rank-number {
+  background: #06b6d4; /* cyan */
+}
+
+.revenue-rank-row:nth-child(8) .revenue-rank-number {
+  background: #84cc16; /* lime */
+}
+
+/* =========================
+   FIX: KOLOROWE NUMERY WSZĘDZIE
+========================= */
+
+/* PRACOWNICY */
+#view-przychody .revenue-employees-panel .revenue-rank-row:nth-child(1) .revenue-rank-number { background: var(--an-accent) !important; color:#fff; }
+#view-przychody .revenue-employees-panel .revenue-rank-row:nth-child(2) .revenue-rank-number { background: #3b82f6 !important; color:#fff; }
+#view-przychody .revenue-employees-panel .revenue-rank-row:nth-child(3) .revenue-rank-number { background: #10b981 !important; color:#fff; }
+#view-przychody .revenue-employees-panel .revenue-rank-row:nth-child(4) .revenue-rank-number { background: #f59e0b !important; color:#fff; }
+#view-przychody .revenue-employees-panel .revenue-rank-row:nth-child(5) .revenue-rank-number { background: #8b5cf6 !important; color:#fff; }
+
+/* GODZINY */
+#view-przychody .revenue-hours-panel .revenue-rank-row:nth-child(1) .revenue-rank-number { background: var(--an-accent) !important; color:#fff; }
+#view-przychody .revenue-hours-panel .revenue-rank-row:nth-child(2) .revenue-rank-number { background: #3b82f6 !important; color:#fff; }
+#view-przychody .revenue-hours-panel .revenue-rank-row:nth-child(3) .revenue-rank-number { background: #10b981 !important; color:#fff; }
+#view-przychody .revenue-hours-panel .revenue-rank-row:nth-child(4) .revenue-rank-number { background: #f59e0b !important; color:#fff; }
+#view-przychody .revenue-hours-panel .revenue-rank-row:nth-child(5) .revenue-rank-number { background: #8b5cf6 !important; color:#fff; }
+
+/* fallback */
+#view-przychody .revenue-employees-panel .revenue-rank-number,
+#view-przychody .revenue-hours-panel .revenue-rank-number {
+  border: none !important;
+}
+
+/* =========================
+   PODSUMOWANIE — KPI NA ŚRODKU
+========================= */
+
+.analytics-kpi-card {
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.analytics-kpi-card .analytics-card-label {
+  justify-content: center;
+  text-align: center;
+}
+
+.analytics-kpi-card .analytics-card-value,
+.analytics-kpi-card .analytics-card-subtext {
+  text-align: center;
+}
+
+
+/* =========================
+   PODSUMOWANIE — SZYBKIE WNIOSKI MOBILE
+========================= */
+
+@media (max-width: 1024px) {
+  .analytics-insights-card .analytics-insights-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .analytics-insights-card .analytics-insight-card {
+    width: 100%;
+  }
+}
+
+.revenue-chart-spacing {
+  margin-top: 12px;
+}
+
+.is-top-client {
+  background: color-mix(in srgb, var(--an-accent) 10%, transparent);
+}
+
+/* =========================
+   USŁUGI — KPI GRID
+========================= */
+
+#view-uslugi .analytics-kpi-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1024px) {
+  #view-uslugi .analytics-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   USŁUGI — KPI CARD (SPÓJNE Z RESZTĄ)
+========================= */
+
+#view-uslugi .analytics-kpi-card {
+  /* ⛔ usuwamy Twój custom wygląd */
+  display: grid;
+  gap: 10px;
+
+  padding: 16px;
+
+  border: 1px solid var(--an-border-2);
+  border-radius: var(--an-r); /* 🔥 kanciaste jak reszta */
+  background: var(--an-surface-2);
+
+  min-height: 112px;
+  align-content: space-between;
+
+  transition: all var(--an-t);
+}
+
+
+/* =========================
+   USŁUGI — HOVER (SUBTELNY, PREMIUM)
+========================= */
+
+#view-uslugi .analytics-kpi-card:hover {
+  border-color: var(--an-accent);
+  background: color-mix(in srgb, var(--an-surface-2) 92%, var(--an-accent));
+}
+
+
+/* =========================
+   USŁUGI — TEKSTY (IDENTYCZNE)
+========================= */
+
+#view-uslugi .analytics-kpi-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--an-text-4);
+  font-size: 8.4px;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+#view-uslugi .analytics-kpi-value {
+  color: var(--an-text);
+  font-size: 25px;
+  line-height: 1.05;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+#view-uslugi .analytics-kpi-note {
+  color: var(--an-text-3);
+  font-size: 11.55px;
+  line-height: 1.4;
+}
+
+/* =========================
+   USŁUGI — SZEROKOŚĆ KOLUMNY
+========================= */
+
+#view-uslugi .analytics-table th.col-service,
+#view-uslugi .analytics-table td.col-service {
+  width: 32%;
+  min-width: 220px;
+}
+
+#view-uslugi .analytics-table td.col-service {
+  font-size: 12.5px;
+  color: var(--an-text);
+}
+
+/* =========================
+   USŁUGI — MOBILE KPI (<=1024px)
+========================= */
+
+@media (max-width: 1024px) {
+
+  /* 1 box na rząd */
+  #view-uslugi .analytics-kpi-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  /* box */
+  #view-uslugi .analytics-kpi-card {
+    padding: 12px 14px;
+    min-height: 88px;
+  }
+
+  /* label */
+  #view-uslugi .analytics-kpi-label {
+    font-size: 7.8px;
+    letter-spacing: 0.06em;
+  }
+
+  /* główna wartość */
+  #view-uslugi .analytics-kpi-value {
+    font-size: 20px;
+  }
+
+  /* opis */
+  #view-uslugi .analytics-kpi-note {
+    font-size: 10.5px;
+  }
+
+}
+
+/* =========================
+   REZERWACJE — FINAL CLEAN
+========================= */
+
+/* KPI na desktopie */
+#view-rezerwacje .analytics-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* wykresy jeden pod drugim */
+#view-rezerwacje .analytics-two-grid:has(.analytics-chart-card) {
+  grid-template-columns: 1fr;
+}
+
+/* sekcje dni/godzin na całą szerokość */
+#view-rezerwacje .analytics-two-grid:has(.visits-days-grid),
+#view-rezerwacje .analytics-two-grid:has(.visits-hours-grid) {
+  grid-template-columns: 1fr;
+}
+
+/* karty dni/godzin bez rozciągania contentu */
+#view-rezerwacje .analytics-card:has(.visits-days-grid),
+#view-rezerwacje .analytics-card:has(.visits-hours-grid) {
+  align-content: start;
+  justify-content: start;
+  gap: 0;
+}
+
+/* tytuł + opis */
+#view-rezerwacje .analytics-card:has(.visits-days-grid) .analytics-section-title,
+#view-rezerwacje .analytics-card:has(.visits-hours-grid) .analytics-section-title {
+  margin: 0 0 4px 0;
+  padding: 0;
+  line-height: 1.15;
+}
+
+#view-rezerwacje .analytics-card:has(.visits-days-grid) .analytics-section-note,
+#view-rezerwacje .analytics-card:has(.visits-hours-grid) .analytics-section-note {
+  margin: 0 0 12px 0;
+  padding: 0;
+  line-height: 1.35;
+}
+
+/* dni + godziny: desktop 3 w rzędzie */
+#view-rezerwacje .visits-days-grid,
+#view-rezerwacje .visits-hours-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+/* okienka */
+#view-rezerwacje .visits-days-grid .analytics-list-row,
+#view-rezerwacje .visits-hours-grid .analytics-list-row {
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+  transition: background var(--an-t), border-color var(--an-t);
+}
+
+#view-rezerwacje .visits-days-grid .analytics-list-row:hover,
+#view-rezerwacje .visits-hours-grid .analytics-list-row:hover {
+  border-color: var(--an-accent);
+  background: color-mix(in srgb, var(--an-surface) 90%, var(--an-accent));
+}
+
+/* tekst w okienkach */
+#view-rezerwacje .analytics-list-title {
+  color: var(--an-text);
+  font-size: 11.55px;
+  line-height: 1.3;
+}
+
+#view-rezerwacje .analytics-list-note {
+  color: var(--an-text-4);
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+
+#view-rezerwacje .analytics-list-value {
+  color: var(--an-text-2);
+  font-size: 11.55px;
+  white-space: nowrap;
+}
+
+/* mobile/tablet */
+@media (max-width: 1024px) {
+  #view-rezerwacje .analytics-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #view-rezerwacje .analytics-two-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #view-rezerwacje .visits-days-grid,
+  #view-rezerwacje .visits-hours-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #view-rezerwacje .analytics-kpi-card {
+    min-height: 88px;
+    padding: 12px 14px !important;
+  }
+
+  #view-rezerwacje .analytics-card-value {
+    font-size: 20px;
+  }
+
+  #view-rezerwacje .analytics-card-subtext {
+    font-size: 10.5px;
+  }
+}
+
+/* =========================
+   REZERWACJE — DNI + GODZINY FINAL CLEAN
+========================= */
+
+#view-rezerwacje .visits-load-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+#view-rezerwacje .visits-load-card {
+  width: 100% !important;
+  max-width: none !important;
+  align-content: start !important;
+  justify-content: stretch !important;
+  gap: 0 !important;
+}
+
+/* tytuł + opis w dużych boxach */
+#view-rezerwacje .visits-load-card .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+#view-rezerwacje .visits-load-card .analytics-section-note {
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+/* kafelki w środku */
+#view-rezerwacje .visits-days-grid,
+#view-rezerwacje .visits-hours-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  justify-items: stretch !important;
+}
+
+/* pojedynczy kafelek */
+#view-rezerwacje .visits-days-grid .analytics-list-row,
+#view-rezerwacje .visits-hours-grid .analytics-list-row {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 64px !important;
+  padding: 10px 12px !important;
+
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 4px !important;
+
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+  transition: background var(--an-t), border-color var(--an-t);
+}
+
+#view-rezerwacje .visits-days-grid .analytics-list-row:hover,
+#view-rezerwacje .visits-hours-grid .analytics-list-row:hover {
+  border-color: var(--an-accent);
+  background: color-mix(in srgb, var(--an-surface) 90%, var(--an-accent));
+}
+
+/* pierwsza linia: nazwa + liczba */
+#view-rezerwacje .analytics-list-top {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) max-content !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+/* teksty */
+#view-rezerwacje .analytics-list-title {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+
+  color: var(--an-text);
+  font-size: 11.55px;
+  line-height: 1.3;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+#view-rezerwacje .analytics-list-value {
+  white-space: nowrap !important;
+  color: var(--an-text-2);
+  font-size: 11.55px;
+  line-height: 1.3;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+#view-rezerwacje .analytics-list-note {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 2px !important;
+  white-space: normal !important;
+
+  color: var(--an-text-4);
+  font-size: 10.5px;
+  line-height: 1.35;
+  font-family: "LexendDecaLocal", Arial, sans-serif !important;
+}
+
+/* mobile/tablet */
+@media (max-width: 1024px) {
+  #view-rezerwacje .visits-load-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #view-rezerwacje .visits-days-grid,
+  #view-rezerwacje .visits-hours-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* =========================
+   PRZYCHODY — GÓRNE KPI CLEAN
+========================= */
+
+#view-przychody > .analytics-kpi-grid:first-child {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+#view-przychody > .analytics-kpi-grid:first-child .analytics-kpi-card {
+  display: grid !important;
+  justify-items: center !important;
+  align-content: center !important;
+  text-align: center !important;
+  gap: 10px !important;
+  min-height: 112px !important;
+  padding: 16px !important;
+}
+
+#view-przychody > .analytics-kpi-grid:first-child .analytics-card-label {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+#view-przychody > .analytics-kpi-grid:first-child .analytics-card-value {
+  text-align: center !important;
+  font-size: 25px !important;
+}
+
+#view-przychody > .analytics-kpi-grid:first-child .analytics-card-subtext {
+  text-align: center !important;
+}
+
+/* mobile/tablet */
+@media (max-width: 1024px) {
+  #view-przychody > .analytics-kpi-grid:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  #view-przychody > .analytics-kpi-grid:first-child .analytics-kpi-card {
+    min-height: 88px !important;
+    padding: 12px 14px !important;
+  }
+
+  #view-przychody > .analytics-kpi-grid:first-child .analytics-card-value {
+    font-size: 20px !important;
+  }
+}
+
+/* =========================
+   PROGNOZA — 4 KOLUMNY CLEAN
+========================= */
+
+.forecast-columns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.forecast-column-card {
+  align-content: start;
+  gap: 0 !important;
+  min-height: 0 !important;
+}
+
+.forecast-column-card .analytics-section-title {
+  margin: 0 0 4px 0 !important;
+}
+
+.forecast-column-card .analytics-section-note {
+  margin: 0 0 12px 0 !important;
+  min-height: 32px;
+}
+
+.forecast-compact-list {
+  display: grid;
+  gap: 8px;
+}
+
+.forecast-compact-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 54px;
+  padding: 10px 11px;
+
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-r);
+  background: rgba(16, 23, 34, 0.55);
+
+  transition: border-color var(--an-t), background var(--an-t);
+}
+
+.forecast-compact-row:hover {
+  border-color: var(--an-accent);
+  background: color-mix(in srgb, var(--an-surface) 90%, var(--an-accent));
+}
+
+.forecast-compact-row.is-top {
+  border-color: color-mix(in srgb, var(--an-accent) 42%, var(--an-border));
+  background: color-mix(in srgb, var(--an-surface) 88%, var(--an-accent));
+}
+
+.forecast-compact-row.is-empty {
+  opacity: 0.72;
+}
+
+.forecast-compact-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.forecast-compact-title {
+  color: var(--an-text);
+  font-size: 11.55px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-compact-note {
+  color: var(--an-text-4);
+  font-size: 10.5px;
+  line-height: 1.25;
+}
+
+.forecast-compact-value {
+  color: var(--an-text);
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: right;
+  font-family: "MonomakhLocal", serif !important;
+}
+
+/* tablet */
+@media (max-width: 1200px) {
+  .forecast-columns-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* mobile */
+@media (max-width: 1024px) {
+  .forecast-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .forecast-column-card .analytics-section-note {
+    min-height: 0;
+  }
+
+  .forecast-compact-row {
+    min-height: 50px;
+  }
+
+  .forecast-compact-value {
+    font-size: 12px;
+  }
+}
+
+/* =========================
+   ANALITYKA — TABELKI MOBILE (FINAL UX)
+========================= */
+
+@media (max-width: 1024px) {
+
+  .analytics-table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .analytics-table {
+    width: 1100px !important;
+    min-width: 1100px !important;
+    table-layout: fixed !important;
+  }
+
+  .analytics-table th,
+  .analytics-table td {
+    white-space: nowrap !important;
+    padding: 10px 12px !important;
+  }
+
+  /* # kolumna */
+  .analytics-table th:first-child,
+  .analytics-table td:first-child {
+    width: 50px !important;
+    text-align: center;
+  }
+
+  /* NAZWA (klient / usługa) */
+  .analytics-table th:nth-child(2),
+  .analytics-table td:nth-child(2) {
+    width: 260px !important;
+  }
+
+  /* RESZTA */
+  .analytics-table th:not(:first-child):not(:nth-child(2)),
+  .analytics-table td:not(:first-child):not(:nth-child(2)) {
+    width: 140px !important;
+  }
+
+}
+</style>
+
+<div class="analytics-page">
+  <div class="analytics-shell">
+
+    <aside class="analytics-sidebar">
+      <nav class="analytics-tabs" aria-label="Menu statystyk">
+        <button type="button" class="analytics-tab is-active" data-tab="podsumowanie" aria-selected="true">
+          <i class="bi bi-speedometer2"></i>
+          Podsumowanie
+        </button>
+
+        <button type="button" class="analytics-tab" data-tab="przychody" aria-selected="false">
+          <i class="bi bi-cash-coin"></i>
+          Przychody
+        </button>
+
+       <button type="button" class="analytics-tab" data-tab="klienci" aria-selected="false">
+  <i class="bi bi-people"></i>
+  Klienci
+</button>
+
+<button type="button" class="analytics-tab" data-tab="uslugi" aria-selected="false">
+  <i class="bi bi-scissors"></i>
+  Usługi
+</button>
+
+<button type="button" class="analytics-tab" data-tab="rezerwacje" aria-selected="false">
+  <i class="bi bi-calendar-check"></i>
+  Rezerwacje
+</button>
+
+        <button type="button" class="analytics-tab" data-tab="pracownicy" aria-selected="false">
+          <i class="bi bi-person-badge"></i>
+          Pracownicy
+        </button>
+
+        <button type="button" class="analytics-tab" data-tab="prognoza" aria-selected="false">
+  <i class="bi bi-graph-up-arrow"></i>
+  Prognoza
+</button>
+      </nav>
+    </aside>
+
+<div class="analytics-filter-row">
+  <select id="analyticsPeriod" name="period" aria-label="Zakres danych">
+    <option value="" disabled {% if not analytics_period %}selected{% endif %}>
+      Zakres danych
+    </option>
+    <option value="today" {% if analytics_period == "today" %}selected{% endif %}>
+      Dzisiaj
+    </option>
+    <option value="7" {% if analytics_period == "7" %}selected{% endif %}>
+      Ostatnie 7 dni
+    </option>
+    <option value="30" {% if analytics_period == "30" %}selected{% endif %}>
+      Ostatnie 30 dni
+    </option>
+    <option value="90" {% if analytics_period == "90" %}selected{% endif %}>
+      Ostatnie 90 dni
+    </option>
+    <option value="year" {% if analytics_period == "year" %}selected{% endif %}>
+      Cały rok
+    </option>
+  </select>
+</div>
+
+  <section class="analytics-view is-active" id="view-podsumowanie">
+
+  <div class="analytics-grid analytics-kpi-grid analytics-kpi-grid-compact">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-calendar2-check"></i> Rezerwacje</div>
+      <div class="analytics-card-value">{{ total_bookings or 0 }}</div>
+      <div class="analytics-card-subtext">Wszystkie rezerwacje w okresie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-check2-circle"></i> Zakończone</div>
+      <div class="analytics-card-value">{{ completed_bookings or 0 }}</div>
+      <div class="analytics-card-subtext">Wizyty ze statusem completed.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-cash"></i> Przychód</div>
+      <div class="analytics-card-value">{{ total_revenue or 0 }}</div>
+      <div class="analytics-card-subtext">Suma zakończonych wizyt.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-receipt"></i> Śr. wizyta</div>
+      <div class="analytics-card-value">{{ average_visit_value or 0 }}</div>
+      <div class="analytics-card-subtext">Przychód / zakończone wizyty.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-person-x"></i> No-show</div>
+      <div class="analytics-card-value">{{ no_show_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci oznaczeni jako nieobecni.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-percent"></i> No-show rate</div>
+      <div class="analytics-card-value">{{ no_show_rate or 0 }}%</div>
+      <div class="analytics-card-subtext">Udział nieobecności w wizytach.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-x-circle"></i> Anulowane</div>
+      <div class="analytics-card-value">{{ cancelled_count or 0 }}</div>
+      <div class="analytics-card-subtext">Rezerwacje anulowane w okresie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-person-plus"></i> Nowi klienci</div>
+      <div class="analytics-card-value">{{ new_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci z pierwszą wizytą.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-arrow-repeat"></i> Powracający</div>
+      <div class="analytics-card-value">{{ returning_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci z więcej niż jedną wizytą.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-people"></i> Aktywni klienci</div>
+      <div class="analytics-card-value">{{ active_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Unikalni klienci w okresie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-stars"></i> Top usługa</div>
+      <div class="analytics-card-value analytics-card-value-text">
+        {{ top_service_name or "—" }}
+      </div>
+      <div class="analytics-card-subtext">{{ top_service_count or 0 }} rezerwacji.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-person-badge"></i> Top pracownik</div>
+      <div class="analytics-card-value analytics-card-value-text">
+        {{ top_employee_name or "—" }}
+      </div>
+      <div class="analytics-card-subtext">{{ top_employee_bookings or 0 }} zakończonych wizyt.</div>
+    </article>
+
+  </div>
+
+  <div class="analytics-grid analytics-one-grid" style="margin-top: 12px;">
+   <article class="analytics-card analytics-chart-card">
+  <div class="analytics-chart-head">
+    <div>
+      <h3 class="analytics-section-title">Trend rezerwacji</h3>
+      <p class="analytics-section-note">
+        Liczba rezerwacji dzień po dniu w wybranym zakresie danych.
+      </p>
+    </div>
+    <span class="analytics-chart-pill">ruch</span>
+  </div>
+
+  <div class="analytics-chart-box">
+    <canvas id="bookingsTrendChart"></canvas>
+  </div>
+</article>
+
+<article class="analytics-card analytics-chart-card">
+  <div class="analytics-chart-head">
+    <div>
+      <h3 class="analytics-section-title">Trend przychodu</h3>
+      <p class="analytics-section-note">
+        Przychód z zakończonych wizyt dzień po dniu.
+      </p>
+    </div>
+    <span class="analytics-chart-pill">PLN</span>
+  </div>
+
+  <div class="analytics-chart-box">
+    <canvas id="revenueTrendChart"></canvas>
+  </div>
+</article>
+  </div>
+</section>
+
+<section class="analytics-view" id="view-przychody">
+
+  <!-- GÓRNE KPI -->
+ <div class="analytics-grid analytics-kpi-grid analytics-kpi-grid-compact">
+
+  <article class="analytics-card analytics-kpi-card">
+    <div class="analytics-card-label">
+      <i class="bi bi-cash-stack"></i> Przychód razem
+    </div>
+    <div class="analytics-card-value">
+      {{ total_revenue or "0 PLN" }}
+    </div>
+    <div class="analytics-card-subtext">
+      w wybranym okresie
+    </div>
+  </article>
+
+  <article class="analytics-card analytics-kpi-card">
+    <div class="analytics-card-label">
+      <i class="bi bi-calendar-week"></i> Najlepszy dzień
+    </div>
+    <div class="analytics-card-value">
+      {{ best_day_name or "—" }}
+    </div>
+    <div class="analytics-card-subtext">
+      {{ best_day_revenue or "0 PLN" }}
+    </div>
+  </article>
+
+  <article class="analytics-card analytics-kpi-card">
+    <div class="analytics-card-label">
+      <i class="bi bi-exclamation-triangle"></i> Utracony przychód
+    </div>
+    <div class="analytics-card-value">
+      {{ lost_revenue or "0 PLN" }}
+    </div>
+    <div class="analytics-card-subtext">
+      No-show + anulowane
+    </div>
+  </article>
+
+</div>
+
+  <!-- GŁÓWNY GRID -->
+  <div class="revenue-dashboard-grid">
+
+    <article class="analytics-card revenue-panel revenue-services-panel">
+  <h3 class="analytics-section-title">Najlepsze usługi</h3>
+  <p class="analytics-section-note">Usługi generujące największy przychód.</p>
+
+  <div class="revenue-rank-list">
+    {% for service in top_services_revenue %}
+    <div class="revenue-rank-row">
+      <div class="revenue-rank-number">{{ loop.index }}</div>
+
+      <div class="revenue-rank-main">
+        <div class="revenue-rank-title">{{ service.name }}</div>
+        <div class="revenue-rank-note">{{ service.count }} rezerwacji</div>
+      </div>
+
+      <div class="revenue-rank-value">{{ service.revenue }}</div>
+    </div>
+    {% else %}
+    <div class="analytics-empty-note">Brak danych</div>
+    {% endfor %}
+  </div>
+</article>
+
+    <!-- PRZYCHÓD WEDŁUG DNI -->
+    <article class="analytics-card analytics-chart-card revenue-panel">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Przychód według dni</h3>
+          <p class="analytics-section-note">Które dni generują największy obrót.</p>
+        </div>
+        <span class="analytics-chart-pill">PLN</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="weekdayRevenueChart"></canvas>
+      </div>
+    </article>
+
+
+    <!-- PRACOWNICY -->
+    <article class="analytics-card revenue-panel revenue-employees-panel">
+      <h3 class="analytics-section-title">Przychód według pracowników</h3>
+      <p class="analytics-section-note">Kto generuje największy przychód.</p>
+
+      <div class="revenue-rank-list revenue-employees-list">
+        {% for emp in employee_revenue %}
+        <div class="revenue-rank-row">
+          <div class="revenue-rank-number">{{ loop.index }}</div>
+
+          <div class="revenue-rank-main">
+            <div class="revenue-rank-title">{{ emp.name }}</div>
+            <div class="revenue-rank-note">{{ emp.bookings }} wizyt</div>
+          </div>
+
+          <div class="revenue-rank-value">{{ emp.revenue }}</div>
+        </div>
+        {% else %}
+        <div class="analytics-empty-note">Brak danych</div>
+        {% endfor %}
+      </div>
+    </article>
+
+    <!-- GODZINY -->
+    <article class="analytics-card revenue-panel revenue-hours-panel">
+      <h3 class="analytics-section-title">Godziny przychodu</h3>
+      <p class="analytics-section-note">Kiedy zarabiasz najwięcej.</p>
+
+      <div class="revenue-rank-list revenue-hours-list">
+        {% for hour in revenue_by_hour %}
+        <div class="revenue-rank-row revenue-hour-row">
+          <div class="revenue-rank-number">{{ loop.index }}</div>
+
+          <div class="revenue-rank-main">
+            <div class="revenue-rank-title">{{ hour.hour }}:00</div>
+            <div class="revenue-rank-note">{{ hour.count or 0 }} wizyt</div>
+          </div>
+
+          <div class="revenue-rank-value">{{ hour.revenue }}</div>
+        </div>
+        {% else %}
+        <div class="analytics-empty-note">Brak danych</div>
+        {% endfor %}
+      </div>
+    </article>
+  </div>
+
+    <article class="analytics-card analytics-chart-card revenue-chart-spacing">
+  <div class="analytics-chart-head">
+    <div>
+      <h3 class="analytics-section-title">Trend przychodu</h3>
+      <p class="analytics-section-note">
+        Przychód z zakończonych wizyt dzień po dniu.
+      </p>
+    </div>
+    <span class="analytics-chart-pill">PLN</span>
+  </div>
+
+  <div class="analytics-chart-box">
+    <canvas id="revenueTrendChartRevenueView"></canvas>
+  </div>
+</article>
+
+  <!-- UTRACONY PRZYCHÓD -->
+  <article class="analytics-card revenue-loss-panel">
+    <h3 class="analytics-section-title">Utracony przychód</h3>
+    <p class="analytics-section-note">Szacowana kwota utracona przez no-show i anulacje.</p>
+
+    <div class="revenue-loss-grid">
+      <div class="revenue-loss-box">
+        <div class="revenue-loss-label">No-show</div>
+        <div class="revenue-loss-value">{{ no_show_lost or 0 }}</div>
+        <div class="revenue-loss-note">nieobecności klientów</div>
+      </div>
+
+      <div class="revenue-loss-box">
+        <div class="revenue-loss-label">Anulacje</div>
+        <div class="revenue-loss-value">{{ cancelled_lost or 0 }}</div>
+        <div class="revenue-loss-note">anulowane rezerwacje</div>
+      </div>
+
+      <div class="revenue-loss-box revenue-loss-total">
+        <div class="revenue-loss-label">Razem</div>
+        <div class="revenue-loss-value">{{ lost_revenue or 0 }}</div>
+        <div class="revenue-loss-note">łączna szacowana strata</div>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+
+ <section class="analytics-view" id="view-klienci">
+
+  <div class="analytics-grid analytics-kpi-grid">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-people"></i> Wszyscy klienci
+      </div>
+      <div class="analytics-card-value">{{ total_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Łączna liczba klientów w bazie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-person-plus"></i> Nowi klienci
+      </div>
+      <div class="analytics-card-value">{{ new_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci dodani w wybranym okresie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-arrow-repeat"></i> Powracający
+      </div>
+      <div class="analytics-card-value">{{ returning_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci, którzy mieli więcej niż jedną wizytę.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-lightning-charge"></i> Do odzyskania
+      </div>
+      <div class="analytics-card-value">{{ clients_to_recover_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci, którzy dawno nie wrócili.</div>
+    </article>
+
+  </div>
+
+    <div class="analytics-grid analytics-kpi-grid" style="margin-top: 12px;">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-star"></i> VIP
+      </div>
+      <div class="analytics-card-value">{{ vip_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Najbardziej wartościowi klienci.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-award"></i> Regularni
+      </div>
+      <div class="analytics-card-value">{{ regular_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Klienci wracający cyklicznie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-exclamation-triangle"></i> Zagrożeni odejściem
+      </div>
+      <div class="analytics-card-value">{{ at_risk_clients_count or 0 }}</div>
+      <div class="analytics-card-subtext">Nie wracali od dłuższego czasu.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-envelope-slash"></i> Bez e-maila
+      </div>
+      <div class="analytics-card-value">{{ clients_without_email_count or 0 }}</div>
+      <div class="analytics-card-subtext">Brak kontaktu mailowego do klienta.</div>
+    </article>
+
+  </div>
+
+  <div style="margin-top: 35px;">
+  <h3 class="analytics-section-title">Top klienci</h3>
+  <p class="analytics-section-note" style="margin-bottom: 10px;">
+    Najważniejsi klienci według liczby wizyt, wydanej kwoty i ostatniej aktywności.
+  </p>
+
+<div class="analytics-table-wrap">
+  <table class="analytics-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Klient</th>
+        <th>Telefon</th>
+        <th>E-mail</th>
+        <th>Wizyty</th>
+        <th>Wydane</th>
+        <th>Ostatnia wizyta</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for client in top_clients %}
+      <tr class="{% if loop.index <= 3 %}is-top-client{% endif %}">
+        <td>{{ loop.index }}</td>
+        <td>{{ client.name }}</td>
+        <td>{{ client.phone or "—" }}</td>
+        <td>{{ client.email or "—" }}</td>
+        <td>{{ client.visits_count }}</td>
+        <td>{{ client.total_spent }}</td>
+        <td>{{ client.last_visit_date or "—" }}</td>
+        <td>
+          <span class="analytics-pill {{ client.status_class }}">
+            {{ client.status_label }}
+          </span>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8">Brak danych o klientach w wybranym okresie.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</article>
+</section>
+
+
+
+<section class="analytics-view" id="view-uslugi">
+
+  <div class="analytics-grid analytics-kpi-grid">
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-scissors"></i>
+        Liczba usług
+      </span>
+      <strong class="analytics-kpi-value">{{ services_count }}</strong>
+      <small class="analytics-kpi-note">wszystkie usługi w systemie</small>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-toggle-on"></i>
+        Aktywne usługi
+      </span>
+      <strong class="analytics-kpi-value">{{ active_services_count }}</strong>
+      <small class="analytics-kpi-note">nieaktywne: {{ inactive_services_count }}</small>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-cash-stack"></i>
+        Śr. cena usługi
+      </span>
+      <strong class="analytics-kpi-value">{{ avg_service_price }}</strong>
+      <small class="analytics-kpi-note">na podstawie cennika</small>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-clock"></i>
+        Śr. czas trwania
+      </span>
+      <strong class="analytics-kpi-value">{{ avg_service_duration }}</strong>
+      <small class="analytics-kpi-note">średnio dla usług</small>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-star"></i>
+        Top według wizyt
+      </span>
+      <strong class="analytics-kpi-value">{{ top_service_by_visits_name }}</strong>
+      <small class="analytics-kpi-note">najczęściej wybierana usługa</small>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <span class="analytics-kpi-label">
+        <i class="bi bi-graph-up-arrow"></i>
+        Top według przychodu
+      </span>
+      <strong class="analytics-kpi-value">{{ top_service_by_revenue_name }}</strong>
+      <small class="analytics-kpi-note">najbardziej dochodowa usługa</small>
+    </article>
+
+  </div>
+
+  <div class="analytics-grid analytics-two-grid" style="margin-top: 16px;">
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Top 10 usług według przychodu</h3>
+          <p class="analytics-section-note">
+            Usługi generujące największy przychód w wybranym okresie.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">PLN</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="servicesRevenueChart"></canvas>
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Top 10 usług według liczby wizyt</h3>
+          <p class="analytics-section-note">
+            Najczęściej realizowane usługi w wybranym okresie.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">wizyty</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="servicesVisitsChart"></canvas>
+      </div>
+    </article>
+  </div>
+
+  <div class="analytics-grid analytics-two-grid" style="margin-top: 16px;">
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Cancel rate per usługa</h3>
+          <p class="analytics-section-note">
+            Usługi z najwyższym udziałem anulacji.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">%</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="servicesCancelRateChart"></canvas>
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">No-show rate per usługa</h3>
+          <p class="analytics-section-note">
+            Usługi z najwyższym udziałem nieobecności.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">%</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="servicesNoShowRateChart"></canvas>
+      </div>
+    </article>
+  </div>
+
+  <div class="analytics-table-wrap" style="margin-top: 16px;">
+    <table class="analytics-table">
+        <thead>
+  <tr>
+    <th>#</th>
+    <th class="col-service">Usługa</th>
+    <th>Wizyty</th>
+    <th>Zrealizowane</th>
+    <th>Anulacje</th>
+    <th>Nieobecności</th>
+    <th>Przychód</th>
+    <th>Cancel rate</th>
+    <th>No-show rate</th>
+    <th>Status</th>
+  </tr>
+</thead>
+  
+
+      <tbody>
+        {% for service in services_summary %}
+        <tr>
+  <td>{{ loop.index }}</td>
+  <td class="col-service">{{ service.name }}</td>
+  <td>{{ service.visits_count }}</td>
+  <td>{{ service.completed_count }}</td>
+  <td>{{ service.cancelled_count }}</td>
+  <td>{{ service.no_show_count }}</td>
+  <td>{{ service.revenue }}</td>
+  <td>{{ service.cancel_rate }}%</td>
+  <td>{{ service.no_show_rate }}%</td>
+  <td>
+    {% if service.active == 1 %}
+      <span class="analytics-pill is-ok">Aktywna</span>
+    {% else %}
+      <span class="analytics-pill is-neutral">Nieaktywna</span>
+    {% endif %}
+  </td>
+</tr>
+        {% else %}
+        <tr>
+          <td colspan="10">Brak danych o usługach w wybranym okresie.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+<section class="analytics-view" id="view-rezerwacje">
+
+  <div class="analytics-grid analytics-kpi-grid analytics-kpi-grid-compact">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-calendar2-check"></i> Wszystkie wizyty</div>
+      <div class="analytics-card-value">{{ total_bookings or 0 }}</div>
+      <div class="analytics-card-subtext">Wizyty w wybranym okresie.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-check2-circle"></i> Zrealizowane</div>
+      <div class="analytics-card-value">{{ completed_bookings or 0 }}</div>
+      <div class="analytics-card-subtext">Wizyty zakończone.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-x-circle"></i> Anulowane</div>
+      <div class="analytics-card-value">{{ cancelled_count or 0 }}</div>
+      <div class="analytics-card-subtext">Wizyty anulowane.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label"><i class="bi bi-person-x"></i> Nieobecności</div>
+      <div class="analytics-card-value">{{ no_show_count or 0 }}</div>
+      <div class="analytics-card-subtext">Wizyty oznaczone jako no-show.</div>
+    </article>
+
+  </div>
+
+  <div class="analytics-grid analytics-two-grid" style="margin-top: 12px;">
+
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Trend rezerwacji</h3>
+          <p class="analytics-section-note">
+            Liczba rezerwacji dzień po dniu w wybranym okresie.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">rezerwacje</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="visitsTrendChart"></canvas>
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-chart-card">
+      <div class="analytics-chart-head">
+        <div>
+          <h3 class="analytics-section-title">Statusy rezerwacji</h3>
+          <p class="analytics-section-note">
+            Porównanie rezerwacji zrealizowanych, anulowanych i nieobecności.
+          </p>
+        </div>
+        <span class="analytics-chart-pill">status</span>
+      </div>
+
+      <div class="analytics-chart-box">
+        <canvas id="visitsStatusChart"></canvas>
+      </div>
+    </article>
+
+  </div>
+
+
+<div class="analytics-grid analytics-two-grid visits-load-grid" style="margin-top: 12px;">
+
+  <!-- DNI -->
+  <article class="analytics-card visits-load-card">
+    <h3 class="analytics-section-title">Najbardziej obłożone dni</h3>
+    <p class="analytics-section-note">
+      Dni tygodnia z największą liczbą rezerwacji.
+    </p>
+
+    <div class="analytics-list visits-days-grid">
+      {% for item in visits_by_weekday %}
+      <div class="analytics-list-row">
+        <div class="analytics-list-top">
+          <div class="analytics-list-title">{{ item.label }}</div>
+          <div class="analytics-list-value">{{ item.count }} rezerwacji</div>
+        </div>
+
+        <div class="analytics-list-note">
+          Udział w rezerwacjach: {{ item.percent }}%
+        </div>
+      </div>
+      {% else %}
+      <div class="analytics-empty-note">Brak danych</div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <!-- GODZINY -->
+  <article class="analytics-card visits-load-card">
+    <h3 class="analytics-section-title">Najbardziej obłożone godziny</h3>
+    <p class="analytics-section-note">
+      Godziny z największą liczbą rezerwacji.
+    </p>
+
+    <div class="analytics-list visits-hours-grid">
+      {% for item in visits_by_hour %}
+      <div class="analytics-list-row">
+        <div class="analytics-list-top">
+          <div class="analytics-list-title">{{ item.hour }}:00</div>
+          <div class="analytics-list-value">{{ item.count }} rezerwacji</div>
+        </div>
+
+        <div class="analytics-list-note">
+          Udział w rezerwacjach: {{ item.percent }}%
+        </div>
+      </div>
+      {% else %}
+      <div class="analytics-empty-note">Brak danych</div>
+      {% endfor %}
+    </div>
+  </article>
+
+</div>
+</section>
+ 
+<section class="analytics-view" id="view-pracownicy">
+
+  <!-- KPI -->
+  <div class="analytics-grid analytics-kpi-grid analytics-kpi-grid-compact">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-star"></i> Top pracownik
+      </div>
+      <div class="analytics-card-value">
+        {{ top_employee_name or "—" }}
+      </div>
+      <div class="analytics-card-subtext">
+        {{ top_employee_revenue or "0 PLN" }} przychodu
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-cash-stack"></i> Największy przychód
+      </div>
+      <div class="analytics-card-value">
+        {{ best_employee_revenue or "0 PLN" }}
+      </div>
+      <div class="analytics-card-subtext">
+        najlepszy wynik w okresie
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-person-x"></i> Najwięcej no-show
+      </div>
+      <div class="analytics-card-value">
+        {{ worst_employee_no_show or "—" }}
+      </div>
+      <div class="analytics-card-subtext">
+        problematyczne wizyty
+      </div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-graph-up"></i> Efektywność
+      </div>
+      <div class="analytics-card-value">
+        {{ best_employee_efficiency or "—" }}
+      </div>
+      <div class="analytics-card-subtext">
+        przychód / wizytę
+      </div>
+    </article>
+
+  </div>
+
+  <!-- TABELA -->
+  <div style="margin-top: 16px;">
+    <h3 class="analytics-section-title">Wyniki pracowników</h3>
+    <p class="analytics-section-note">
+      Pełne porównanie efektywności, przychodu i jakości wizyt.
+    </p>
+
+    <div class="analytics-table-wrap">
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pracownik</th>
+            <th>Wizyty</th>
+            <th>Przychód</th>
+            <th>Śr. wizyta</th>
+            <th>Anulacje</th>
+            <th>No-show</th>
+            <th>Obłożenie</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for emp in employees_summary %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ emp.name }}</td>
+            <td>{{ emp.visits }}</td>
+            <td>{{ emp.revenue }}</td>
+            <td>{{ emp.avg_visit }}</td>
+            <td>{{ emp.cancelled }}</td>
+            <td>{{ emp.no_show }}</td>
+            <td>{{ emp.load_percent }}%</td>
+            <td>
+              {% if emp.load_percent > 80 %}
+                <span class="analytics-pill is-ok">Pełne obłożenie</span>
+              {% elif emp.load_percent < 40 %}
+                <span class="analytics-pill is-warn">Niski ruch</span>
+              {% else %}
+                <span class="analytics-pill">OK</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="9">Brak danych o pracownikach.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<section class="analytics-view" id="view-prognoza">
+
+  <div class="analytics-grid analytics-kpi-grid analytics-kpi-grid-compact">
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-calendar-check"></i> Przyszłe wizyty
+      </div>
+      <div class="analytics-card-value">{{ future_bookings_count or 0 }}</div>
+      <div class="analytics-card-subtext">Aktywne rezerwacje w kalendarzu.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-cash-stack"></i> Przyszły przychód
+      </div>
+      <div class="analytics-card-value">{{ future_revenue or "0 PLN" }}</div>
+      <div class="analytics-card-subtext">Szacowana wartość obecnych rezerwacji.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-shield-check"></i> Potwierdzony przychód
+      </div>
+      <div class="analytics-card-value">{{ confirmed_future_revenue or "0 PLN" }}</div>
+      <div class="analytics-card-subtext">Rezerwacje ze statusem potwierdzonym.</div>
+    </article>
+
+    <article class="analytics-card analytics-kpi-card">
+      <div class="analytics-card-label">
+        <i class="bi bi-exclamation-triangle"></i> Przychód w ryzyku
+      </div>
+      <div class="analytics-card-value">{{ unconfirmed_future_revenue or "0 PLN" }}</div>
+      <div class="analytics-card-subtext">Rezerwacje nowe lub niepotwierdzone.</div>
+    </article>
+
+  </div>
+
+  <div class="forecast-columns-grid">
+
+  <!-- DNI -->
+  <article class="analytics-card forecast-column-card">
+    <h3 class="analytics-section-title">Dni</h3>
+    <p class="analytics-section-note">
+      Przychód według dni tygodnia.
+    </p>
+
+    <div class="forecast-compact-list">
+      {% for item in future_revenue_by_weekday %}
+      <div class="forecast-compact-row {% if loop.index == 1 and item.revenue_raw > 0 %}is-top{% endif %}">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">{{ item.label }}</div>
+          <div class="forecast-compact-note">{{ item.count }} wizyt</div>
+        </div>
+        <div class="forecast-compact-value">{{ item.revenue }}</div>
+      </div>
+      {% else %}
+      <div class="analytics-empty-note">Brak danych.</div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <!-- GODZINY -->
+  <article class="analytics-card forecast-column-card">
+    <h3 class="analytics-section-title">Godziny</h3>
+    <p class="analytics-section-note">
+      Najmocniejsze godziny.
+    </p>
+
+    <div class="forecast-compact-list">
+      {% for item in future_revenue_by_hour %}
+      <div class="forecast-compact-row {% if loop.index == 1 %}is-top{% endif %}">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">{{ item.hour }}:00</div>
+          <div class="forecast-compact-note">{{ item.count }} wizyt</div>
+        </div>
+        <div class="forecast-compact-value">{{ item.revenue }}</div>
+      </div>
+      {% else %}
+      <div class="forecast-compact-row is-empty">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">Brak godzin</div>
+          <div class="forecast-compact-note">0 wizyt</div>
+        </div>
+        <div class="forecast-compact-value">0 PLN</div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <!-- PRACOWNICY -->
+  <article class="analytics-card forecast-column-card">
+    <h3 class="analytics-section-title">Pracownicy</h3>
+    <p class="analytics-section-note">
+      Przychód według zespołu.
+    </p>
+
+    <div class="forecast-compact-list">
+      {% for emp in future_revenue_by_employee %}
+      <div class="forecast-compact-row {% if loop.index == 1 %}is-top{% endif %}">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">{{ emp.name }}</div>
+          <div class="forecast-compact-note">{{ emp.count }} wizyt</div>
+        </div>
+        <div class="forecast-compact-value">{{ emp.revenue }}</div>
+      </div>
+      {% else %}
+      <div class="forecast-compact-row is-empty">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">Brak pracowników</div>
+          <div class="forecast-compact-note">0 wizyt</div>
+        </div>
+        <div class="forecast-compact-value">0 PLN</div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <!-- USŁUGI -->
+  <article class="analytics-card forecast-column-card">
+    <h3 class="analytics-section-title">Usługi</h3>
+    <p class="analytics-section-note">
+      Usługi budujące przyszły obrót.
+    </p>
+
+    <div class="forecast-compact-list">
+      {% for service in future_revenue_by_service %}
+      <div class="forecast-compact-row {% if loop.index == 1 %}is-top{% endif %}">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">{{ service.name }}</div>
+          <div class="forecast-compact-note">{{ service.count }} wizyt</div>
+        </div>
+        <div class="forecast-compact-value">{{ service.revenue }}</div>
+      </div>
+      {% else %}
+      <div class="forecast-compact-row is-empty">
+        <div class="forecast-compact-main">
+          <div class="forecast-compact-title">Brak usług</div>
+          <div class="forecast-compact-note">0 wizyt</div>
+        </div>
+        <div class="forecast-compact-value">0 PLN</div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+
+</div>
+
+  <div style="margin-top: 18px;">
+    <h3 class="analytics-section-title">Najbliższy przychód</h3>
+    <p class="analytics-section-note" style="margin-bottom: 10px;">
+      Nadchodzące rezerwacje o największej wartości.
+    </p>
+
+    <div class="analytics-table-wrap">
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Data</th>
+            <th>Godzina</th>
+            <th>Klient</th>
+            <th>Usługa</th>
+            <th>Pracownik</th>
+            <th>Status</th>
+            <th>Wartość</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in upcoming_revenue_items %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.time }}</td>
+            <td>{{ item.client_name }}</td>
+            <td>{{ item.service_name }}</td>
+            <td>{{ item.employee_name }}</td>
+            <td>
+              <span class="analytics-pill {{ item.status_class }}">
+                {{ item.status_label }}
+              </span>
+            </td>
+            <td>{{ item.revenue }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="8">Brak nadchodzących rezerwacji.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+
+
+<script>
+window.ANALYTICS_CHART_DATA = {
+  labels: {{ bookings_chart_labels | default([]) | tojson }},
+  bookings: {{ bookings_chart_values | default([]) | tojson }},
+  revenue: {{ revenue_chart_values | default([]) | tojson }},
+
+  servicesRevenueLabels: {{ top_services_revenue_chart_labels | default([]) | tojson }},
+  servicesRevenueValues: {{ top_services_revenue_chart_values | default([]) | tojson }},
+
+  servicesVisitsLabels: {{ top_services_visits_chart_labels | default([]) | tojson }},
+  servicesVisitsValues: {{ top_services_visits_chart_values | default([]) | tojson }},
+
+  servicesCancelRateLabels: {{ services_cancel_rate_chart_labels | default([]) | tojson }},
+  servicesCancelRateValues: {{ services_cancel_rate_chart_values | default([]) | tojson }},
+
+  servicesNoShowRateLabels: {{ services_no_show_rate_chart_labels | default([]) | tojson }},
+  servicesNoShowRateValues: {{ services_no_show_rate_chart_values | default([]) | tojson }},
+
+  visitsStatusLabels: {{ visits_status_chart_labels | default([]) | tojson }},
+visitsStatusValues: {{ visits_status_chart_values | default([]) | tojson }}
+};
+
+window.WEEKDAY_REVENUE_DATA = {
+  labels: {{ weekday_revenue_labels | default([]) | tojson }},
+  values: {{ weekday_revenue_values | default([]) | tojson }}
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  AnalyticsPage.init();
+  initAnalyticsCharts();
+});
+
+const AnalyticsPage = (() => {
+  const STORAGE_KEY = "alifio_analytics_active_tab";
+  const dom = {};
+
+  function init() {
+    cacheDom();
+    initTabs();
+    initPeriodFilter();
+    restoreActiveTab();
+  }
+
+  function cacheDom() {
+    dom.tabs = Array.from(document.querySelectorAll(".analytics-tab"));
+    dom.views = Array.from(document.querySelectorAll(".analytics-view"));
+  }
+
+  function getAvailableTabIds() {
+    return dom.tabs.map((tab) => tab.dataset.tab).filter(Boolean);
+  }
+
+  function getFirstAvailableTabId() {
+    const ids = getAvailableTabIds();
+    return ids.length ? ids[0] : null;
+  }
+
+  function isTabAvailable(tabId) {
+    return getAvailableTabIds().includes(tabId);
+  }
+
+  function activateTab(tabId) {
+    if (!tabId || !isTabAvailable(tabId)) {
+      tabId = getFirstAvailableTabId();
+    }
+
+    if (!tabId) return;
+
+    dom.tabs.forEach((tab) => {
+      const isActive = tab.dataset.tab === tabId;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    dom.views.forEach((view) => {
+      view.classList.toggle("is-active", view.id === `view-${tabId}`);
+    });
+
+    sessionStorage.setItem(STORAGE_KEY, tabId);
+  }
+
+  function initTabs() {
+    dom.tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activateTab(tab.dataset.tab);
+      });
+    });
+  }
+
+  function initPeriodFilter() {
+    const periodSelect = document.getElementById("analyticsPeriod");
+    if (!periodSelect) return;
+
+    periodSelect.addEventListener("change", () => {
+      if (!periodSelect.value) return;
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("period", periodSelect.value);
+      window.location.href = url.toString();
+    });
+  }
+
+  function restoreActiveTab() {
+    const savedTab = sessionStorage.getItem(STORAGE_KEY);
+    activateTab(savedTab && isTabAvailable(savedTab) ? savedTab : getFirstAvailableTabId());
+  }
+
+  return { init };
+})();
+
+function getCssVar(name, fallback = "") {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
+function initAnalyticsCharts() {
+  if (typeof Chart === "undefined") return;
+
+  const chartData = window.ANALYTICS_CHART_DATA || {};
+  const weekdayData = window.WEEKDAY_REVENUE_DATA || { labels: [], values: [] };
+
+  const accent = getCssVar("--an-accent", "#5eead4");
+  const textMuted = "rgba(220, 226, 235, 0.72)";
+  const gridColor = "rgba(255, 255, 255, 0.075)";
+
+  createLineChart("bookingsTrendChart", chartData.labels, chartData.bookings, "Rezerwacje", "rezerwacji", accent, textMuted, gridColor);
+  createBarChart("revenueTrendChart", chartData.labels, chartData.revenue, "Przychód", "PLN", accent, textMuted, gridColor);
+  createBarChart("revenueTrendChartRevenueView", chartData.labels, chartData.revenue, "Przychód", "PLN", accent, textMuted, gridColor);
+  createBarChart("weekdayRevenueChart", weekdayData.labels, weekdayData.values, "Przychód według dni", "PLN", accent, textMuted, gridColor);
+  createLineChart("visitsTrendChart", chartData.labels, chartData.bookings, "Wizyty", "wizyt", accent, textMuted, gridColor);
+  createBarChart("visitsStatusChart", chartData.visitsStatusLabels, chartData.visitsStatusValues, "Statusy wizyt", "wizyt", accent, textMuted, gridColor);
+
+  createBarChart("servicesRevenueChart", chartData.servicesRevenueLabels, chartData.servicesRevenueValues, "Przychód usług", "PLN", accent, textMuted, gridColor);
+  createBarChart("servicesVisitsChart", chartData.servicesVisitsLabels, chartData.servicesVisitsValues, "Wizyty usług", "wizyt", accent, textMuted, gridColor);
+  createBarChart("servicesCancelRateChart", chartData.servicesCancelRateLabels, chartData.servicesCancelRateValues, "Cancel rate", "%", accent, textMuted, gridColor);
+  createBarChart("servicesNoShowRateChart", chartData.servicesNoShowRateLabels, chartData.servicesNoShowRateValues, "No-show rate", "%", accent, textMuted, gridColor);
+}
+
+function createLineChart(canvasId, labels, values, label, suffix, accent, textMuted, gridColor) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+
+  gradient.addColorStop(0, accent + "55");
+  gradient.addColorStop(0.55, accent + "18");
+  gradient.addColorStop(1, "rgba(16, 23, 34, 0)");
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels || [],
+      datasets: [{
+        label,
+        data: values || [],
+        borderColor: accent,
+        backgroundColor: gradient,
+        fill: true,
+        tension: 0,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        borderWidth: 2.5
+      }]
+    },
+    options: getChartOptions(textMuted, gridColor, suffix)
+  });
+}
+
+function createBarChart(canvasId, labels, values, label, suffix, accent, textMuted, gridColor) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+
+  gradient.addColorStop(0, accent + "ee");
+  gradient.addColorStop(0.7, accent + "77");
+  gradient.addColorStop(1, accent + "22");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels || [],
+      datasets: [{
+        label,
+        data: values || [],
+        backgroundColor: gradient,
+        borderColor: accent,
+        borderWidth: 1,
+        borderRadius: 3,
+        hoverBackgroundColor: accent,
+        maxBarThickness: 42
+      }]
+    },
+    options: getChartOptions(textMuted, gridColor, suffix)
+  });
+}
+
+function getChartOptions(textMuted, gridColor, suffix) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 900,
+      easing: "easeOutQuart"
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        displayColors: false,
+        backgroundColor: "rgba(16, 23, 34, 0.96)",
+        borderColor: "rgba(255, 255, 255, 0.16)",
+        borderWidth: 1,
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        padding: 12,
+        callbacks: {
+          label: (context) => `${context.parsed.y} ${suffix}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: textMuted,
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 8,
+          font: {
+            size: 10
+          }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: gridColor
+        },
+        ticks: {
+          color: textMuted,
+          precision: 0,
+          font: {
+            size: 10
+          }
+        }
+      }
+    }
+  };
+}
+</script>
+{% endblock %}
