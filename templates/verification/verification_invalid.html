@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link jest nieprawidłowy lub wygasł</title>
+
+  <style>
+    @font-face {
+      font-family: "LexendDecaLocal";
+      src: url("{{ url_for('static', filename='fonts/LexendDeca-Regular.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f5f7fb; font-family:'LexendDecaLocal', Arial, sans-serif; color:#18212f;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; min-height:100vh; border-collapse:collapse; background-color:#f5f7fb; margin:0; padding:0;">
+    <tr>
+      <td align="center" valign="top" style="padding:56px 14px 28px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; max-width:620px; border-collapse:collapse; margin:0 auto;">
+
+          <tr>
+            <td style="padding:0 0 12px; text-align:center;">
+              <div style="font-size:11px; line-height:1.5; letter-spacing:0.16em; text-transform:uppercase; color:#7a8798; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                Weryfikacja niedostępna
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#ffffff; border:1px solid #e3e8f0; border-radius:12px; padding:34px 28px; text-align:center;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;">
+
+                <tr>
+                  <td style="padding:0 0 14px; text-align:center;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; width:54px; height:54px; border-radius:50%; background-color:#fff7ed; border:1px solid #f5d7b2; color:#c2410c; font-size:24px; line-height:1; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      !
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 16px; text-align:center;">
+                    <h1 style="margin:0; font-size:28px; line-height:1.2; font-weight:400; color:#132033; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Link jest nieprawidłowy lub wygasł
+                    </h1>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 14px; text-align:center;">
+                    <p style="margin:0; font-size:15px; line-height:1.75; color:#334155; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Nie udało się potwierdzić adresu e-mail na podstawie tego linku.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:0 0 24px; text-align:center;">
+                    <p style="margin:0; font-size:15px; line-height:1.75; color:#334155; font-family:'LexendDecaLocal', Arial, sans-serif;">
+                      Link może być nieaktualny, został już wcześniej użyty albo nie jest już aktywny. Jeśli to konieczne, poproś o ponowne wysłanie wiadomości weryfikacyjnej.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:4px 0 0; text-align:center;">
+                    <button
+  type="button"
+  onclick="window.close(); setTimeout(function(){ window.history.back(); }, 100);"
+  style="display:inline-block; padding:13px 22px; border:none; border-radius:99999px; background-color:#1f4ed8; color:#ffffff; font-size:14px; line-height:1.2; font-weight:400; cursor:pointer; font-family:'LexendDecaLocal', Arial, sans-serif;"
+>
+  Zamknij okno
+</button>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
