@@ -1,0 +1,1655 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root {
+  --cal-bg: #101722;
+  --cal-surface: #1a2230;
+  --cal-surface-2: #212b3a;
+  --cal-surface-3: #2a3547;
+  --cal-border: rgba(255, 255, 255, 0.18);
+  --cal-border-2: rgba(255, 255, 255, 0.28);
+  --cal-text: #f4f7fb;
+  --cal-text-2: #dce2eb;
+  --cal-text-3: #cfd8e5;
+  --cal-text-4: #aeb8c8;
+  --cal-row-h: 75px;
+  --cal-time-col: 74px;
+  --cal-radius: 2px;
+  --cal-t: 0.16s ease;
+}
+
+body {
+  background: var(--cal-bg) !important;
+}
+
+.calendar-page,
+.calendar-page * {
+  box-sizing: border-box;
+  font-family: "LexendDecaLocal", Arial, sans-serif;
+}
+
+.calendar-page {
+  width: 100%;
+  padding-top: 7px;
+  color: var(--cal-text);
+}
+
+.calendar-shell {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* TOPBAR */
+
+.calendar-topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 18px;
+}
+
+.calendar-title-wrap {
+  display: grid;
+  gap: 4px;
+}
+
+.calendar-title {
+  margin: 0;
+  color: var(--cal-text);
+  font-size: 16.8px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.calendar-subtitle {
+  margin: 0;
+  color: var(--cal-text-3);
+  font-size: 11.55px;
+  line-height: 1.45;
+}
+
+.calendar-week-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.calendar-nav-btn {
+  width: 28px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cal-text-2);
+  text-decoration: none;
+  transition: color var(--cal-t), transform var(--cal-t);
+}
+
+.calendar-nav-btn:hover {
+  color: var(--primary-color-bright);
+  transform: translateY(-1px);
+}
+
+.calendar-week-range {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--cal-text-2);
+  font-size: 11.55px;
+  white-space: nowrap;
+}
+
+.calendar-week-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.calendar-today-btn,
+.calendar-print-btn {
+  height: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 16px;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--cal-radius);
+  background: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  font-size: 10.8px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--cal-t), color var(--cal-t), transform var(--cal-t);
+}
+
+.calendar-print-btn {
+  border-color: var(--cal-border-2);
+  background: var(--cal-surface-3);
+  color: var(--cal-text-2);
+}
+
+.calendar-today-btn:hover,
+.calendar-print-btn:hover {
+  background: transparent;
+  color: var(--cal-text);
+  transform: translateY(-1px);
+}
+
+/* ICONS */
+
+.calendar-page svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+}
+
+.calendar-week-range svg,
+.calendar-meta-pill svg,
+.calendar-selected-worker svg,
+.calendar-day-hours svg,
+.calendar-mobile-day-work svg {
+  color: var(--primary-color);
+}
+
+/* EMPLOYEES */
+
+.calendar-employee-pills {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.calendar-employee-pill {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--cal-border-2);
+  border-radius: 999px;
+  background: var(--cal-surface-3);
+  color: var(--cal-text-3);
+  text-decoration: none;
+  font-size: 11px;
+  white-space: nowrap;
+  transition: background var(--cal-t), border-color var(--cal-t), color var(--cal-t), transform var(--cal-t);
+}
+
+.calendar-employee-pill svg {
+  width: 13px;
+  height: 13px;
+}
+
+.calendar-employee-pill:hover {
+  border-color: var(--primary-color);
+  background: transparent;
+  color: var(--cal-text);
+  transform: translateY(-1px);
+}
+
+.calendar-employee-pill.is-active {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* INFO */
+
+.calendar-info-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.calendar-selected-worker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--cal-text-2);
+  font-size: 12px;
+}
+
+.calendar-meta-pills {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.calendar-meta-pill {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border: 1px solid var(--cal-border);
+  border-radius: 999px;
+  color: var(--cal-text-3);
+  font-size: 10.3px;
+}
+
+/* DESKTOP BOARD */
+
+.calendar-print-header {
+  display: none !important;
+}
+
+.calendar-board {
+  min-width: 0;
+  overflow: visible;
+  border: 1px solid var(--cal-border-2);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface);
+}
+
+.calendar-scroll {
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: var(--cal-time-col) repeat(7, minmax(150px, 1fr));
+  min-width: 1124px;
+  border-bottom: 1px solid var(--cal-border-2);
+  background: var(--cal-surface-2);
+}
+
+.calendar-corner {
+  min-height: 64px;
+  border-right: 1px solid var(--cal-border);
+}
+
+.calendar-day-head {
+  min-height: 64px;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-right: 1px solid var(--cal-border);
+}
+
+.calendar-day-head:last-child {
+  border-right: none;
+}
+
+.calendar-day-head.is-today {
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+}
+
+.calendar-day-name {
+  justify-self: start;
+  color: var(--cal-text);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.calendar-day-date {
+  justify-self: end;
+  margin-top: -21px;
+  color: var(--cal-text-2);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.calendar-day-hours {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--cal-text-4);
+  font-size: 9.5px;
+  line-height: 1;
+}
+
+.calendar-day-hours.is-off {
+  color: rgba(255,255,255,0.42);
+}
+
+.calendar-day-hours.is-off svg {
+  color: #ffb4c8;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: var(--cal-time-col) repeat(7, minmax(150px, 1fr));
+  grid-template-rows: repeat({{ time_slots|length }}, var(--cal-row-h));
+  min-width: 1124px;
+  background:
+    linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:
+    calc((100% - var(--cal-time-col)) / 7) var(--cal-row-h),
+    100% var(--cal-row-h);
+  background-position:
+    var(--cal-time-col) 0,
+    0 0;
+}
+
+.calendar-time-slot {
+  grid-column: 1;
+  padding: 7px 10px 0 0;
+  border-right: 1px solid var(--cal-border-2);
+  color: var(--cal-text-4);
+  font-size: 14px;
+  line-height: 1;
+  text-align: right;
+}
+
+.calendar-day-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 6px;
+  border-right: 1px solid rgba(255,255,255,0.045);
+}
+
+.calendar-day-slot.is-today {
+  background: color-mix(in srgb, var(--primary-color) 3%, transparent);
+}
+
+.calendar-day-slot.is-off {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,0.025) 0,
+      rgba(255,255,255,0.025) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+}
+
+.calendar-booking-icons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.calendar-booking-icon {
+  position: relative;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 55%, transparent);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.22), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--primary-color) 88%, white 8%), color-mix(in srgb, var(--primary-color) 68%, black 30%));
+  color: #fff;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.26),
+    0 0 18px color-mix(in srgb, var(--primary-color) 18%, transparent);
+  cursor: pointer;
+  transition: transform var(--cal-t), filter var(--cal-t), box-shadow var(--cal-t);
+}
+
+.calendar-booking-icon:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.32),
+    0 0 24px color-mix(in srgb, var(--primary-color) 26%, transparent);
+}
+
+.calendar-booking-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.calendar-booking-icon.is-new {
+  border-color: rgba(169, 220, 255, 0.74);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.22), transparent 34%),
+    linear-gradient(180deg, rgba(78,157,255,0.96), rgba(42,103,190,0.96));
+}
+
+.calendar-booking-icon.is-confirmed {
+  border-color: rgba(94, 234, 212, 0.74);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2), transparent 34%),
+    linear-gradient(180deg, rgba(34,197,164,0.96), rgba(18,128,111,0.96));
+}
+
+.calendar-booking-icon.has-note::before {
+  content: "";
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(16, 23, 34, 0.82);
+  border-radius: 999px;
+  background: #fff3b0;
+}
+
+/* TOOLTIP */
+.calendar-booking-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  z-index: 99999;
+
+  width: max-content;
+  max-width: 380px;
+  padding: 13px 15px;
+
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 0;
+  background: #121a26;
+  color: #ffffff;
+
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: normal;
+  text-align: left;
+
+  box-shadow: 0 18px 38px rgba(0,0,0,0.46);
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity var(--cal-t), transform var(--cal-t);
+}
+
+.calendar-booking-icon:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.calendar-empty-state {
+  grid-column: 2 / span 7;
+  grid-row: 1 / span {{ time_slots|length }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--cal-text-4);
+  font-size: 12px;
+  text-align: center;
+}
+
+.calendar-empty-state-inner {
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+  padding: 18px;
+}
+
+.calendar-empty-state svg {
+  width: 24px;
+  height: 24px;
+  color: var(--primary-color);
+}
+
+/* MOBILE */
+
+.calendar-mobile-list {
+  display: none;
+}
+
+.calendar-mobile-day {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface);
+}
+
+.calendar-mobile-day-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--cal-border);
+}
+
+.calendar-mobile-day-date {
+  color: var(--cal-text);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.calendar-mobile-day-work {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  color: var(--cal-text-4);
+  font-size: 9.8px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-mobile-day-work svg {
+  width: 11px;
+  min-width: 11px;
+  height: 11px;
+}
+
+.calendar-mobile-day-weekday {
+  color: var(--cal-text-4);
+  font-size: 9.5px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.calendar-mobile-slots {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+}
+
+.calendar-mobile-slot-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 7px 8px;
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  background: var(--cal-surface-2);
+}
+
+.calendar-mobile-slot-time {
+  color: var(--cal-text-4);
+  font-size: 11px;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.calendar-mobile-slot-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.calendar-mobile-slot-icons .calendar-booking-icon {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+}
+
+.calendar-empty-day {
+  padding: 8px 0 2px;
+  color: var(--cal-text-4);
+  font-size: 10.8px;
+  text-align: center;
+}
+
+/* MODAL */
+
+.calendar-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(5, 8, 13, 0.68);
+  backdrop-filter: blur(12px);
+}
+
+.calendar-modal-backdrop.is-open {
+  display: flex;
+}
+
+.calendar-modal {
+  width: min(560px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 0;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--primary-color) 20%, transparent), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+    #141d2a;
+  color: var(--cal-text);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,0.56),
+    0 0 0 1px rgba(255,255,255,0.04) inset;
+}
+
+.calendar-modal-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.calendar-modal-title {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.calendar-modal-title strong {
+  color: var(--cal-text);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.calendar-modal-title span {
+  color: var(--cal-text-4);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.calendar-modal-close {
+  justify-self: end;
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cal-text-2);
+  cursor: pointer;
+  transition: color var(--cal-t), transform var(--cal-t), opacity var(--cal-t);
+}
+
+.calendar-modal-close:hover {
+  background: transparent;
+  color: #fff;
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.calendar-modal-close svg {
+  width: 17px;
+  height: 17px;
+}
+
+.calendar-modal-body {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px 18px;
+}
+
+.calendar-modal-section {
+  display: grid;
+  gap: 8px;
+}
+
+.calendar-modal-section-title {
+  color: var(--cal-text-4);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.calendar-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendar-modal-item {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  padding: 11px 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 0;
+  background: rgba(255,255,255,0.035);
+}
+
+.calendar-modal-item span {
+  color: var(--cal-text-4);
+  font-size: 9.4px;
+  line-height: 1;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.calendar-modal-item strong {
+  min-width: 0;
+  color: var(--cal-text);
+  font-size: 11.6px;
+  font-weight: 400;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.calendar-modal-note {
+  padding: 12px;
+  border: 1px solid rgba(255,243,176,0.26);
+  border-radius: 0;
+  background: rgba(255,243,176,0.06);
+  color: var(--cal-text-2);
+  font-size: 11.4px;
+  line-height: 1.5;
+}
+
+.calendar-modal-status {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: var(--cal-text-2);
+  font-size: 10px;
+}
+
+.calendar-modal-status.is-new {
+  background: rgba(169,220,255,0.16);
+  color: #bfe7ff;
+}
+
+.calendar-modal-status.is-confirmed {
+  background: rgba(94,234,212,0.14);
+  color: #9ff5e7;
+}
+
+/* TABLET */
+
+@media (min-width: 1024px) and (max-width: 1180px) {
+  .calendar-days-header,
+  .calendar-grid {
+    min-width: 1320px;
+    grid-template-columns: var(--cal-time-col) repeat(7, minmax(178px, 1fr));
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 1024px) {
+  .calendar-page {
+    padding-top: 0;
+    overflow-x: hidden;
+  }
+
+  .calendar-topbar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .calendar-title {
+    font-size: 15.5px;
+  }
+
+  .calendar-subtitle {
+    font-size: 10.8px;
+  }
+
+  .calendar-week-center {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) 32px;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .calendar-week-range {
+    min-width: 0;
+    font-size: 10.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .calendar-week-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .calendar-today-btn,
+  .calendar-print-btn {
+    width: 100%;
+    height: 34px;
+  }
+
+  .calendar-employee-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px 2px 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .calendar-employee-pill {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 0 13px;
+    font-size: 10.8px;
+  }
+
+  .calendar-info-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .calendar-selected-worker,
+  .calendar-meta-pills {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .calendar-board {
+    display: none;
+  }
+
+  .calendar-mobile-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .calendar-booking-icon::after {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .calendar-mobile-day-head {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  .calendar-mobile-day-date {
+    font-size: 12.5px;
+  }
+
+  .calendar-mobile-day-work {
+    font-size: 9.2px;
+  }
+
+  .calendar-mobile-day-weekday {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-scroll,
+.calendar-grid,
+.calendar-day-slot,
+.calendar-booking-icons,
+.calendar-booking-icon {
+  overflow: visible !important;
+}
+
+.calendar-booking-icon {
+  z-index: 20;
+}
+
+.calendar-booking-icon:hover {
+  z-index: 9999;
+}
+
+.calendar-booking-icon::after {
+  z-index: 99999;
+}
+
+body.calendar-modal-open .calendar-booking-icon::after {
+  display: none !important;
+}
+
+body.calendar-modal-open .calendar-board,
+body.calendar-modal-open .calendar-mobile-list {
+  pointer-events: none !important;
+}
+
+body.calendar-modal-open .calendar-booking-icon,
+body.calendar-modal-open .calendar-booking-icon::after {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.calendar-mobile-day-head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--cal-border);
+}
+
+.calendar-mobile-day-date {
+  justify-self: start;
+  color: var(--cal-text);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.calendar-mobile-day-work {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--cal-text-4);
+  font-size: 9.8px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.calendar-mobile-day-work svg {
+  width: 11px;
+  min-width: 11px;
+  height: 11px;
+  color: var(--primary-color);
+}
+
+.calendar-mobile-day-weekday {
+  justify-self: end;
+  color: var(--cal-text-4);
+  font-size: 9.5px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .calendar-mobile-slot-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 6px;
+    padding-left: 6px;
+    padding-right: 12px;
+  }
+
+  .calendar-mobile-slot-time {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  .calendar-mobile-slot-icons {
+    justify-content: center !important;
+    transform: translateX(-25px);
+  }
+}
+
+.calendar-modal-item-full {
+  grid-column: 1 / -1;
+}
+
+/* KALENDARZ — usuń glow z ikon rezerwacji i modala */
+.calendar-booking-icon,
+.calendar-booking-icon:hover {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.calendar-modal {
+  background: #141d2a !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.56) !important;
+}
+
+.calendar-booking-icon.has-note::before {
+  box-shadow: none !important;
+}
+
+.calendar-booking-icon svg {
+  transform: translate(0px, -1px);
+}
+
+/* =========================
+   KALENDARZ — SCROLL MODALA (MOBILE)
+========================= */
+
+@media (max-width: 1024px) {
+
+  .calendar-modal {
+    max-height: 85vh;           /* 🔥 ograniczenie wysokości */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-modal-body {
+    overflow-y: auto;           /* 🔥 WŁAŚCIWY SCROLL */
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(85vh - 70px); /* odejmuje header */
+  }
+}
+
+/* =========================
+   KALENDARZ — MODAL MOBILE 2x2
+   Tylko 4 pierwsze okienka: Data / Godzina / Czas / Status
+========================= */
+
+@media (max-width: 1024px) {
+  .calendar-modal-body .calendar-modal-section:first-child .calendar-modal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .calendar-modal-body .calendar-modal-section:first-child .calendar-modal-item {
+    min-width: 0 !important;
+    padding: 10px 9px !important;
+  }
+
+  .calendar-modal-body .calendar-modal-section:first-child .calendar-modal-item span {
+    font-size: 8.8px !important;
+  }
+
+  .calendar-modal-body .calendar-modal-section:first-child .calendar-modal-item strong {
+    font-size: 10.8px !important;
+    line-height: 1.25 !important;
+  }
+}
+
+/* =========================
+   KALENDARZ — TOPBAR CENTER + RIGHT
+========================= */
+
+.calendar-topbar {
+  grid-template-columns: 1fr auto 1fr !important;
+  align-items: center !important;
+}
+
+/* ŚRODEK */
+.calendar-week-center {
+  grid-column: 2;
+  justify-content: center !important;
+}
+
+/* PRAWA STRONA */
+.calendar-week-actions {
+  grid-column: 3;
+  justify-content: flex-end !important;
+}
+
+/* =========================
+   KALENDARZ — MOBILE FINAL (CENTER + BUTTON BELOW)
+========================= */
+
+@media (max-width: 1024px) {
+
+  .calendar-topbar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+
+  /* DATY + CHEVRONY */
+  .calendar-week-center {
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* PRZYCISK */
+  .calendar-week-actions {
+    width: 100%;
+    display: flex !important;
+    justify-content: stretch !important;
+  }
+
+  .calendar-week-actions a {
+    width: 100% !important;
+  }
+
+}
+
+/* =========================
+   KALENDARZ — SCALE CHEVRONY + DATY x2
+========================= */
+
+/* CHEVRONY (ikony strzałek) */
+.calendar-nav-btn {
+  width: 56px !important;
+  height: 64px !important;
+}
+
+.calendar-nav-btn svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* TEKST DAT */
+.calendar-week-range {
+  font-size: 20px !important;
+  gap: 12px !important;
+}
+
+.calendar-week-range svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* MOBILE DOPIESZCZENIE */
+@media (max-width: 1024px) {
+
+  .calendar-week-center {
+    gap: 10px !important;
+  }
+
+  .calendar-nav-btn {
+    width: 48px !important;
+    height: 52px !important;
+  }
+
+  .calendar-nav-btn svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .calendar-week-range {
+    font-size: 18px !important;
+  }
+
+}
+</style>
+
+<div class="calendar-page">
+  <section class="calendar-shell">
+
+    <div class="calendar-topbar">
+      
+
+      <div class="calendar-week-center">
+        <a href="{{ url_for('admin_calendar', start=prev_week_start.isoformat(), employee_id=selected_employee_id) }}" class="calendar-nav-btn" aria-label="Poprzedni tydzień">
+          <i data-lucide="chevron-left"></i>
+        </a>
+
+        <div class="calendar-week-range">
+          <i data-lucide="calendar-days"></i>
+          {{ start_date.strftime("%d-%m-%Y") }} — {{ end_date.strftime("%d-%m-%Y") }}
+        </div>
+
+        <a href="{{ url_for('admin_calendar', start=next_week_start.isoformat(), employee_id=selected_employee_id) }}" class="calendar-nav-btn" aria-label="Następny tydzień">
+          <i data-lucide="chevron-right"></i>
+        </a>
+      </div>
+
+      <div class="calendar-week-actions">
+        <a href="{{ url_for('admin_calendar', employee_id=selected_employee_id) }}" class="calendar-today-btn">
+          <i data-lucide="crosshair"></i>
+          <span>Bieżący tydzień</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="calendar-employee-pills">
+      {% for employee in employees %}
+        <a href="{{ url_for('admin_calendar', start=start_date.isoformat(), employee_id=employee.id) }}" class="calendar-employee-pill{% if employee.id == selected_employee_id %} is-active{% endif %}">
+          <i data-lucide="user-round"></i>
+          {{ employee.full_name }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="calendar-info-row">
+      <div class="calendar-selected-worker">
+        <i data-lucide="briefcase-business"></i>
+        {% if selected_employee %}
+          Widok dla: {{ selected_employee.full_name }}
+        {% else %}
+          Brak aktywnego pracownika.
+        {% endif %}
+      </div>
+
+      <div class="calendar-meta-pills">
+        <div class="calendar-meta-pill">
+          <i data-lucide="clock-3"></i>
+          Interwał: {{ slot_interval }} min
+        </div>
+
+        <div class="calendar-meta-pill">
+          <i data-lucide="columns-3"></i>
+          {{ calendar_start_label }}–{{ calendar_end_label }}
+        </div>
+
+        <div class="calendar-meta-pill">
+          <i data-lucide="calendar-check-2"></i>
+          Rezerwacje: {{ calendar_bookings|length }}
+        </div>
+      </div>
+    </div>
+
+    {% if employees %}
+
+      <div class="calendar-print-header">
+        <div class="calendar-print-company">
+          {{ business_settings.company_name if business_settings and business_settings.company_name else "Alifio" }}
+        </div>
+
+        <div class="calendar-print-title">
+          Kalendarz rezerwacji — {{ selected_employee.full_name if selected_employee else "Pracownik" }}
+        </div>
+
+        <div class="calendar-print-meta">
+          Tydzień: {{ start_date.strftime("%d-%m-%Y") }} — {{ end_date.strftime("%d-%m-%Y") }}
+        </div>
+      </div>
+
+      <div class="calendar-board">
+        <div class="calendar-days-header">
+          <div class="calendar-corner"></div>
+
+          {% for day in week_days %}
+            <div class="calendar-day-head{% if day.is_today %} is-today{% endif %}">
+              <div class="calendar-day-name">{{ day.weekday }}</div>
+
+              <div class="calendar-day-date">
+                {% if day.iso %}
+                  {{ day.iso[8:10] }}-{{ day.iso[5:7] }}-{{ day.iso[0:4] }}
+                {% else %}
+                  {{ day.label }}
+                {% endif %}
+              </div>
+
+              <div class="calendar-day-hours{% if not day.is_working_day %} is-off{% endif %}">
+                {% if not day.is_working_day %}
+                  <i data-lucide="calendar-off"></i>
+                {% else %}
+                  <i data-lucide="clock-3"></i>
+                {% endif %}
+                {{ day.day_status_label }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="calendar-scroll">
+          <div class="calendar-grid">
+
+            {% for slot in time_slots %}
+              <div class="calendar-time-slot" style="grid-row: {{ slot.index + 1 }};">
+                {{ slot.label }}
+              </div>
+            {% endfor %}
+
+            {% for day in week_days %}
+              {% for slot in time_slots %}
+                <div
+                  class="calendar-day-slot{% if day.is_today %} is-today{% endif %}{% if not day.is_working_day %} is-off{% endif %}"
+                  style="grid-column: {{ day.index + 2 }}; grid-row: {{ slot.index + 1 }};"
+                >
+                  <div class="calendar-booking-icons">
+                    {% for booking in calendar_bookings %}
+                      {% set booking_row = booking.display_grid_row_start|default(booking.grid_row_start) %}
+
+                      {% if booking.grid_column == day.index + 2 and booking_row == slot.index + 1 %}
+                        <button
+                          type="button"
+                          class="calendar-booking-icon is-{{ booking.status }}{% if booking.notes %} has-note{% endif %}"
+                          aria-label="Pokaż szczegóły rezerwacji"
+                          data-booking-open
+                          data-client="{{ booking.client_name|default('')|e }}"
+                          data-phone="{{ booking.client_phone|default(booking.phone|default(''))|e }}"
+                          data-email="{{ booking.client_email|default(booking.email|default(''))|e }}"
+                          data-service="{{ booking.service_name|default('')|e }}"
+                          data-service-price="{{ booking.service_price|default(booking.price|default(''))|e }}"
+                          data-employee="{{ booking.employee_name|default(selected_employee.full_name if selected_employee else '')|e }}"
+                          data-date="{{ booking.booking_date|default('')|e }}"
+                          data-time="{{ booking.booking_time|default('')|e }}"
+                          data-end="{{ booking.booking_end_time|default('')|e }}"
+                          data-duration="{{ booking.duration_minutes|default('')|e }}"
+                          data-status="{{ booking.status|default('')|e }}"
+                          data-notes="{{ booking.notes|default('')|e }}"
+                          data-tooltip="{{ booking.client_name|default('')|e }} · {{ booking.service_name|default('')|e }}{% if booking.service_price|default(booking.price|default('')) %} — {{ booking.service_price|default(booking.price|default(''))|e }}{% endif %} · {{ booking.booking_time|default('')|e }}–{{ booking.booking_end_time|default('')|e }} · {{ booking.employee_name|default(selected_employee.full_name if selected_employee else '')|e }}"
+                        >
+                          <i data-lucide="user-round"></i>
+                        </button>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endfor %}
+
+            {% if calendar_bookings|length == 0 %}
+              <div class="calendar-empty-state">
+                <div class="calendar-empty-state-inner">
+                  <i data-lucide="calendar-x-2"></i>
+                  <div>Brak rezerwacji dla tego pracownika w wybranym tygodniu.</div>
+                </div>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-mobile-list">
+        {% for day in week_days %}
+          <div class="calendar-mobile-day">
+
+            <div class="calendar-mobile-day-head">
+              <div class="calendar-mobile-day-date">
+                {% if day.iso %}
+                  {{ day.iso[8:10] }}-{{ day.iso[5:7] }}-{{ day.iso[0:4] }}
+                {% else %}
+                  {{ day.label }}
+                {% endif %}
+              </div>
+
+              <div class="calendar-mobile-day-work{% if not day.is_working_day %} is-off{% endif %}">
+                {% if not day.is_working_day %}
+                  <i data-lucide="calendar-off"></i>
+                {% else %}
+                  <i data-lucide="clock-3"></i>
+                {% endif %}
+                <span>{{ day.day_status_label }}</span>
+              </div>
+
+              <div class="calendar-mobile-day-weekday">
+                {{ day.weekday }}
+              </div>
+            </div>
+
+            {% set day_found = namespace(value=false) %}
+
+            <div class="calendar-mobile-slots">
+              {% for slot in time_slots %}
+                {% set slot_found = namespace(value=false) %}
+
+                {% for booking in calendar_bookings %}
+                  {% set booking_row = booking.display_grid_row_start|default(booking.grid_row_start) %}
+
+                  {% if booking.booking_date == day.iso and booking_row == slot.index + 1 %}
+                    {% if not slot_found.value %}
+                      {% set slot_found.value = true %}
+                      {% set day_found.value = true %}
+
+                      <div class="calendar-mobile-slot-row">
+                        <div class="calendar-mobile-slot-time">
+                          {{ slot.label }}
+                        </div>
+
+                        <div class="calendar-mobile-slot-icons">
+                    {% endif %}
+
+                          <button
+                            type="button"
+                            class="calendar-booking-icon is-{{ booking.status }}{% if booking.notes %} has-note{% endif %}"
+                            aria-label="Pokaż szczegóły rezerwacji"
+                            data-booking-open
+                            data-client="{{ booking.client_name|default('')|e }}"
+                            data-phone="{{ booking.client_phone|default(booking.phone|default(''))|e }}"
+                            data-email="{{ booking.client_email|default(booking.email|default(''))|e }}"
+                            data-service="{{ booking.service_name|default('')|e }}"
+                            data-service-price="{{ booking.service_price|default(booking.price|default(''))|e }}"
+                            data-employee="{{ booking.employee_name|default(selected_employee.full_name if selected_employee else '')|e }}"
+                            data-date="{{ booking.booking_date|default('')|e }}"
+                            data-time="{{ booking.booking_time|default('')|e }}"
+                            data-end="{{ booking.booking_end_time|default('')|e }}"
+                            data-duration="{{ booking.duration_minutes|default('')|e }}"
+                            data-status="{{ booking.status|default('')|e }}"
+                            data-notes="{{ booking.notes|default('')|e }}"
+                            data-tooltip="{{ booking.client_name|default('')|e }} · {{ booking.service_name|default('')|e }}{% if booking.service_price|default(booking.price|default('')) %} — {{ booking.service_price|default(booking.price|default(''))|e }}{% endif %} · {{ booking.booking_time|default('')|e }}–{{ booking.booking_end_time|default('')|e }}"
+                          >
+                            <i data-lucide="user-round"></i>
+                          </button>
+                  {% endif %}
+                {% endfor %}
+
+                {% if slot_found.value %}
+                        </div>
+                      </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            {% if not day_found.value %}
+              <div class="calendar-empty-day">
+                Brak rezerwacji w tym dniu.
+              </div>
+            {% endif %}
+
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="calendar-mobile-day">
+        <div class="calendar-empty-day">
+          Brak aktywnych pracowników. Dodaj pracownika w ustawieniach, aby kalendarz mógł wyświetlić grafik.
+        </div>
+      </div>
+    {% endif %}
+
+  </section>
+</div>
+
+<div class="calendar-modal-backdrop" id="calendarBookingModal" aria-hidden="true">
+  <div class="calendar-modal" role="dialog" aria-modal="true" aria-labelledby="calendarModalClient">
+    <div class="calendar-modal-head">
+      <div class="calendar-modal-title">
+        <strong id="calendarModalClient">Klient</strong>
+        <span id="calendarModalService">Usługa</span>
+      </div>
+
+      <button type="button" class="calendar-modal-close" data-booking-close aria-label="Zamknij">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="calendar-modal-body">
+      <div class="calendar-modal-section">
+        <div class="calendar-modal-section-title">Rezerwacja</div>
+
+        <div class="calendar-modal-grid">
+          <div class="calendar-modal-item">
+            <span>Data</span>
+            <strong id="calendarModalDate">—</strong>
+          </div>
+
+          <div class="calendar-modal-item">
+            <span>Godzina</span>
+            <strong id="calendarModalTime">—</strong>
+          </div>
+
+          <div class="calendar-modal-item">
+            <span>Czas trwania</span>
+            <strong id="calendarModalDuration">—</strong>
+          </div>
+
+          <div class="calendar-modal-item">
+            <span>Status</span>
+            <strong>
+              <span class="calendar-modal-status" id="calendarModalStatus">—</span>
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-modal-section">
+        <div class="calendar-modal-section-title">Dane klienta</div>
+
+        <div class="calendar-modal-grid">
+          <div class="calendar-modal-item">
+            <span>Telefon</span>
+            <strong id="calendarModalPhone">—</strong>
+          </div>
+
+          <div class="calendar-modal-item">
+            <span>E-mail</span>
+            <strong id="calendarModalEmail">—</strong>
+          </div>
+
+          <div class="calendar-modal-item calendar-modal-item-full">
+          <span>Osoba wykonująca usługę</span>
+          <strong id="calendarModalEmployee">—</strong>
+        </div>
+        </div>
+      </div>
+
+      <div class="calendar-modal-section" id="calendarModalNotesWrap" style="display:none;">
+        <div class="calendar-modal-section-title">Notatka</div>
+        <div class="calendar-modal-note" id="calendarModalNotes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
+  const modal = document.getElementById("calendarBookingModal");
+  if (!modal) return;
+
+  const fields = {
+    client: document.getElementById("calendarModalClient"),
+    service: document.getElementById("calendarModalService"),
+    serviceBox: document.getElementById("calendarModalServiceBox"),
+    phone: document.getElementById("calendarModalPhone"),
+    email: document.getElementById("calendarModalEmail"),
+    employee: document.getElementById("calendarModalEmployee"),
+    date: document.getElementById("calendarModalDate"),
+    time: document.getElementById("calendarModalTime"),
+    duration: document.getElementById("calendarModalDuration"),
+    status: document.getElementById("calendarModalStatus"),
+    notesWrap: document.getElementById("calendarModalNotesWrap"),
+    notes: document.getElementById("calendarModalNotes")
+  };
+
+  const labels = {
+    new: "Nowa",
+    confirmed: "Potwierdzona",
+    cancelled: "Anulowana",
+    completed: "Zakończona",
+    archived: "Archiwalna"
+  };
+
+  function valueOrDash(value) {
+    return value && String(value).trim() ? value : "—";
+  }
+
+  function formatDate(value) {
+    if (!value || !String(value).includes("-")) {
+      return valueOrDash(value);
+    }
+
+    const parts = String(value).split("-");
+    if (parts.length !== 3) {
+      return valueOrDash(value);
+    }
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+
+  function openModal(button) {
+    const data = button.dataset;
+
+    fields.client.textContent = valueOrDash(data.client);
+
+    const serviceDisplay = data.servicePrice
+      ? `${valueOrDash(data.service)} — ${data.servicePrice}`
+      : valueOrDash(data.service);
+
+    fields.service.textContent = serviceDisplay;
+    if (fields.serviceBox) {
+  fields.serviceBox.textContent = serviceDisplay;
+}
+    fields.phone.textContent = valueOrDash(data.phone);
+    fields.email.textContent = valueOrDash(data.email);
+    fields.employee.textContent = valueOrDash(data.employee);
+    fields.date.textContent = formatDate(data.date);
+
+    fields.time.textContent = data.end
+      ? `${valueOrDash(data.time)}–${valueOrDash(data.end)}`
+      : valueOrDash(data.time);
+
+    fields.duration.textContent = data.duration ? `${data.duration} min` : "—";
+
+    fields.status.textContent = labels[data.status] || valueOrDash(data.status);
+    fields.status.className = `calendar-modal-status is-${data.status || ""}`;
+
+    if (data.notes && data.notes.trim()) {
+      fields.notesWrap.style.display = "";
+      fields.notes.textContent = data.notes;
+    } else {
+      fields.notesWrap.style.display = "none";
+      fields.notes.textContent = "";
+    }
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    document.body.classList.add("calendar-modal-open");
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    document.body.classList.remove("calendar-modal-open");
+  }
+
+  document.addEventListener("click", (event) => {
+    const openButton = event.target.closest("[data-booking-open]");
+    if (openButton) {
+      openModal(openButton);
+      return;
+    }
+
+    if (event.target.closest("[data-booking-close]")) {
+      closeModal();
+      return;
+    }
+
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("is-open")) {
+      closeModal();
+    }
+  });
+});
+</script>
+{% endblock %}
