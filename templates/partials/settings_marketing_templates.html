@@ -1,0 +1,1799 @@
+<style>
+/* =========================================================
+   ALIFIO — MARKETING CENTER CLEAN
+========================================================= */
+
+#view-marketing,
+#view-marketing * {
+  box-sizing: border-box;
+}
+
+#view-marketing {
+  width: 100%;
+  color: var(--st-text);
+  font-family: "LexendDecaLocal", Arial, sans-serif;
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+
+#view-marketing .marketing-page {
+  display: grid;
+  gap: 18px;
+}
+
+#view-marketing .marketing-title {
+  margin: 0;
+  color: var(--st-text);
+  font-family: "MonomakhLocal", serif !important;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+#view-marketing .marketing-note {
+  margin: 6px 0 0;
+  color: var(--st-text-3);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+#view-marketing .marketing-section {
+  display: grid;
+  gap: 12px;
+}
+
+#view-marketing .marketing-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#view-marketing .marketing-section-title {
+  margin: 0;
+  color: var(--st-text);
+  font-family: "MonomakhLocal", serif !important;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+#view-marketing .marketing-section-note {
+  margin: 5px 0 0;
+  color: var(--st-text-3);
+  font-size: 11.2px;
+  line-height: 1.5;
+}
+
+#view-marketing .marketing-soft-box {
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+}
+
+/* =========================================================
+   TOP SUMMARY
+========================================================= */
+
+#view-marketing .marketing-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#view-marketing .marketing-summary-card {
+  padding: 13px 14px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+}
+
+#view-marketing .marketing-summary-label {
+  color: var(--st-text-4);
+  font-size: 8.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#view-marketing .marketing-summary-value {
+  margin-top: 6px;
+  color: var(--st-text);
+  font-family: "MonomakhLocal", serif !important;
+  font-size: 24px;
+  line-height: 1;
+}
+
+#view-marketing .marketing-summary-note {
+  margin-top: 6px;
+  color: var(--st-text-3);
+  font-size: 10.4px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+#view-marketing .marketing-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+#view-marketing .marketing-sidebar {
+  display: grid;
+  gap: 10px;
+}
+
+#view-marketing .marketing-main {
+  display: grid;
+  gap: 18px;
+}
+
+/* =========================================================
+   CAMPAIGN TEMPLATES
+========================================================= */
+
+#view-marketing .marketing-template-list {
+  display: grid;
+  gap: 8px;
+}
+
+#view-marketing .marketing-template-btn {
+  width: 100%;
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--st-t),
+    background var(--st-t),
+    transform var(--st-t);
+}
+
+#view-marketing .marketing-template-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-color);
+}
+
+#view-marketing .marketing-template-btn.is-active {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 12%, var(--st-surface-2));
+}
+
+#view-marketing .marketing-template-name {
+  color: var(--st-text);
+  font-size: 11.6px;
+  line-height: 1.35;
+}
+
+#view-marketing .marketing-template-desc {
+  color: var(--st-text-4);
+  font-size: 9.8px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   AUDIENCE
+========================================================= */
+
+#view-marketing .marketing-audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#view-marketing .marketing-audience-option {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 13px 14px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  cursor: pointer;
+  transition:
+    border-color var(--st-t),
+    background var(--st-t),
+    transform var(--st-t);
+}
+
+#view-marketing .marketing-audience-option:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-color);
+}
+
+#view-marketing .marketing-audience-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#view-marketing .marketing-audience-option.is-active {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 10%, var(--st-surface-2));
+}
+
+#view-marketing .marketing-audience-title {
+  color: var(--st-text);
+  font-size: 11.6px;
+  line-height: 1.35;
+}
+
+#view-marketing .marketing-audience-desc {
+  color: var(--st-text-3);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+#view-marketing .marketing-recipients-box {
+  padding: 13px 14px;
+  display: grid;
+  gap: 12px;
+}
+
+#view-marketing .marketing-recipients-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#view-marketing .marketing-recipients-title {
+  color: var(--st-text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+#view-marketing .marketing-recipients-status {
+  color: var(--primary-color);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#view-marketing .marketing-recipients-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#view-marketing .marketing-recipient-stat {
+  padding: 10px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: color-mix(in srgb, var(--st-surface-2) 70%, transparent);
+}
+
+#view-marketing .marketing-recipient-stat strong {
+  display: block;
+  color: var(--st-text);
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+#view-marketing .marketing-recipient-stat span {
+  display: block;
+  margin-top: 5px;
+  color: var(--st-text-4);
+  font-size: 9.5px;
+  line-height: 1.35;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+#view-marketing .marketing-form {
+  display: grid;
+  gap: 18px;
+}
+
+#view-marketing .marketing-form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+#view-marketing .marketing-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#view-marketing .marketing-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#view-marketing .marketing-field {
+  display: grid;
+  gap: 5px;
+}
+
+#view-marketing .marketing-field label,
+#view-marketing .marketing-label {
+  color: var(--st-text-4);
+  font-size: 8.4px;
+  line-height: 1.2;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#view-marketing .marketing-field input,
+#view-marketing .marketing-field textarea,
+#view-marketing .marketing-field select {
+  width: 100%;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  color: var(--st-text);
+  font-family: "LexendDecaLocal", Arial, sans-serif;
+}
+
+#view-marketing .marketing-field input,
+#view-marketing .marketing-field select {
+  height: 38px;
+  padding: 0 12px;
+  font-size: 11.6px;
+}
+
+#view-marketing .marketing-field textarea {
+  min-height: 240px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 11.6px;
+  line-height: 1.65;
+}
+
+#view-marketing .marketing-field input:focus,
+#view-marketing .marketing-field textarea:focus,
+#view-marketing .marketing-field select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+}
+
+#view-marketing .marketing-help {
+  color: var(--st-text-4);
+  font-size: 9.8px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   PLACEHOLDERS
+========================================================= */
+
+#view-marketing .marketing-placeholder-box {
+  display: grid;
+  gap: 7px;
+}
+
+#view-marketing .marketing-placeholder-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+}
+
+#view-marketing .marketing-placeholder-chip {
+  border: 1px solid var(--st-border-2);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--st-surface-2));
+  color: var(--st-text-2);
+  padding: 7px 10px;
+  font-size: 10.5px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#view-marketing .marketing-placeholder-chip:hover {
+  border-color: var(--primary-color);
+  color: var(--st-text);
+}
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+#view-marketing .marketing-image-control {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+#view-marketing .marketing-file-trigger {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--st-border-2);
+  border-radius: 999px 0 0 999px;
+  background: var(--st-surface-2);
+  color: var(--st-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#view-marketing .marketing-file-trigger i {
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+#view-marketing .marketing-file-trigger span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--st-text);
+  font-size: 10.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+#view-marketing .marketing-remove-image-btn {
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  color: var(--st-text);
+  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+#view-marketing .marketing-image-preview {
+  width: 100%;
+  max-width: 340px;
+  display: none;
+  margin-top: 10px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  overflow: hidden;
+}
+
+#view-marketing .marketing-image-preview.is-visible {
+  display: block;
+}
+
+#view-marketing .marketing-image-preview img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+#view-marketing .marketing-action-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+#view-marketing .marketing-action-row .settings-btn,
+#view-marketing .marketing-action-row .settings-btn-secondary {
+  width: 100% !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-size: 11.6px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+#view-marketing .marketing-preview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: start;
+}
+
+#view-marketing .marketing-preview-mail {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dfe3ea;
+}
+
+#view-marketing .marketing-preview-head {
+  padding: 18px 22px;
+  border-bottom: 1px solid #e8ebf0;
+  background: #f7f8fa;
+}
+
+#view-marketing .marketing-preview-subject {
+  color: #111827;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+#view-marketing .marketing-preview-small {
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#view-marketing .marketing-preview-body {
+  padding: 24px 22px 0;
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+#view-marketing .marketing-preview-cta {
+  padding: 22px;
+  display: flex;
+  justify-content: center;
+}
+
+#view-marketing .marketing-preview-cta a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+}
+
+#view-marketing .marketing-preview-image {
+  display: none;
+  padding: 0 22px 22px;
+}
+
+#view-marketing .marketing-preview-image.is-visible {
+  display: block;
+}
+
+#view-marketing .marketing-preview-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 14px;
+}
+
+#view-marketing .marketing-send-summary {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+#view-marketing .marketing-send-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--st-border-2);
+}
+
+#view-marketing .marketing-send-summary-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+#view-marketing .marketing-send-summary-row span {
+  color: var(--st-text-4);
+  font-size: 9.5px;
+  line-height: 1.4;
+}
+
+#view-marketing .marketing-send-summary-row strong {
+  color: var(--st-text);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* =========================================================
+   SAVED TEMPLATES
+========================================================= */
+
+#view-marketing .marketing-saved-section {
+  display: grid;
+  gap: 14px;
+}
+
+#view-marketing .marketing-saved-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+#view-marketing .marketing-saved-card {
+  padding: 14px;
+  border: 1px solid var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  display: grid;
+  gap: 13px;
+  transition:
+    border-color var(--st-t),
+    transform var(--st-t);
+}
+
+#view-marketing .marketing-saved-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+}
+
+#view-marketing .marketing-saved-meta {
+  display: grid;
+  gap: 3px;
+}
+
+#view-marketing .marketing-saved-meta strong {
+  color: var(--st-text);
+  font-size: 12.2px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+#view-marketing .marketing-saved-meta span {
+  color: var(--st-text-4);
+  font-size: 9.8px;
+  line-height: 1.4;
+}
+
+#view-marketing .marketing-saved-desc {
+  margin: 0;
+  color: var(--st-text-3);
+  font-size: 10.4px;
+  line-height: 1.65;
+}
+
+#view-marketing .marketing-saved-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#view-marketing .marketing-saved-actions .settings-btn-secondary {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  padding: 0 10px !important;
+  gap: 8px !important;
+  font-size: 10px !important;
+}
+
+#view-marketing .marketing-empty-state {
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px dashed var(--st-border-2);
+  border-radius: var(--st-r);
+  background: var(--st-surface-2);
+  color: var(--st-text-3);
+  font-size: 11.2px;
+  line-height: 1.7;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 1400px) {
+  #view-marketing .marketing-saved-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  #view-marketing .marketing-layout,
+  #view-marketing .marketing-preview-layout,
+  #view-marketing .marketing-summary-grid,
+  #view-marketing .marketing-audience-grid,
+  #view-marketing .marketing-recipients-stats,
+  #view-marketing .marketing-grid-2,
+  #view-marketing .marketing-grid-3,
+  #view-marketing .marketing-action-row,
+  #view-marketing .marketing-saved-grid,
+  #view-marketing .marketing-saved-actions {
+    grid-template-columns: 1fr;
+  }
+
+  #view-marketing .marketing-section-head,
+  #view-marketing .marketing-recipients-top {
+    display: grid;
+    gap: 6px;
+  }
+
+  #view-marketing .settings-btn,
+  #view-marketing .settings-btn-secondary {
+    width: 100%;
+  }
+
+  #view-marketing .marketing-preview-mail {
+    border-radius: 14px;
+  }
+
+  #view-marketing .marketing-preview-head,
+  #view-marketing .marketing-preview-body,
+  #view-marketing .marketing-preview-cta,
+  #view-marketing .marketing-preview-image {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+</style>
+
+
+<div class="marketing-page">
+
+  <section class="marketing-section">
+    
+
+    <div class="marketing-summary-grid">
+      <div class="marketing-summary-card">
+        <div class="marketing-summary-label">Wybrani odbiorcy</div>
+        <div class="marketing-summary-value" id="summarySelectedRecipients">0</div>
+        <div class="marketing-summary-note">Klienci pasujący do wybranej grupy.</div>
+      </div>
+
+      <div class="marketing-summary-card">
+        <div class="marketing-summary-label">Gotowi do wysyłki</div>
+        <div class="marketing-summary-value" id="summaryReadyRecipients">0</div>
+        <div class="marketing-summary-note">Mają e-mail i zgodę marketingową.</div>
+      </div>
+
+      <div class="marketing-summary-card">
+        <div class="marketing-summary-label">Pominięci</div>
+        <div class="marketing-summary-value" id="summarySkippedRecipients">0</div>
+        <div class="marketing-summary-note">Bez e-maila lub bez zgody.</div>
+      </div>
+
+      <div class="marketing-summary-card">
+        <div class="marketing-summary-label">Status kampanii</div>
+        <div class="marketing-summary-value" id="summaryCampaignStatus">Szkic</div>
+        <div class="marketing-summary-note">Wysyłka dopiero po potwierdzeniu.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="marketing-layout">
+
+    <aside class="marketing-sidebar">
+
+      <section class="marketing-section">
+        <div>
+          <h3 class="marketing-section-title">Gotowe kampanie</h3>
+          <p class="marketing-section-note">
+            Szablon uzupełnia treść. Odbiorców i dane oferty wybierasz osobno.
+          </p>
+        </div>
+
+        <div class="marketing-template-list" id="marketingTemplateList"></div>
+      </section>
+
+    </aside>
+
+
+    <div class="marketing-main">
+
+      <form
+        id="marketingTemplateForm"
+        class="marketing-form"
+        method="POST"
+        action="{{ url_for('save_marketing_template') }}"
+        enctype="multipart/form-data"
+      >
+
+        <input type="hidden" id="marketingTemplateKey" name="template_key" value="campaign_1">
+        <input type="hidden" id="removeMarketingImage" name="remove_image" value="0">
+        <input type="hidden" id="marketingAudienceValue" name="audience_type" value="all_marketing">
+
+        <!-- =====================================================
+             1. AUDIENCE
+        ====================================================== -->
+
+        <section class="marketing-section">
+          <div class="marketing-section-head">
+            <div>
+              <h3 class="marketing-section-title">1. Odbiorcy kampanii</h3>
+              <p class="marketing-section-note">
+                Kampania może trafić wyłącznie do klientów z zapisanym e-mailem i zgodą marketingową.
+              </p>
+            </div>
+          </div>
+
+          <div class="marketing-audience-grid">
+
+            <label class="marketing-audience-option is-active" data-audience="all_marketing">
+              <input type="radio" name="audience_choice" value="all_marketing" checked>
+              <span class="marketing-audience-title">Wszyscy ze zgodą marketingową</span>
+              <span class="marketing-audience-desc">Najbezpieczniejsza grupa do ogólnej kampanii.</span>
+            </label>
+
+            <label class="marketing-audience-option" data-audience="inactive_30">
+              <input type="radio" name="audience_choice" value="inactive_30">
+              <span class="marketing-audience-title">Bez wizyty 30 dni</span>
+              <span class="marketing-audience-desc">Delikatne przypomnienie dla klientów, którzy nie wrócili od miesiąca.</span>
+            </label>
+
+            <label class="marketing-audience-option" data-audience="inactive_60">
+              <input type="radio" name="audience_choice" value="inactive_60">
+              <span class="marketing-audience-title">Bez wizyty 60 dni</span>
+              <span class="marketing-audience-desc">Kampania powrotna z konkretną propozycją.</span>
+            </label>
+
+            <label class="marketing-audience-option" data-audience="inactive_90">
+              <input type="radio" name="audience_choice" value="inactive_90">
+              <span class="marketing-audience-title">Bez wizyty 90 dni</span>
+              <span class="marketing-audience-desc">Ostatnia próba reaktywacji klienta.</span>
+            </label>
+
+            <label class="marketing-audience-option" data-audience="after_visit">
+              <input type="radio" name="audience_choice" value="after_visit">
+              <span class="marketing-audience-title">Po ostatniej wizycie</span>
+              <span class="marketing-audience-desc">Podziękowanie, relacja i zaproszenie do kolejnej rezerwacji.</span>
+            </label>
+
+            <label class="marketing-audience-option" data-audience="manual">
+              <input type="radio" name="audience_choice" value="manual">
+              <span class="marketing-audience-title">Wybór ręczny</span>
+              <span class="marketing-audience-desc">Docelowo: zaznaczanie konkretnych klientów z tabeli.</span>
+            </label>
+
+          </div>
+
+          <div class="marketing-recipients-box marketing-soft-box">
+            <div class="marketing-recipients-top">
+              <div>
+                <div class="marketing-recipients-title" id="marketingRecipientsTitle">
+                  Wybrana grupa: wszyscy klienci ze zgodą marketingową
+                </div>
+                <div class="marketing-help">
+                  Dokładna lista klientów zostanie podłączona w backendzie. Ten panel pokazuje logikę kampanii.
+                </div>
+              </div>
+
+              <div class="marketing-recipients-status">
+                Tylko zgody marketingowe
+              </div>
+            </div>
+
+            <div class="marketing-recipients-stats">
+              <div class="marketing-recipient-stat">
+                <strong id="recipientsMatched">0</strong>
+                <span>Pasuje do filtra</span>
+              </div>
+
+              <div class="marketing-recipient-stat">
+                <strong id="recipientsReady">0</strong>
+                <span>Gotowi do wysyłki</span>
+              </div>
+
+              <div class="marketing-recipient-stat">
+                <strong id="recipientsNoEmail">0</strong>
+                <span>Bez e-maila</span>
+              </div>
+
+              <div class="marketing-recipient-stat">
+                <strong id="recipientsNoConsent">0</strong>
+                <span>Bez zgody</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- =====================================================
+             2. OFFER DATA
+        ====================================================== -->
+
+        <section class="marketing-section">
+          <div>
+            <h3 class="marketing-section-title">2. Dane kampanii</h3>
+            <p class="marketing-section-note">
+              Tutaj wpisujesz konkretne wartości, które zastąpią placeholdery w wiadomości.
+            </p>
+          </div>
+
+          <div class="marketing-grid-3">
+
+            <div class="marketing-field">
+              <label for="marketingDiscount">Rabat / promocja</label>
+              <input
+                type="text"
+                id="marketingDiscount"
+                name="discount_value"
+                placeholder="np. -20%, 50 PLN, darmowa konsultacja"
+              >
+            </div>
+
+            <div class="marketing-field">
+              <label for="marketingServiceName">Usługa</label>
+              <input
+                type="text"
+                id="marketingServiceName"
+                name="service_name_value"
+                placeholder="np. mezoterapia, laser, konsultacja"
+              >
+            </div>
+
+            <div class="marketing-field">
+              <label for="marketingOfferDeadline">Termin ważności</label>
+              <input
+                type="text"
+                id="marketingOfferDeadline"
+                name="offer_deadline"
+                placeholder="np. do 31.07.2026"
+              >
+            </div>
+
+          </div>
+
+          <div class="marketing-grid-2">
+
+            <div class="marketing-field">
+              <label for="marketingCta">Tekst przycisku</label>
+              <input
+                type="text"
+                id="marketingCta"
+                name="cta_text"
+                placeholder="np. Zarezerwuj termin"
+              >
+            </div>
+
+            <div class="marketing-field">
+              <label for="marketingCtaUrl">Link przycisku</label>
+              <input
+                type="text"
+                id="marketingCtaUrl"
+                name="cta_url"
+                placeholder="Domyślnie: link do strony rezerwacji"
+              >
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- =====================================================
+             3. MESSAGE
+        ====================================================== -->
+
+        <section class="marketing-section">
+          <div>
+            <h3 class="marketing-section-title">3. Wiadomość</h3>
+            <p class="marketing-section-note">
+              Placeholdery możesz wstawić kliknięciem. W podglądzie zobaczysz przykładowo podstawione dane.
+            </p>
+          </div>
+
+          <div class="marketing-form-grid">
+
+            <div class="marketing-grid-3">
+
+              <div class="marketing-field">
+                <label for="marketingTemplateName">Nazwa szablonu</label>
+                <input
+                  type="text"
+                  id="marketingTemplateName"
+                  name="template_name"
+                  placeholder="np. Powrót klienta — 60 dni"
+                >
+              </div>
+
+              <div class="marketing-field">
+                <label for="marketingSubject">Temat maila</label>
+                <input
+                  type="text"
+                  id="marketingSubject"
+                  name="subject"
+                >
+              </div>
+
+              <div class="marketing-field">
+                <label for="marketingPreview">Preview text</label>
+                <input
+                  type="text"
+                  id="marketingPreview"
+                  name="preview_text"
+                >
+              </div>
+
+            </div>
+
+            <div class="marketing-field">
+              <label for="marketingBody">Treść wiadomości</label>
+              <textarea id="marketingBody" name="body"></textarea>
+            </div>
+
+            <div class="marketing-placeholder-box">
+              <div class="marketing-label">Placeholdery do wstawienia</div>
+
+              <div class="marketing-placeholder-list">
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{client_name}}' }}">
+                  {{ '{{client_name}}' }}
+                </button>
+
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{business_name}}' }}">
+                  {{ '{{business_name}}' }}
+                </button>
+
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{booking_link}}' }}">
+                  {{ '{{booking_link}}' }}
+                </button>
+
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{discount}}' }}">
+                  {{ '{{discount}}' }}
+                </button>
+
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{service_name}}' }}">
+                  {{ '{{service_name}}' }}
+                </button>
+
+                <button type="button" class="marketing-placeholder-chip" data-placeholder="{{ '{{offer_deadline}}' }}">
+                  {{ '{{offer_deadline}}' }}
+                </button>
+              </div>
+            </div>
+
+            <div class="marketing-field">
+              <label for="marketingImage">Zdjęcie kampanii</label>
+
+              <div class="marketing-image-control">
+                <label class="marketing-file-trigger" for="marketingImage">
+                  <i class="bi bi-plus"></i>
+                  <span id="marketingImageFileName">Nie wybrano pliku</span>
+                </label>
+
+                <button
+                  type="button"
+                  class="marketing-remove-image-btn"
+                  id="marketingRemoveImageBtn"
+                >
+                  <i class="bi bi-trash"></i>
+                  Usuń
+                </button>
+              </div>
+
+              <input
+                type="file"
+                id="marketingImage"
+                name="image"
+                accept=".png,.jpg,.jpeg,.webp"
+                hidden
+              >
+
+              <div class="marketing-image-preview" id="marketingImagePreview">
+                <img
+                  src=""
+                  alt="Podgląd zdjęcia kampanii"
+                  id="marketingImagePreviewImg"
+                >
+              </div>
+            </div>
+
+            <div class="marketing-action-row">
+
+              <button
+                type="submit"
+                class="settings-btn-secondary"
+                id="marketingSaveBtn"
+              >
+                <i class="bi bi-floppy"></i>
+                <span>Zapisz szablon</span>
+              </button>
+
+              <button
+                type="button"
+                class="settings-btn-secondary"
+                id="marketingTestBtn"
+              >
+                <i class="bi bi-envelope-check"></i>
+                <span>Wyślij test</span>
+              </button>
+
+              <button
+                type="button"
+                class="settings-btn"
+                id="marketingSendBtn"
+              >
+                <i class="bi bi-send"></i>
+                <span>Wyślij kampanię</span>
+              </button>
+
+            </div>
+
+          </div>
+        </section>
+
+      </form>
+
+
+      <!-- =====================================================
+           4. PREVIEW
+      ====================================================== -->
+
+      <section class="marketing-section">
+        <div>
+          <h3 class="marketing-section-title">4. Podgląd i kontrola</h3>
+          <p class="marketing-section-note">
+            To jest przykładowy podgląd wiadomości. Przed prawdziwą wysyłką backend powinien pokazać finalną listę odbiorców.
+          </p>
+        </div>
+
+        <div class="marketing-preview-layout">
+
+          <div class="marketing-preview-mail">
+
+            <div class="marketing-preview-head">
+              <div class="marketing-preview-subject" id="previewSubject"></div>
+              <div class="marketing-preview-small" id="previewText"></div>
+            </div>
+
+            <div class="marketing-preview-body" id="previewBody"></div>
+
+            <div class="marketing-preview-cta">
+              <a href="#" target="_blank" id="previewCta"></a>
+            </div>
+
+            <div class="marketing-preview-image" id="previewImageWrap">
+              <img src="" alt="Zdjęcie kampanii" id="previewImage">
+            </div>
+
+          </div>
+
+          <div class="marketing-send-summary marketing-soft-box">
+
+            <div class="marketing-send-summary-row">
+              <span>Odbiorcy</span>
+              <strong id="summaryAudienceName">Wszyscy ze zgodą</strong>
+            </div>
+
+            <div class="marketing-send-summary-row">
+              <span>Gotowi do wysyłki</span>
+              <strong id="summaryReadySmall">0</strong>
+            </div>
+
+            <div class="marketing-send-summary-row">
+              <span>Rabat</span>
+              <strong id="summaryDiscount">Nie ustawiono</strong>
+            </div>
+
+            <div class="marketing-send-summary-row">
+              <span>Usługa</span>
+              <strong id="summaryService">Nie ustawiono</strong>
+            </div>
+
+            <div class="marketing-send-summary-row">
+              <span>Termin ważności</span>
+              <strong id="summaryDeadline">Nie ustawiono</strong>
+            </div>
+
+            <div class="marketing-send-summary-row">
+              <span>Bezpieczeństwo</span>
+              <strong>Tylko zgody marketingowe</strong>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       SAVED MARKETING TEMPLATES
+  ========================================================= -->
+
+  <section class="marketing-saved-section">
+
+    <div>
+      <h3 class="marketing-section-title">Zapisane szablony</h3>
+      <p class="marketing-section-note">
+        Zapisane kampanie możesz później otworzyć, skopiować albo wykorzystać ponownie.
+      </p>
+    </div>
+
+    <div class="marketing-saved-grid">
+
+      {% for template in marketing_templates %}
+
+        <article class="marketing-saved-card">
+
+          <div class="marketing-saved-meta">
+            <strong>{{ template.template_name or template.subject or "Bez nazwy" }}</strong>
+            <span>Zapisano {{ template.updated_at or template.created_at }}</span>
+          </div>
+
+          <p class="marketing-saved-desc">
+            {{ template.preview_text or "Brak krótkiego opisu szablonu." }}
+          </p>
+
+          <div class="marketing-saved-actions">
+
+            <button type="button" class="settings-btn-secondary">
+              <i class="bi bi-pencil"></i>
+              <span>Otwórz</span>
+            </button>
+
+            <button type="button" class="settings-btn-secondary">
+              <i class="bi bi-files"></i>
+              <span>Duplikuj</span>
+            </button>
+
+            <button type="button" class="settings-btn-secondary settings-btn-danger">
+              <i class="bi bi-trash"></i>
+              <span>Usuń</span>
+            </button>
+          </div>
+        </article>
+
+      {% else %}
+        <div class="marketing-empty-state">
+          Brak zapisanych szablonów.<br>
+          Wybierz gotową kampanię, dopracuj treść i kliknij „Zapisz szablon”.
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<script>
+const ALIFIO_MARKETING_TEMPLATES = [
+  {
+    key: "campaign_reminder",
+    name: "Przypomnienie o firmie",
+    desc: "Lekki kontakt z klientami, bez promocji i bez presji.",
+    subject: "{{ '{{client_name}}' }}, mamy dla Ciebie wolne terminy",
+    preview: "Sprawdź dostępne terminy i zarezerwuj wizytę w dogodnym czasie.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+chcieliśmy przypomnieć, że w {{ '{{business_name}}' }} możesz ponownie zarezerwować wizytę w dogodnym terminie.
+
+Jeśli planowałaś/planowałeś wrócić, ale zabrakło czasu — teraz możesz zrobić to od razu.
+
+Kliknij poniżej i wybierz termin:
+
+{{ '{{booking_link}}' }}`,
+    cta: "Zarezerwuj termin",
+    audience: "all_marketing"
+  },
+  {
+    key: "campaign_30_days",
+    name: "Bez wizyty 30 dni",
+    desc: "Subtelny powrót po miesiącu od ostatniej wizyty.",
+    subject: "{{ '{{client_name}}' }}, minął miesiąc od ostatniej wizyty",
+    preview: "Zapraszamy ponownie, kiedy będzie Ci wygodnie.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+od Twojej ostatniej wizyty w {{ '{{business_name}}' }} minęło już trochę czasu.
+
+Jeśli chcesz wrócić do regularnej pielęgnacji lub kontynuować wybraną usługę, możesz od razu wybrać najwygodniejszy termin.
+
+{{ '{{booking_link}}' }}`,
+    cta: "Sprawdź terminy",
+    audience: "inactive_30"
+  },
+  {
+    key: "campaign_60_days",
+    name: "Powrót z ofertą",
+    desc: "Kampania dla klientów bez wizyty od około 60 dni.",
+    subject: "{{ '{{client_name}}' }}, przygotowaliśmy dla Ciebie propozycję powrotu",
+    preview: "Skorzystaj z oferty i zarezerwuj kolejną wizytę.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+od Twojej ostatniej wizyty w {{ '{{business_name}}' }} minęło już trochę więcej czasu, dlatego przygotowaliśmy prostą propozycję powrotu.
+
+Oferta dla Ciebie:
+{{ '{{discount}}' }}
+
+Możesz wykorzystać ją na usługę:
+{{ '{{service_name}}' }}
+
+Oferta jest ważna:
+{{ '{{offer_deadline}}' }}
+
+Rezerwacja terminu:
+{{ '{{booking_link}}' }}`,
+    cta: "Wróć z ofertą",
+    audience: "inactive_60"
+  },
+  {
+    key: "campaign_free_slots",
+    name: "Wolne terminy",
+    desc: "Szybka kampania do zapełnienia wolnych miejsc.",
+    subject: "{{ '{{client_name}}' }}, mamy wolne terminy",
+    preview: "Kilka miejsc jest dostępnych — możesz zarezerwować od razu.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+mamy dostępne wolne terminy i możesz zarezerwować wizytę bez czekania.
+
+Jeśli odkładałaś/odkładałeś wizytę na później, to dobry moment, żeby wybrać termin.
+
+{{ '{{booking_link}}' }}`,
+    cta: "Zobacz wolne terminy",
+    audience: "all_marketing"
+  },
+  {
+    key: "campaign_promo",
+    name: "Promocja",
+    desc: "Uniwersalna kampania promocyjna z rabatem lub ofertą.",
+    subject: "{{ '{{client_name}}' }}, specjalna oferta w {{ '{{business_name}}' }}",
+    preview: "Oferta dostępna przez ograniczony czas.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+przygotowaliśmy specjalną ofertę w {{ '{{business_name}}' }}.
+
+Oferta:
+{{ '{{discount}}' }}
+
+Dotyczy usługi:
+{{ '{{service_name}}' }}
+
+Oferta jest ważna:
+{{ '{{offer_deadline}}' }}
+
+Zarezerwuj termin tutaj:
+{{ '{{booking_link}}' }}`,
+    cta: "Skorzystaj z oferty",
+    audience: "all_marketing"
+  },
+  {
+    key: "campaign_after_visit",
+    name: "Podziękowanie po wizycie",
+    desc: "Wiadomość relacyjna po zakończonej wizycie.",
+    subject: "{{ '{{client_name}}' }}, dziękujemy za wizytę",
+    preview: "Miło było gościć Cię w naszej firmie.",
+    body: `Cześć {{ '{{client_name}}' }},
+
+dziękujemy za wizytę w {{ '{{business_name}}' }}.
+
+Mamy nadzieję, że wszystko przebiegło dobrze i że zobaczymy się ponownie.
+
+Jeśli chcesz zaplanować kolejną wizytę, możesz zrobić to tutaj:
+
+{{ '{{booking_link}}' }}`,
+    cta: "Zarezerwuj kolejną wizytę",
+    audience: "after_visit"
+  }
+];
+
+const ALIFIO_AUDIENCE_LABELS = {
+  all_marketing: {
+    name: "Wszyscy ze zgodą marketingową",
+    title: "Wybrana grupa: wszyscy klienci ze zgodą marketingową"
+  },
+  inactive_30: {
+    name: "Bez wizyty 30 dni",
+    title: "Wybrana grupa: klienci bez wizyty od 30 dni"
+  },
+  inactive_60: {
+    name: "Bez wizyty 60 dni",
+    title: "Wybrana grupa: klienci bez wizyty od 60 dni"
+  },
+  inactive_90: {
+    name: "Bez wizyty 90 dni",
+    title: "Wybrana grupa: klienci bez wizyty od 90 dni"
+  },
+  after_visit: {
+    name: "Po ostatniej wizycie",
+    title: "Wybrana grupa: klienci po ostatniej zakończonej wizycie"
+  },
+  manual: {
+    name: "Wybór ręczny",
+    title: "Wybrana grupa: ręcznie zaznaczeni klienci"
+  }
+};
+
+(function initMarketingCenter() {
+  let activeIndex = 0;
+  let activeAudience = "all_marketing";
+
+  let activeAudienceData = {
+    name: "Wszyscy ze zgodą marketingową",
+    title: "Wybrana grupa: wszyscy klienci ze zgodą marketingową",
+    matched: 0,
+    ready: 0,
+    noEmail: 0,
+    noConsent: 0
+  };
+
+  const list = document.getElementById("marketingTemplateList");
+
+  const templateKeyInput = document.getElementById("marketingTemplateKey");
+  const audienceInput = document.getElementById("marketingAudienceValue");
+  const removeImageInput = document.getElementById("removeMarketingImage");
+
+  const templateNameInput = document.getElementById("marketingTemplateName");
+  const subjectInput = document.getElementById("marketingSubject");
+  const previewInput = document.getElementById("marketingPreview");
+  const bodyInput = document.getElementById("marketingBody");
+
+  const discountInput = document.getElementById("marketingDiscount");
+  const serviceInput = document.getElementById("marketingServiceName");
+  const deadlineInput = document.getElementById("marketingOfferDeadline");
+  const ctaInput = document.getElementById("marketingCta");
+  const ctaUrlInput = document.getElementById("marketingCtaUrl");
+
+  const imageInput = document.getElementById("marketingImage");
+  const imageFileName = document.getElementById("marketingImageFileName");
+  const removeImageBtn = document.getElementById("marketingRemoveImageBtn");
+  const imagePreview = document.getElementById("marketingImagePreview");
+  const imagePreviewImg = document.getElementById("marketingImagePreviewImg");
+
+  const previewSubject = document.getElementById("previewSubject");
+  const previewText = document.getElementById("previewText");
+  const previewBody = document.getElementById("previewBody");
+  const previewCta = document.getElementById("previewCta");
+  const previewImageWrap = document.getElementById("previewImageWrap");
+  const previewImage = document.getElementById("previewImage");
+
+  const recipientsTitle = document.getElementById("marketingRecipientsTitle");
+  const recipientsMatched = document.getElementById("recipientsMatched");
+  const recipientsReady = document.getElementById("recipientsReady");
+  const recipientsNoEmail = document.getElementById("recipientsNoEmail");
+  const recipientsNoConsent = document.getElementById("recipientsNoConsent");
+
+  const summarySelectedRecipients = document.getElementById("summarySelectedRecipients");
+  const summaryReadyRecipients = document.getElementById("summaryReadyRecipients");
+  const summarySkippedRecipients = document.getElementById("summarySkippedRecipients");
+  const summaryCampaignStatus = document.getElementById("summaryCampaignStatus");
+
+  const summaryAudienceName = document.getElementById("summaryAudienceName");
+  const summaryReadySmall = document.getElementById("summaryReadySmall");
+  const summaryDiscount = document.getElementById("summaryDiscount");
+  const summaryService = document.getElementById("summaryService");
+  const summaryDeadline = document.getElementById("summaryDeadline");
+
+  function getAudienceMeta(value) {
+    return ALIFIO_AUDIENCE_LABELS[value] || ALIFIO_AUDIENCE_LABELS.all_marketing;
+  }
+
+  function renderTemplateList() {
+    if (!list) return;
+
+    list.innerHTML = ALIFIO_MARKETING_TEMPLATES.map((item, index) => `
+      <button
+        type="button"
+        class="marketing-template-btn ${index === activeIndex ? "is-active" : ""}"
+        data-index="${index}"
+      >
+        <span class="marketing-template-name">${index + 1}. ${item.name}</span>
+        <span class="marketing-template-desc">${item.desc}</span>
+      </button>
+    `).join("");
+
+    list.querySelectorAll(".marketing-template-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeIndex = Number(button.dataset.index || 0);
+        fillTemplate();
+        renderTemplateList();
+      });
+    });
+  }
+
+  function fillTemplate() {
+    const item = ALIFIO_MARKETING_TEMPLATES[activeIndex];
+
+    if (!item) return;
+
+    if (templateKeyInput) templateKeyInput.value = item.key || `campaign_${activeIndex + 1}`;
+    if (templateNameInput) templateNameInput.value = item.name || "";
+    if (subjectInput) subjectInput.value = item.subject || "";
+    if (previewInput) previewInput.value = item.preview || "";
+    if (bodyInput) bodyInput.value = item.body || "";
+    if (ctaInput) ctaInput.value = item.cta || "Zarezerwuj termin";
+    if (removeImageInput) removeImageInput.value = "0";
+
+    setAudience(item.audience || "all_marketing", false);
+    updatePreview();
+  }
+
+  function setAudience(value, shouldLoadFromBackend = false) {
+    activeAudience = value || "all_marketing";
+
+    if (audienceInput) {
+      audienceInput.value = activeAudience;
+    }
+
+    const meta = getAudienceMeta(activeAudience);
+
+    activeAudienceData = {
+      name: meta.name,
+      title: meta.title,
+      matched: 0,
+      ready: 0,
+      noEmail: 0,
+      noConsent: 0
+    };
+
+    document.querySelectorAll(".marketing-audience-option").forEach((option) => {
+      const isActive = option.dataset.audience === activeAudience;
+      option.classList.toggle("is-active", isActive);
+
+      const radio = option.querySelector('input[type="radio"]');
+      if (radio) radio.checked = isActive;
+    });
+
+    updateAudienceSummary();
+
+    if (shouldLoadFromBackend) {
+      updateAudienceSummary();
+    }
+  }
+
+  function updateAudienceSummary() {
+    const skipped = Number(activeAudienceData.noEmail || 0) + Number(activeAudienceData.noConsent || 0);
+
+    if (recipientsTitle) recipientsTitle.textContent = activeAudienceData.title;
+    if (recipientsMatched) recipientsMatched.textContent = activeAudienceData.matched;
+    if (recipientsReady) recipientsReady.textContent = activeAudienceData.ready;
+    if (recipientsNoEmail) recipientsNoEmail.textContent = activeAudienceData.noEmail;
+    if (recipientsNoConsent) recipientsNoConsent.textContent = activeAudienceData.noConsent;
+
+    if (summarySelectedRecipients) summarySelectedRecipients.textContent = activeAudienceData.matched;
+    if (summaryReadyRecipients) summaryReadyRecipients.textContent = activeAudienceData.ready;
+    if (summarySkippedRecipients) summarySkippedRecipients.textContent = skipped;
+    if (summaryAudienceName) summaryAudienceName.textContent = activeAudienceData.name;
+    if (summaryReadySmall) summaryReadySmall.textContent = activeAudienceData.ready;
+
+    updateCampaignStatus();
+  }
+
+  function loadMarketingRecipients() {
+    const url = `/admin/marketing/recipients?audience_type=${encodeURIComponent(activeAudience)}`;
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data || !data.success) {
+          throw new Error("Nie udało się pobrać odbiorców.");
+        }
+
+        const meta = getAudienceMeta(data.audience_type);
+
+        activeAudienceData = {
+          name: meta.name,
+          title: meta.title,
+          matched: Number(data.matched_count || 0),
+          ready: Number(data.ready_count || 0),
+          noEmail: Number(data.no_email_count || 0),
+          noConsent: Number(data.no_consent_count || 0)
+        };
+
+        updateAudienceSummary();
+      })
+      .catch((error) => {
+        console.error("Marketing recipients error:", error);
+
+        const meta = getAudienceMeta(activeAudience);
+
+        activeAudienceData = {
+          name: meta.name,
+          title: "Nie udało się pobrać odbiorców z bazy danych",
+          matched: 0,
+          ready: 0,
+          noEmail: 0,
+          noConsent: 0
+        };
+
+        updateAudienceSummary();
+      });
+  }
+
+  function getBookingUrl() {
+    const ctaUrl = ctaUrlInput ? ctaUrlInput.value.trim() : "";
+    if (ctaUrl) return ctaUrl;
+
+    const bookingUrlInput = document.querySelector('[name="booking_page_url"]');
+    return bookingUrlInput ? bookingUrlInput.value.trim() : "";
+  }
+
+  function replacePlaceholders(value) {
+    const bookingUrl = getBookingUrl();
+
+    return (value || "")
+      .replaceAll("{{client_name}}", "Anna")
+      .replaceAll("{{business_name}}", "Twoja firma")
+      .replaceAll("{{booking_link}}", bookingUrl || "https://twoja-strona.pl/rezerwacja")
+      .replaceAll("{{discount}}", discountInput?.value.trim() || "nie ustawiono")
+      .replaceAll("{{service_name}}", serviceInput?.value.trim() || "wybrana usługa")
+      .replaceAll("{{offer_deadline}}", deadlineInput?.value.trim() || "nie ustawiono");
+  }
+
+  function updatePreview() {
+    const subject = replacePlaceholders(subjectInput?.value || "Brak tematu");
+    const preview = replacePlaceholders(previewInput?.value || "Brak preview text");
+    const body = replacePlaceholders(bodyInput?.value || "Brak treści wiadomości.");
+    const cta = ctaInput?.value || "Zarezerwuj termin";
+    const bookingUrl = getBookingUrl();
+
+    if (previewSubject) previewSubject.textContent = subject;
+    if (previewText) previewText.textContent = preview;
+    if (previewBody) previewBody.textContent = body;
+
+    if (previewCta) {
+      previewCta.textContent = cta;
+      previewCta.href = bookingUrl || "#";
+    }
+
+    if (summaryDiscount) summaryDiscount.textContent = discountInput?.value.trim() || "Nie ustawiono";
+    if (summaryService) summaryService.textContent = serviceInput?.value.trim() || "Nie ustawiono";
+    if (summaryDeadline) summaryDeadline.textContent = deadlineInput?.value.trim() || "Nie ustawiono";
+
+    updateCampaignStatus();
+  }
+
+  function updateCampaignStatus() {
+    const hasSubject = Boolean(subjectInput?.value.trim());
+    const hasBody = Boolean(bodyInput?.value.trim());
+    const hasRecipients = Number(activeAudienceData.ready || 0) > 0;
+
+    if (!summaryCampaignStatus) return;
+
+    if (!hasSubject || !hasBody) {
+      summaryCampaignStatus.textContent = "Braki";
+      return;
+    }
+
+    if (!hasRecipients) {
+      summaryCampaignStatus.textContent = "Szkic";
+      return;
+    }
+
+    summaryCampaignStatus.textContent = "Gotowe";
+  }
+
+  function clearImagePreview() {
+    if (imageInput) imageInput.value = "";
+    if (imageFileName) imageFileName.textContent = "Nie wybrano pliku";
+    if (imagePreview) imagePreview.classList.remove("is-visible");
+    if (previewImageWrap) previewImageWrap.classList.remove("is-visible");
+    if (imagePreviewImg) imagePreviewImg.src = "";
+    if (previewImage) previewImage.src = "";
+  }
+
+  function handleImageUpload() {
+    const file = imageInput?.files && imageInput.files[0];
+
+    if (removeImageInput) removeImageInput.value = "0";
+    if (imageFileName) imageFileName.textContent = file ? file.name : "Nie wybrano pliku";
+
+    if (!file) {
+      clearImagePreview();
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const src = event.target.result;
+
+      if (imagePreviewImg) imagePreviewImg.src = src;
+      if (previewImage) previewImage.src = src;
+      if (imagePreview) imagePreview.classList.add("is-visible");
+      if (previewImageWrap) previewImageWrap.classList.add("is-visible");
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function handleRemoveImage() {
+    clearImagePreview();
+
+    if (removeImageInput) {
+      removeImageInput.value = "1";
+    }
+  }
+
+  function insertPlaceholder(placeholder) {
+    if (!bodyInput || !placeholder) return;
+
+    const start = bodyInput.selectionStart || 0;
+    const end = bodyInput.selectionEnd || 0;
+    const value = bodyInput.value || "";
+
+    bodyInput.value =
+      value.substring(0, start) +
+      placeholder +
+      value.substring(end);
+
+    const cursorPosition = start + placeholder.length;
+
+    bodyInput.focus();
+    bodyInput.setSelectionRange(cursorPosition, cursorPosition);
+
+    updatePreview();
+  }
+
+  document.querySelectorAll(".marketing-audience-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      setAudience(option.dataset.audience || "all_marketing", false);
+    });
+  });
+
+  document.querySelectorAll(".marketing-placeholder-chip").forEach((button) => {
+    button.addEventListener("click", () => {
+      insertPlaceholder(button.dataset.placeholder || "");
+    });
+  });
+
+  [
+    subjectInput,
+    previewInput,
+    bodyInput,
+    discountInput,
+    serviceInput,
+    deadlineInput,
+    ctaInput,
+    ctaUrlInput
+  ].forEach((input) => {
+    input?.addEventListener("input", updatePreview);
+  });
+
+  imageInput?.addEventListener("change", handleImageUpload);
+  removeImageBtn?.addEventListener("click", handleRemoveImage);
+
+  document.getElementById("marketingTestBtn")?.addEventListener("click", () => {
+    alert("Wysyłka testowa zostanie podłączona w backendzie. Test powinien wysłać wiadomość tylko na adres administratora.");
+  });
+
+  document.getElementById("marketingSendBtn")?.addEventListener("click", () => {
+    alert("Wysyłka kampanii zostanie podłączona w backendzie. Przed wysyłką system powinien pokazać finalną listę odbiorców.");
+  });
+
+  renderTemplateList();
+fillTemplate();
+updateAudienceSummary();
+})();
+</script>
