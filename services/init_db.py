@@ -16,8 +16,12 @@ def ensure_column(cursor, table_name, column_name, column_sql):
 
 def ensure_index(cursor, index_name, table_name, columns_sql, unique=False):
     unique_sql = "UNIQUE " if unique else ""
+
     cursor.execute(
-        f"CREATE {unique_sql}INDEX IF NOT EXISTS {index_name} ON {table_name} ({columns_sql})"
+        f"""
+        CREATE {unique_sql}INDEX IF NOT EXISTS {index_name}
+        ON {table_name} ({columns_sql})
+        """
     )
 
 
@@ -152,7 +156,7 @@ def init_db():
         )
 
         # =========================================================
-        # SERVICE_EMPLOYEES
+        # SERVICE EMPLOYEES
         # =========================================================
         cursor.execute(
             """
@@ -327,6 +331,12 @@ def init_db():
                 status TEXT NOT NULL DEFAULT 'waiting',
                 matched_booking_date TEXT,
                 matched_booking_time TEXT,
+                privacy_consent INTEGER NOT NULL DEFAULT 0,
+                marketing_consent INTEGER NOT NULL DEFAULT 0,
+                consents_created_at TEXT,
+                cancel_token TEXT,
+                cancel_token_used INTEGER NOT NULL DEFAULT 0,
+                cancelled_at TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
                 FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
@@ -349,6 +359,8 @@ def init_db():
                 contact_phone TEXT DEFAULT '',
                 primary_color TEXT NOT NULL DEFAULT '#1f3c88',
                 contact_email TEXT,
+                privacy_policy_url TEXT,
+                terms_url TEXT,
                 booking_page_url TEXT,
                 slot_interval_minutes INTEGER NOT NULL DEFAULT 30,
                 logo_path TEXT,
@@ -395,6 +407,34 @@ def init_db():
                 note TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE
+            )
+            """
+        )
+
+        # =========================================================
+        # MARKETING TEMPLATES
+        # =========================================================
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS marketing_templates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                business_id INTEGER NOT NULL,
+                template_key TEXT NOT NULL,
+                template_name TEXT,
+                audience_type TEXT,
+                subject TEXT,
+                preview_text TEXT,
+                body TEXT,
+                cta_text TEXT,
+                cta_url TEXT,
+                image_path TEXT,
+                discount_value TEXT,
+                service_name_value TEXT,
+                offer_deadline TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+                UNIQUE(business_id, template_key)
             )
             """
         )
@@ -521,13 +561,13 @@ def init_db():
         ensure_column(cursor, "waitlist_entries", "client_id", "client_id INTEGER")
         ensure_column(cursor, "waitlist_entries", "matched_booking_date", "matched_booking_date TEXT")
         ensure_column(cursor, "waitlist_entries", "matched_booking_time", "matched_booking_time TEXT")
-        ensure_column(cursor, "waitlist_entries", "created_at", "created_at TEXT")
         ensure_column(cursor, "waitlist_entries", "privacy_consent", "privacy_consent INTEGER NOT NULL DEFAULT 0")
         ensure_column(cursor, "waitlist_entries", "marketing_consent", "marketing_consent INTEGER NOT NULL DEFAULT 0")
         ensure_column(cursor, "waitlist_entries", "consents_created_at", "consents_created_at TEXT")
         ensure_column(cursor, "waitlist_entries", "cancel_token", "cancel_token TEXT")
         ensure_column(cursor, "waitlist_entries", "cancel_token_used", "cancel_token_used INTEGER NOT NULL DEFAULT 0")
         ensure_column(cursor, "waitlist_entries", "cancelled_at", "cancelled_at TEXT")
+        ensure_column(cursor, "waitlist_entries", "created_at", "created_at TEXT")
 
         # business_settings
         ensure_column(cursor, "business_settings", "business_id", "business_id INTEGER")
@@ -550,6 +590,23 @@ def init_db():
         # closed_days
         ensure_column(cursor, "closed_days", "business_id", "business_id INTEGER")
         ensure_column(cursor, "closed_days", "created_at", "created_at TEXT")
+
+        # marketing_templates
+        ensure_column(cursor, "marketing_templates", "business_id", "business_id INTEGER")
+        ensure_column(cursor, "marketing_templates", "template_key", "template_key TEXT")
+        ensure_column(cursor, "marketing_templates", "template_name", "template_name TEXT")
+        ensure_column(cursor, "marketing_templates", "audience_type", "audience_type TEXT")
+        ensure_column(cursor, "marketing_templates", "subject", "subject TEXT")
+        ensure_column(cursor, "marketing_templates", "preview_text", "preview_text TEXT")
+        ensure_column(cursor, "marketing_templates", "body", "body TEXT")
+        ensure_column(cursor, "marketing_templates", "cta_text", "cta_text TEXT")
+        ensure_column(cursor, "marketing_templates", "cta_url", "cta_url TEXT")
+        ensure_column(cursor, "marketing_templates", "image_path", "image_path TEXT")
+        ensure_column(cursor, "marketing_templates", "discount_value", "discount_value TEXT")
+        ensure_column(cursor, "marketing_templates", "service_name_value", "service_name_value TEXT")
+        ensure_column(cursor, "marketing_templates", "offer_deadline", "offer_deadline TEXT")
+        ensure_column(cursor, "marketing_templates", "created_at", "created_at TEXT")
+        ensure_column(cursor, "marketing_templates", "updated_at", "updated_at TEXT")
 
         # =========================================================
         # INDEXES
@@ -574,6 +631,7 @@ def init_db():
         ensure_index(cursor, "idx_booking_side_images_business_id", "booking_side_images", "business_id")
         ensure_index(cursor, "idx_closed_days_business_id", "closed_days", "business_id")
         ensure_index(cursor, "idx_booking_cancel_tokens_booking_id", "booking_cancel_tokens", "booking_id")
+        ensure_index(cursor, "idx_marketing_templates_business", "marketing_templates", "business_id")
 
         ensure_index(
             cursor,
@@ -657,32 +715,6 @@ def init_db():
             (DEFAULT_BUSINESS_ID,),
         )
 
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS marketing_templates (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                business_id INTEGER NOT NULL,
-                template_key TEXT NOT NULL,
-                subject TEXT,
-                preview_text TEXT,
-                body TEXT,
-                cta_text TEXT,
-                image_path TEXT,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(business_id, template_key)
-            )
-            """)
-        
-        ensure_column(cursor, "marketing_templates", "template_name", "template_name TEXT")
-
-        ensure_column(cursor, "marketing_templates", "audience_type", "audience_type TEXT")
-        ensure_column(cursor, "marketing_templates", "discount_value", "discount_value TEXT")
-        ensure_column(cursor, "marketing_templates", "service_name_value", "service_name_value TEXT")
-        ensure_column(cursor, "marketing_templates", "offer_deadline", "offer_deadline TEXT")
-        ensure_column(cursor, "marketing_templates", "cta_url", "cta_url TEXT")
-
-        ensure_index(cursor, "idx_marketing_templates_business", "marketing_templates", "business_id")
-
         # =========================================================
         # BACKFILL EXISTING DATA TO DEFAULT BUSINESS
         # =========================================================
@@ -698,6 +730,7 @@ def init_db():
             "waitlist_entries",
             "booking_side_images",
             "closed_days",
+            "marketing_templates",
         ]
 
         for table_name in tables_to_backfill:
@@ -728,8 +761,19 @@ def init_db():
         # =========================================================
         # BACKFILL CREATED_AT / UPDATED_AT
         # =========================================================
-        cursor.execute("UPDATE services SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
-        cursor.execute("UPDATE employees SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
+        cursor.execute(
+            """
+            UPDATE services
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
+
+        cursor.execute(
+            """
+            UPDATE employees
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
 
         cursor.execute(
             """
@@ -741,8 +785,19 @@ def init_db():
             """
         )
 
-        cursor.execute("UPDATE bookings SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
-        cursor.execute("UPDATE waitlist_entries SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
+        cursor.execute(
+            """
+            UPDATE bookings
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
+
+        cursor.execute(
+            """
+            UPDATE waitlist_entries
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
 
         cursor.execute(
             """
@@ -752,18 +807,28 @@ def init_db():
             """
         )
 
-        cursor.execute("UPDATE booking_side_images SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
-        cursor.execute("UPDATE closed_days SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)")
+        cursor.execute(
+            """
+            UPDATE booking_side_images
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
 
+        cursor.execute(
+            """
+            UPDATE closed_days
+            SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP)
+            """
+        )
 
-        ensure_index(
-            cursor,
-                "idx_marketing_templates_business",
-                "marketing_templates",
-                "business_id"
-            )
-
-
+        cursor.execute(
+            """
+            UPDATE marketing_templates
+            SET
+                created_at = COALESCE(created_at, CURRENT_TIMESTAMP),
+                updated_at = COALESCE(updated_at, CURRENT_TIMESTAMP)
+            """
+        )
 
         conn.commit()
         print("Baza danych została zainicjalizowana pomyślnie.")
